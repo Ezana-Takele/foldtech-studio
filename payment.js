@@ -103,9 +103,8 @@
           tokenizationSpecification: {
             type: 'PAYMENT_GATEWAY',
             parameters: {
-              'gateway': 'stripe',
-              'stripe:version': '2020-08-27',
-              'stripe:publishableKey': GATEWAY_CONFIG.stripePublicKey
+              'gateway': 'example',
+              'gatewayMerchantId': 'exampleGatewayMerchantId'
             }
           }
         }],
