@@ -2,14 +2,19 @@
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="HandheldFriendly" content="true">
   <title>Fold Tech Studio™ | Minimalist Desk & Travel Ecosystem</title>
   
   <!-- SEO & Social Graph Meta -->
-  <meta name="description" content="Official Fold Tech Studio catalog: MagFold™ 3-in-1 Foldable Charger, 65W GaN Travel Adapters, MagSafe Wallets & Minimalist Desk Essentials. Accepts Mastercard, Visa, Apple Pay, USDT & USDC.">
-  <meta name="keywords" content="MagFold charger, 3 in 1 wireless charger, GaN travel charger, MagSafe wallet, minimalist desk setup, pay with mastercard, pay with apple pay, crypto ecommerce">
+  <meta name="description" content="Official Fold Tech Studio catalog: MagFold™ 3-in-1 Foldable Charger, 65W GaN Travel Adapters, MagSafe Wallets & Minimalist Desk Essentials. Accepts Mastercard, Visa, Apple Pay, Google Pay, USDT & USDC.">
+  <meta name="keywords" content="MagFold charger, 3 in 1 wireless charger, GaN travel charger, MagSafe wallet, minimalist desk setup, pay with mastercard, pay with apple pay, pay with google pay, crypto ecommerce">
   <meta property="og:title" content="Fold Tech Studio™ | Minimalist Desk & Travel Ecosystem">
-  <meta property="og:description" content="One charger for everything. Sleek, foldable tech accessories with free worldwide express shipping. Accepts Cards & Crypto.">
+  <meta property="og:description" content="One charger for everything. Sleek, foldable tech accessories with free worldwide express shipping. Accepts Cards, Apple Pay, GPay & Crypto.">
   <meta property="og:image" content="https://ezana-takele.github.io/foldtech-studio/magfold_hero.jpg">
   <meta property="og:url" content="https://ezana-takele.github.io/foldtech-studio/">
 
@@ -20,7 +25,34 @@
   <!-- Fonts & Custom Styles -->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    html {
+      -webkit-text-size-adjust: 100%;
+      touch-action: manipulation;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    /* Universal Mobile Form Fix: Prevents iOS Safari from auto-zooming and distorting layouts */
+    @media screen and (max-width: 768px) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+    }
+    /* Momentum scrolling on legacy iOS & Android devices */
+    .touch-scroll, #cartItemsList, #checkoutModal, #applePayModal, #googlePayModal, #adminModal {
+      -webkit-overflow-scrolling: touch;
+    }
+    /* Fallback for legacy Android & iOS browsers without backdrop-filter support */
+    @supports not ((-webkit-backdrop-filter: blur(16px)) or (backdrop-filter: blur(16px))) {
+      .glass-card {
+        background-color: #111827 !important;
+      }
+    }
     .glass-card {
       background: rgba(17, 24, 39, 0.75);
       backdrop-filter: blur(16px);
@@ -531,8 +563,8 @@
     <div id="cartBackdrop" onclick="toggleCart(false)" class="absolute inset-0 bg-black/70 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
 
     <!-- Drawer Panel -->
-    <div id="cartPanel" class="absolute inset-y-0 right-0 max-w-full flex pl-10 pointer-events-auto transform translate-x-full transition-transform duration-300">
-      <div class="w-screen max-w-md bg-[#0f1523] border-l border-gray-800 p-6 flex flex-col justify-between shadow-2xl">
+    <div id="cartPanel" class="absolute inset-y-0 right-0 max-w-full flex pl-4 sm:pl-10 pointer-events-auto transform translate-x-full transition-transform duration-300">
+      <div class="w-screen max-w-md bg-[#0f1523] border-l border-gray-800 p-4 sm:p-6 flex flex-col justify-between shadow-2xl">
         
         <!-- Header -->
         <div>
@@ -677,17 +709,31 @@
               </span>
               <div class="flex items-center gap-2 text-sm">
                 <i class="fa-brands fa-apple text-white text-base" title="Apple Pay"></i>
+                <i class="fa-brands fa-google text-blue-400 text-sm" title="Google Pay"></i>
                 <i class="fa-brands fa-cc-mastercard text-amber-500 text-base" title="Mastercard"></i>
                 <i class="fa-brands fa-cc-visa text-sky-400 text-base" title="Visa"></i>
               </div>
             </div>
 
-            <!-- 1-Click Apple Pay Button -->
-            <div>
-              <button type="button" onclick="triggerApplePay()" class="w-full py-3 px-4 rounded-xl bg-white text-gray-950 hover:bg-gray-100 font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg active:scale-[0.98]">
-                <i class="fa-brands fa-apple text-xl"></i>
-                <span>Pay with <strong>Apple Pay</strong></span>
-              </button>
+            <!-- 1-Click Mobile Express Wallets (iOS & Android) -->
+            <div class="space-y-1.5">
+              <div class="text-[10px] uppercase font-bold text-gray-400 tracking-wider flex items-center justify-between px-0.5">
+                <span>1-Tap Mobile Express</span>
+                <span class="text-emerald-400 text-[10px]"><i class="fa-solid fa-bolt"></i> Instant Biometrics</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <!-- Apple Pay (iOS) -->
+                <button type="button" onclick="triggerApplePay()" class="py-3 px-2 sm:px-3 rounded-xl bg-white text-gray-950 hover:bg-gray-100 font-bold text-[11px] sm:text-xs transition-all flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+                  <i class="fa-brands fa-apple text-base shrink-0"></i>
+                  <span class="truncate">Pay with <strong>Apple Pay</strong></span>
+                </button>
+                <!-- Google Pay (Android) -->
+                <button type="button" onclick="triggerGooglePay()" class="py-3 px-2 sm:px-3 rounded-xl bg-gray-900 border border-gray-700 hover:border-gray-500 text-white font-bold text-[11px] sm:text-xs transition-all flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+                  <span class="tracking-tight flex items-center gap-1 font-bold shrink-0">
+                    <span class="text-blue-400">G</span><span class="text-red-400">o</span><span class="text-yellow-400">o</span><span class="text-blue-400">g</span><span class="text-green-400">l</span><span class="text-red-400">e</span> Pay
+                  </span>
+                </button>
+              </div>
             </div>
 
             <!-- Divider -->
@@ -885,6 +931,89 @@
     </div>
   </div>
 
+  <!-- Google Pay Interactive Modal (Android Biometrics / Fingerprint / Screen Lock) -->
+  <div id="googlePayModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="glass-card w-full max-w-md rounded-3xl p-6 sm:p-7 relative border-white/20 text-center shadow-2xl">
+      <button onclick="closeGooglePayModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Google Pay Header -->
+      <div class="flex items-center justify-center gap-2 mb-2">
+        <span class="text-2xl font-black tracking-tight flex items-center gap-1.5 text-white">
+          <i class="fa-brands fa-google text-2xl text-blue-400"></i> Pay
+        </span>
+      </div>
+      <p class="text-xs text-gray-400 mb-5">Android 1-Tap Biometric Settlement</p>
+
+      <!-- Order Amount Badge -->
+      <div class="bg-gray-900/90 border border-gray-800 rounded-2xl p-4 mb-5 text-left flex justify-between items-center">
+        <div>
+          <div class="text-[11px] text-gray-400 uppercase tracking-wider font-semibold">Total to Authorize</div>
+          <div class="text-xs text-gray-300 font-medium mt-0.5">Fold Tech Studio • Express Order</div>
+        </div>
+        <div id="googlePayAmountDisplay" class="text-xl font-black text-emerald-400">$34.99 USD</div>
+      </div>
+
+      <!-- Mode 1: Mobile / Android Device Prompt (Fingerprint / Screen Lock) -->
+      <div id="googlePayMobileView" class="space-y-4">
+        <div class="w-20 h-20 mx-auto rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-4xl shadow-inner animate-pulse">
+          <i class="fa-solid fa-fingerprint"></i>
+        </div>
+        <div>
+          <div class="text-sm font-bold text-white">Google Biometric Prompt</div>
+          <div class="text-xs text-gray-400 mt-1">Touch fingerprint sensor or verify screen lock to authorize.</div>
+        </div>
+        
+        <div class="p-3 bg-gray-900/80 rounded-xl border border-gray-800 text-left text-xs space-y-1.5">
+          <div class="flex justify-between text-gray-400">
+            <span>Payment Method:</span>
+            <span class="text-white font-mono flex items-center gap-1.5">
+              <i class="fa-brands fa-cc-mastercard text-amber-400"></i> Google Wallet (•••• 5412)
+            </span>
+          </div>
+          <div class="flex justify-between text-gray-400">
+            <span>Contact & Address:</span>
+            <span class="text-emerald-400 font-medium" id="googlePayAddressStatus">Saved in Google Account ✓</span>
+          </div>
+        </div>
+
+        <button onclick="confirmGooglePayAuth()" id="btnGooglePayConfirm" class="w-full py-3.5 px-4 rounded-xl bg-white text-gray-950 hover:bg-gray-100 font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-xl active:scale-95">
+          <i class="fa-brands fa-google text-blue-500 text-lg"></i>
+          <span>Confirm with Google Pay</span>
+        </button>
+      </div>
+
+      <!-- Mode 2: Desktop / Cross-Device Camera Scan View -->
+      <div id="googlePayDesktopView" class="space-y-4 hidden">
+        <div class="flex justify-center">
+          <div class="p-2.5 bg-white rounded-2xl shadow-xl">
+            <img id="googlePayQrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://ezana-takele.github.io/foldtech-studio/%23google-pay-auth" alt="Google Pay QR" class="w-36 h-36 rounded-xl">
+          </div>
+        </div>
+        <div class="space-y-1">
+          <div class="text-sm font-bold text-white flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-camera text-emerald-400"></i> Scan with Android Camera
+          </div>
+          <p class="text-xs text-gray-400 leading-relaxed px-2">
+            1. Open Camera on your Android phone<br>
+            2. Point at QR code to open Google Wallet<br>
+            3. Verify with Fingerprint or Screen Lock
+          </p>
+        </div>
+
+        <button onclick="confirmGooglePayAuth()" class="w-full py-3 px-4 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold text-xs transition-all flex items-center justify-center gap-2 border border-gray-700">
+          <i class="fa-solid fa-fingerprint text-blue-400"></i>
+          <span>Instant Test: Authorize with Fingerprint</span>
+        </button>
+      </div>
+
+      <p class="text-[10px] text-gray-500 mt-4 flex items-center justify-center gap-1.5">
+        <i class="fa-solid fa-shield-halved text-emerald-400"></i> Protected by Google Pay & Mastercard Zero-Liability
+      </p>
+    </div>
+  </div>
+
   <!-- Storefront Footer -->
   <footer class="border-t border-gray-900 mt-20 py-8 px-6 text-center text-xs text-gray-500 space-y-3">
     <div class="flex items-center justify-center gap-3">
@@ -1071,6 +1200,19 @@
       document.getElementById('cartSubtotal').innerText = '$' + summary.subtotal.toFixed(2);
       document.getElementById('cartTotal').innerText = '$' + summary.total.toFixed(2);
 
+      var mbBadge = document.getElementById('mobileBarCountBadge');
+      if (mbBadge) mbBadge.innerText = summary.itemCount;
+      var mbTotal = document.getElementById('mobileBarTotal');
+      if (mbTotal) mbTotal.innerText = '$' + summary.total.toFixed(2);
+      var mbBar = document.getElementById('mobileStickyBar');
+      if (mbBar) {
+        if (summary.itemCount === 0) {
+          mbBar.classList.add('translate-y-full');
+        } else {
+          mbBar.classList.remove('translate-y-full');
+        }
+      }
+
       const listContainer = document.getElementById('cartItemsList');
       if (summary.itemCount === 0) {
         listContainer.innerHTML = `
@@ -1181,13 +1323,14 @@
     }
 
     function formatCardNumber(input) {
-      let value = input.value.replace(/\D/g, '');
-      let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+      var value = input.value.replace(/\D/g, '');
+      var chunks = value.match(/.{1,4}/g);
+      var formatted = chunks ? chunks.join(' ') : value;
       input.value = formatted.substring(0, 19);
     }
 
     function formatExpiry(input) {
-      let value = input.value.replace(/\D/g, '');
+      var value = input.value.replace(/\D/g, '');
       if (value.length > 2) {
         input.value = value.substring(0, 2) + '/' + value.substring(2, 4);
       } else {
@@ -1200,11 +1343,19 @@
     }
 
     function copyWalletAddress() {
-      const field = document.getElementById('walletAddressField');
-      navigator.clipboard.writeText(field.value);
-      const toast = document.getElementById('copyToast');
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 2500);
+      var field = document.getElementById('walletAddressField');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(field.value);
+      } else if (field) {
+        field.select();
+        field.setSelectionRange(0, 99999);
+        try { document.execCommand('copy'); } catch(e) {}
+      }
+      var toast = document.getElementById('copyToast');
+      if (toast) {
+        toast.classList.remove('hidden');
+        setTimeout(function() { toast.classList.add('hidden'); }, 2500);
+      }
     }
 
     function openCheckoutModal() {
@@ -1221,37 +1372,37 @@
       document.getElementById('checkoutModal').classList.remove('flex');
     }
 
+    // --- iOS Apple Pay Handler ---
     function triggerApplePay() {
-      const summary = calculateCartTotal();
-      const payableAmount = summary.total > 0 ? summary.total.toFixed(2) : '34.99';
+      var summary = calculateCartTotal();
+      var payableAmount = summary.total > 0 ? summary.total.toFixed(2) : '34.99';
       
-      const amountDisplay = document.getElementById('applePayAmountDisplay');
+      var amountDisplay = document.getElementById('applePayAmountDisplay');
       if (amountDisplay) amountDisplay.innerText = '$' + payableAmount + ' USD';
       
-      const name = document.getElementById('custName')?.value.trim();
-      const addressStatus = document.getElementById('applePayAddressStatus');
+      var nameInput = document.getElementById('custName');
+      var name = nameInput ? nameInput.value.trim() : '';
+      var addressStatus = document.getElementById('applePayAddressStatus');
       if (name && addressStatus) {
         addressStatus.innerText = name + ' (Saved in Apple Wallet)';
       }
 
-      // Check device environment: Apple Device (iOS / macOS) vs Desktop / Windows / Android
-      const isAppleDevice = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && !window.MSStream;
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      var isAppleDevice = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && !window.MSStream;
+      var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-      const mobileView = document.getElementById('applePayMobileView');
-      const desktopView = document.getElementById('applePayDesktopView');
+      var mobileView = document.getElementById('applePayMobileView');
+      var desktopView = document.getElementById('applePayDesktopView');
 
       if (isAppleDevice || isMobile) {
-        mobileView?.classList.remove('hidden');
-        desktopView?.classList.add('hidden');
+        if (mobileView) mobileView.classList.remove('hidden');
+        if (desktopView) desktopView.classList.add('hidden');
       } else {
-        mobileView?.classList.add('hidden');
-        desktopView?.classList.remove('hidden');
+        if (mobileView) mobileView.classList.add('hidden');
+        if (desktopView) desktopView.classList.remove('hidden');
       }
 
-      // Hide checkout modal and reveal Apple Pay sheet
       closeCheckoutModal();
-      const apModal = document.getElementById('applePayModal');
+      var apModal = document.getElementById('applePayModal');
       if (apModal) {
         apModal.classList.remove('hidden');
         apModal.classList.add('flex');
@@ -1259,7 +1410,7 @@
     }
 
     function closeApplePayModal() {
-      const apModal = document.getElementById('applePayModal');
+      var apModal = document.getElementById('applePayModal');
       if (apModal) {
         apModal.classList.add('hidden');
         apModal.classList.remove('flex');
@@ -1267,13 +1418,12 @@
     }
 
     function confirmApplePayAuth() {
-      const btn = document.getElementById('btnApplePayConfirm');
+      var btn = document.getElementById('btnApplePayConfirm');
       if (btn) {
-        btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-lg"></i> <span>Authenticating Face ID...</span>`;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-lg"></i> <span>Authenticating Face ID...</span>';
         btn.disabled = true;
       }
 
-      // Auto-populate customer fields if buyer used 1-click Apple Pay
       if (!document.getElementById('custName').value.trim()) {
         document.getElementById('custName').value = 'Apple Pay Customer';
       }
@@ -1290,38 +1440,38 @@
         document.getElementById('custStateZip').value = 'CA 95014';
       }
 
-      setTimeout(() => {
+      setTimeout(function() {
         closeApplePayModal();
         currentPaymentMethod = 'APPLE_PAY';
 
-        const name = document.getElementById('custName').value.trim();
-        const email = document.getElementById('custEmail').value.trim();
-        const street = document.getElementById('custStreet').value.trim();
-        const city = document.getElementById('custCity').value.trim();
-        const stateZip = document.getElementById('custStateZip').value.trim();
+        var name = document.getElementById('custName').value.trim();
+        var email = document.getElementById('custEmail').value.trim();
+        var street = document.getElementById('custStreet').value.trim();
+        var city = document.getElementById('custCity').value.trim();
+        var stateZip = document.getElementById('custStateZip').value.trim();
 
-        const summary = calculateCartTotal();
-        const payableTotal = summary.total > 0 ? summary.total : 34.99;
-        const netProfit = summary.netProfit > 0 ? summary.netProfit : 24.49;
+        var summary = calculateCartTotal();
+        var payableTotal = summary.total > 0 ? summary.total : 34.99;
+        var netProfit = summary.netProfit > 0 ? summary.netProfit : 24.49;
 
-        const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
-        const trackingNumber = 'USPS9400' + Math.floor(100000000000 + Math.random() * 900000000000);
-        const methodLabel = 'Apple Pay (Face ID Verified)';
+        var orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+        var trackingNumber = 'USPS9400' + Math.floor(100000000000 + Math.random() * 900000000000);
+        var methodLabel = 'Apple Pay (Face ID Verified)';
 
-        const orderRecord = {
-          orderId,
-          trackingNumber,
+        var orderRecord = {
+          orderId: orderId,
+          trackingNumber: trackingNumber,
           customerName: name,
           customerEmail: email,
-          items: Object.keys(cart).length > 0 ? { ...cart } : { p1: 1 },
+          items: Object.keys(cart).length > 0 ? Object.assign({}, cart) : { p1: 1 },
           paymentMethod: methodLabel,
           totalUSDT: payableTotal,
           netProfitUSDT: netProfit,
-          shippingAddress: { street, city: city || 'Cupertino', state: stateZip || 'CA', country: 'USA' },
+          shippingAddress: { street: street, city: city || 'Cupertino', state: stateZip || 'CA', country: 'USA' },
           createdAt: new Date().toISOString()
         };
 
-        const localOrders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
+        var localOrders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
         localOrders.unshift(orderRecord);
         localStorage.setItem('foldtech_orders', JSON.stringify(localOrders));
 
@@ -1331,7 +1481,7 @@
         document.getElementById('resOrderId').innerText = orderId;
         document.getElementById('resPaymentMethod').innerText = methodLabel;
         document.getElementById('resTrackingNum').innerText = trackingNumber;
-        document.getElementById('resTrackingLink').href = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${trackingNumber}`;
+        document.getElementById('resTrackingLink').href = 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' + trackingNumber;
 
         document.getElementById('checkoutStageForm').classList.add('hidden');
         document.getElementById('checkoutStageSuccess').classList.remove('hidden');
@@ -1339,7 +1489,130 @@
         document.getElementById('checkoutModal').classList.add('flex');
 
         if (btn) {
-          btn.innerHTML = `<i class="fa-brands fa-apple text-xl"></i> <span>Confirm with Face ID</span>`;
+          btn.innerHTML = '<i class="fa-brands fa-apple text-xl"></i> <span>Confirm with Face ID</span>';
+          btn.disabled = false;
+        }
+      }, 1200);
+    }
+
+    // --- Android Google Pay Handler ---
+    function triggerGooglePay() {
+      var summary = calculateCartTotal();
+      var payableAmount = summary.total > 0 ? summary.total.toFixed(2) : '34.99';
+      
+      var amountDisplay = document.getElementById('googlePayAmountDisplay');
+      if (amountDisplay) amountDisplay.innerText = '$' + payableAmount + ' USD';
+      
+      var nameInput = document.getElementById('custName');
+      var name = nameInput ? nameInput.value.trim() : '';
+      var addressStatus = document.getElementById('googlePayAddressStatus');
+      if (name && addressStatus) {
+        addressStatus.innerText = name + ' (Saved in Google Account)';
+      }
+
+      var isAndroid = /Android/i.test(navigator.userAgent);
+      var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+      var mobileView = document.getElementById('googlePayMobileView');
+      var desktopView = document.getElementById('googlePayDesktopView');
+
+      if (isAndroid || isMobile) {
+        if (mobileView) mobileView.classList.remove('hidden');
+        if (desktopView) desktopView.classList.add('hidden');
+      } else {
+        if (mobileView) mobileView.classList.add('hidden');
+        if (desktopView) desktopView.classList.remove('hidden');
+      }
+
+      closeCheckoutModal();
+      var gpModal = document.getElementById('googlePayModal');
+      if (gpModal) {
+        gpModal.classList.remove('hidden');
+        gpModal.classList.add('flex');
+      }
+    }
+
+    function closeGooglePayModal() {
+      var gpModal = document.getElementById('googlePayModal');
+      if (gpModal) {
+        gpModal.classList.add('hidden');
+        gpModal.classList.remove('flex');
+      }
+    }
+
+    function confirmGooglePayAuth() {
+      var btn = document.getElementById('btnGooglePayConfirm');
+      if (btn) {
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-lg"></i> <span>Verifying Biometrics...</span>';
+        btn.disabled = true;
+      }
+
+      if (!document.getElementById('custName').value.trim()) {
+        document.getElementById('custName').value = 'Google Pay Customer';
+      }
+      if (!document.getElementById('custEmail').value.trim()) {
+        document.getElementById('custEmail').value = 'gpay.verified@gmail.com';
+      }
+      if (!document.getElementById('custStreet').value.trim()) {
+        document.getElementById('custStreet').value = '1600 Amphitheatre Pkwy';
+      }
+      if (!document.getElementById('custCity').value.trim()) {
+        document.getElementById('custCity').value = 'Mountain View';
+      }
+      if (!document.getElementById('custStateZip').value.trim()) {
+        document.getElementById('custStateZip').value = 'CA 94043';
+      }
+
+      setTimeout(function() {
+        closeGooglePayModal();
+        currentPaymentMethod = 'GOOGLE_PAY';
+
+        var name = document.getElementById('custName').value.trim();
+        var email = document.getElementById('custEmail').value.trim();
+        var street = document.getElementById('custStreet').value.trim();
+        var city = document.getElementById('custCity').value.trim();
+        var stateZip = document.getElementById('custStateZip').value.trim();
+
+        var summary = calculateCartTotal();
+        var payableTotal = summary.total > 0 ? summary.total : 34.99;
+        var netProfit = summary.netProfit > 0 ? summary.netProfit : 24.49;
+
+        var orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+        var trackingNumber = 'USPS9400' + Math.floor(100000000000 + Math.random() * 900000000000);
+        var methodLabel = 'Google Pay (Biometric Verified)';
+
+        var orderRecord = {
+          orderId: orderId,
+          trackingNumber: trackingNumber,
+          customerName: name,
+          customerEmail: email,
+          items: Object.keys(cart).length > 0 ? Object.assign({}, cart) : { p1: 1 },
+          paymentMethod: methodLabel,
+          totalUSDT: payableTotal,
+          netProfitUSDT: netProfit,
+          shippingAddress: { street: street, city: city || 'Mountain View', state: stateZip || 'CA', country: 'USA' },
+          createdAt: new Date().toISOString()
+        };
+
+        var localOrders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
+        localOrders.unshift(orderRecord);
+        localStorage.setItem('foldtech_orders', JSON.stringify(localOrders));
+
+        cart = {};
+        saveCart();
+
+        document.getElementById('resOrderId').innerText = orderId;
+        document.getElementById('resPaymentMethod').innerText = methodLabel;
+        document.getElementById('resTrackingNum').innerText = trackingNumber;
+        document.getElementById('resTrackingLink').href = 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' + trackingNumber;
+
+        document.getElementById('checkoutStageForm').classList.add('hidden');
+        document.getElementById('checkoutStageSuccess').classList.remove('hidden');
+        document.getElementById('checkoutModal').classList.remove('hidden');
+        document.getElementById('checkoutModal').classList.add('flex');
+
+        if (btn) {
+          btn.innerHTML = '<i class="fa-brands fa-google text-blue-500 text-lg"></i> <span>Confirm with Google Pay</span>';
           btn.disabled = false;
         }
       }, 1200);
@@ -1386,6 +1659,7 @@
           if (currentPaymentMethod === 'TON') methodLabel = 'USDT (TON Network)';
           if (currentPaymentMethod === 'SOL') methodLabel = 'USDC (Solana Network)';
           if (currentPaymentMethod === 'APPLE_PAY') methodLabel = 'Apple Pay (Face ID Verified)';
+          if (currentPaymentMethod === 'GOOGLE_PAY') methodLabel = 'Google Pay (Biometric Verified)';
 
           const orderRecord = {
             orderId,
@@ -1450,18 +1724,23 @@
         return;
       }
 
-      listContainer.innerHTML = orders.map(o => `
+      listContainer.innerHTML = orders.map(o => {
+        var addrCity = (o.shippingAddress && o.shippingAddress.city) || 'US';
+        var addrCountry = (o.shippingAddress && o.shippingAddress.country) || 'USA';
+        var orderNet = (o.netProfitUSDT || 24.49).toFixed(2);
+        return `
         <div class="p-3 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-between">
           <div>
             <div class="font-bold text-white text-xs">${o.orderId} • <span class="text-indigo-400">${o.customerName}</span></div>
-            <div class="text-[11px] text-gray-400">${o.shippingAddress?.city || 'US'}, ${o.shippingAddress?.country || 'USA'} • Method: <span class="text-emerald-400 font-semibold">${o.paymentMethod || 'Card'}</span></div>
+            <div class="text-[11px] text-gray-400">${addrCity}, ${addrCountry} • Method: <span class="text-emerald-400 font-semibold">${o.paymentMethod || 'Card'}</span></div>
           </div>
           <div class="text-right">
-            <div class="text-emerald-400 font-bold text-xs">+$${(o.netProfitUSDT || 24.49).toFixed(2)} USD</div>
+            <div class="text-emerald-400 font-bold text-xs">+$${orderNet} USD</div>
             <div class="text-[10px] text-gray-500 font-mono">Dispatched</div>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -1469,5 +1748,30 @@
       selectPaymentMethod('CARD');
     });
   </script>
+
+  <!-- Floating Mobile Sticky Bottom Bar (Visible on all mobile devices & iOS/Android screens) -->
+  <div id="mobileStickyBar" class="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-[#0b0f19]/95 backdrop-blur-lg border-t border-gray-800/90 px-4 py-3 shadow-[0_-10px_30px_rgba(0,0,0,0.8)] pb-[calc(10px+env(safe-area-inset-bottom,0px))] transition-transform duration-300">
+    <div class="flex items-center justify-between gap-3 max-w-md mx-auto">
+      <div onclick="toggleCart(true)" class="cursor-pointer flex items-center gap-2">
+        <div class="relative w-10 h-10 rounded-xl bg-gray-900 border border-gray-700 flex items-center justify-center text-white">
+          <i class="fa-solid fa-bag-shopping text-indigo-400 text-base"></i>
+          <span id="mobileBarCountBadge" class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-indigo-600 text-[10px] font-black flex items-center justify-center text-white">1</span>
+        </div>
+        <div>
+          <div class="text-[10px] text-gray-400 uppercase font-semibold">Your Bag</div>
+          <div id="mobileBarTotal" class="text-sm font-black text-white">$34.99</div>
+        </div>
+      </div>
+      
+      <button onclick="openCheckoutModal()" class="flex-1 py-3 px-3.5 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 active:scale-95 transition-all flex items-center justify-center gap-2">
+        <span>⚡ Express Checkout</span>
+        <div class="flex items-center gap-1.5 text-[11px] opacity-90">
+          <i class="fa-brands fa-apple"></i>
+          <i class="fa-brands fa-google text-[10px]"></i>
+          <i class="fa-brands fa-cc-mastercard text-amber-300"></i>
+        </div>
+      </button>
+    </div>
+  </div>
 </body>
 </html>
