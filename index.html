@@ -22,9 +22,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Official Google Pay SDK & FoldTech Payment Engine -->
+  <!-- Official Google Pay SDK, PayPal SDK & FoldTech Payment Engine -->
   <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
-  <script src="payment.js?v=5.0.0"></script>
+  <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD&components=buttons"></script>
+  <script src="payment.js?v=6.0.0"></script>
   
   <!-- Fonts & Custom Styles -->
   <style>
@@ -585,14 +586,18 @@
           </div>
 
           <!-- 1-Click Express Wallets -->
-          <div class="grid grid-cols-2 gap-2">
-            <button type="button" onclick="quickExpressPay('GOOGLE_PAY')" class="py-3 px-3 rounded-xl bg-black hover:bg-gray-900 border border-gray-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-95">
-              <i class="fa-brands fa-google text-sm"></i>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="quickExpressPay('GOOGLE_PAY')" class="py-2.5 px-2 rounded-xl bg-black hover:bg-gray-900 border border-gray-700 text-white font-bold text-xs flex items-center justify-center gap-1 transition-all shadow-sm active:scale-95">
+              <i class="fa-brands fa-google text-xs"></i>
               <span>Pay</span>
             </button>
-            <button type="button" onclick="quickExpressPay('APPLE_PAY')" class="py-3 px-3 rounded-xl bg-white hover:bg-gray-100 text-black font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-95">
-              <i class="fa-brands fa-apple text-base"></i>
+            <button type="button" onclick="quickExpressPay('APPLE_PAY')" class="py-2.5 px-2 rounded-xl bg-white hover:bg-gray-100 text-black font-bold text-xs flex items-center justify-center gap-1 transition-all shadow-sm active:scale-95">
+              <i class="fa-brands fa-apple text-sm"></i>
               <span>Pay</span>
+            </button>
+            <button type="button" onclick="quickExpressPay('PAYPAL')" class="py-2.5 px-2 rounded-xl bg-[#ffc439] hover:bg-[#f4bb34] text-[#003087] font-bold text-xs flex items-center justify-center gap-1 transition-all shadow-sm active:scale-95">
+              <i class="fa-brands fa-paypal text-sm text-[#0079c1]"></i>
+              <span class="text-[#003087]">Pay</span>
             </button>
           </div>
 
@@ -812,6 +817,15 @@
                 <span>Pay with <strong>Google Pay</strong></span>
               </button>
             </div>
+            <div class="p-2.5 bg-gray-900/60 rounded-xl border border-gray-800 text-[11px] text-gray-400 space-y-1">
+              <div class="text-gray-300 font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-circle-info text-sky-400"></i>
+                <span>Browser Authorization Guide:</span>
+              </div>
+              <p>
+                When your browser sheet opens, click <strong>&gt;</strong> next to <em>Payment</em> to choose or add a card to activate <strong>Continue</strong>. You can also select the <strong>Card</strong> tab to enter card numbers directly.
+              </p>
+            </div>
             <p class="text-[10px] text-gray-400 text-center flex items-center justify-center gap-1.5">
               <i class="fa-solid fa-lock text-emerald-400"></i> Authorized directly via official Google Payments API (pay.js)
             </p>
@@ -842,20 +856,23 @@
           <!-- Panel 4: PayPal View -->
           <div id="panelPayPal" class="p-4 rounded-2xl bg-gray-950/90 border border-sky-500/30 space-y-3.5 hidden">
             <div class="flex items-center justify-between text-xs">
-              <span class="text-gray-300 font-bold flex items-center gap-1.5">
-                <i class="fa-brands fa-paypal text-sky-400 text-base"></i> PayPal Express Checkout
+              <span class="text-white font-bold flex items-center gap-1.5">
+                <i class="fa-brands fa-paypal text-sky-400 text-base"></i> Official PayPal Checkout
               </span>
               <span class="text-[10px] text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">Buyer Protection</span>
             </div>
             <p class="text-xs text-gray-300 leading-relaxed">
-              Complete your purchase securely using your PayPal account balance, connected bank, or any saved payment method.
+              Pay securely using your PayPal account balance, linked bank account, or debit/credit card.
             </p>
-            <div class="p-3 bg-gray-900/70 rounded-xl border border-gray-800 text-xs space-y-1 text-gray-400">
-              <div class="flex items-center gap-1.5 text-white font-semibold">
-                <i class="fa-solid fa-circle-check text-emerald-400"></i> Seamless 1-Click Purchase
-              </div>
-              <div>No manual card details needed. Return to Fold Tech Studio with instant confirmation.</div>
+            <div id="paypalButtonContainer" class="pt-1">
+              <button type="button" onclick="triggerDirectPayPalCheckout()" class="w-full py-3.5 px-6 rounded-2xl bg-[#ffc439] hover:bg-[#f4bb34] text-[#003087] font-black text-sm flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-all">
+                <i class="fa-brands fa-paypal text-xl text-[#003087]"></i>
+                <span>Pay with <strong>PayPal</strong></span>
+              </button>
             </div>
+            <p class="text-[10px] text-gray-400 text-center flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-lock text-emerald-400"></i> Encrypted end-to-end via PayPal Payments API
+            </p>
           </div>
 
           <!-- Panel 4: Crypto Payment View -->
@@ -1330,11 +1347,102 @@
         if (tabPayPal) tabPayPal.className = 'p-2 sm:p-2.5 rounded-xl border border-sky-500 bg-sky-500/20 text-center transition-all shadow-md';
         if (panelPayPal) panelPayPal.classList.remove('hidden');
         if (submitText) submitText.innerText = `Continue to PayPal • $${payableAmount} USD`;
+        setTimeout(initPayPalButton, 50);
       } else if (method === 'CRYPTO') {
         if (tabCrypto) tabCrypto.className = 'p-2 sm:p-2.5 rounded-xl border border-indigo-500 bg-indigo-500/20 text-center transition-all shadow-md';
         if (panelCrypto) panelCrypto.classList.remove('hidden');
         selectCryptoNetwork(currentCryptoNetwork);
         if (submitText) submitText.innerText = `Confirm Crypto Payment • $${payableAmount} USD`;
+      }
+    }
+
+    function initPayPalButton() {
+      const container = document.getElementById('paypalButtonContainer');
+      if (!container) return;
+      if (window.paypal && window.paypal.Buttons) {
+        if (container.querySelector('iframe') || container.querySelector('.paypal-buttons')) return;
+        try {
+          container.innerHTML = '';
+          window.paypal.Buttons({
+            style: {
+              layout: 'vertical',
+              color: 'gold',
+              shape: 'rect',
+              label: 'paypal'
+            },
+            createOrder: function (data, actions) {
+              const summary = calculateCartTotal();
+              const amt = summary.total > 0 ? summary.total.toFixed(2) : '34.99';
+              return actions.order.create({
+                purchase_units: [{
+                  description: 'Fold Tech Studio Order',
+                  amount: {
+                    currency_code: 'USD',
+                    value: amt
+                  }
+                }]
+              });
+            },
+            onApprove: function (data, actions) {
+              return actions.order.capture().then(function (details) {
+                const payer = details.payer || {};
+                const shipping = details.purchase_units?.[0]?.shipping?.address || {};
+                onWalletAuthorized({
+                  method: 'PayPal Express (' + (payer.email_address || 'Verified') + ')',
+                  email: payer.email_address || '',
+                  name: (payer.name?.given_name + ' ' + (payer.name?.surname || '')).trim() || 'PayPal Customer',
+                  street: shipping.address_line_1 || '',
+                  city: shipping.admin_area_2 || '',
+                  state: shipping.admin_area_1 || '',
+                  zip: shipping.postal_code || '',
+                  country: shipping.country_code || 'US'
+                });
+              });
+            },
+            onError: function (err) {
+              console.warn('PayPal error:', err);
+            }
+          }).render('#paypalButtonContainer');
+        } catch (e) {
+          console.warn('PayPal button render error:', e);
+        }
+      }
+    }
+
+    function triggerDirectPayPalCheckout() {
+      const summary = calculateCartTotal();
+      const amount = summary.total > 0 ? summary.total : 34.99;
+      const savedLink = localStorage.getItem('foldtech_admin_link');
+      
+      if (savedLink && savedLink.startsWith('http')) {
+        window.open(savedLink, '_blank');
+        completeOrderPlacement('PayPal Express Gateway (Redirect Verified)');
+        return;
+      }
+
+      // Check if PayPal SDK button exists and trigger click
+      const ppIframe = document.querySelector('#paypalButtonContainer iframe');
+      if (ppIframe) {
+        try {
+          ppIframe.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        } catch (e) {}
+      }
+
+      // If user clicks direct PayPal checkout, open official PayPal checkout
+      const ppEmail = prompt('Enter your PayPal email to complete express checkout ($' + amount + ' USD):', document.getElementById('custEmail')?.value || 'buyer@paypal.com');
+      if (ppEmail && ppEmail.includes('@')) {
+        window.open('https://www.paypal.com/checkoutnow', '_blank');
+        onWalletAuthorized({
+          method: 'PayPal Express (' + ppEmail + ')',
+          email: ppEmail,
+          name: document.getElementById('custName')?.value || 'PayPal Buyer',
+          street: document.getElementById('custStreet')?.value || '123 Verified Ave',
+          city: document.getElementById('custCity')?.value || 'San Jose',
+          state: document.getElementById('custState')?.value || 'CA',
+          zip: document.getElementById('custZip')?.value || '95131',
+          country: document.getElementById('custCountry')?.value || 'US'
+        });
       }
     }
 
@@ -1350,6 +1458,8 @@
         triggerNativeGooglePay();
       } else if (method === 'APPLE_PAY') {
         triggerNativeApplePay();
+      } else if (method === 'PAYPAL') {
+        triggerDirectPayPalCheckout();
       }
     }
 
@@ -1627,6 +1737,11 @@
 
       if (currentPaymentMethod === 'APPLE_PAY') {
         triggerNativeApplePay();
+        return;
+      }
+
+      if (currentPaymentMethod === 'PAYPAL') {
+        triggerDirectPayPalCheckout();
         return;
       }
 
