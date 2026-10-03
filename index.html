@@ -590,160 +590,234 @@
     </div>
   </div>
 
-  <!-- Dynamic Multi-Payment Checkout Modal (Cards & Crypto) -->
-  <div id="checkoutModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
-    <div class="glass-card w-full max-w-lg rounded-3xl p-6 sm:p-8 max-h-[92vh] overflow-y-auto relative border-indigo-500/30">
+  <!-- Dynamic Multi-Payment Checkout Modal (Cards, PayPal, Apple Pay, Crypto) -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4">
+    <div class="glass-card w-full max-w-xl rounded-3xl p-5 sm:p-8 max-h-[92vh] overflow-y-auto relative border-indigo-500/30 shadow-2xl">
       
-      <button onclick="closeCheckoutModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg">
+      <button onclick="closeCheckoutModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg p-1 transition-colors" title="Close">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
       <!-- Stage 1: Order Form -->
       <div id="checkoutStageForm" class="space-y-6">
         <div>
-          <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">Direct Express Checkout</span>
-          <h3 class="text-2xl font-bold text-white mt-1">Shipping & Payment</h3>
-          <div class="text-xs text-gray-300 mt-1 flex items-center justify-between">
-            <span>Order Total:</span>
-            <span class="font-extrabold text-sm text-emerald-400" id="checkoutOrderTotalDisplay">$34.99 USD</span>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">Fold Tech Studio™ Express Checkout</span>
+          </div>
+          <h3 class="text-2xl font-extrabold text-white mt-1">Review & Place Your Order</h3>
+          <div class="text-xs text-gray-300 mt-1 flex items-center justify-between bg-gray-900/60 px-3 py-2 rounded-xl border border-gray-800">
+            <span>Order Total (<span id="checkoutItemCount">1 item</span>):</span>
+            <span class="font-black text-sm text-emerald-400" id="checkoutOrderTotalDisplay">$34.99 USD</span>
           </div>
         </div>
 
-        <!-- Shipping Fields -->
+        <!-- Section 1: Shipping Address (Amazon/Shopify Format) -->
         <div class="space-y-3">
-          <div>
-            <label class="block text-xs font-semibold text-gray-300 mb-1">Full Name</label>
-            <input type="text" id="custName" oninput="syncCardholder(this.value)" placeholder="e.g. John Miller" class="w-full px-4 py-2.5 rounded-xl bg-gray-900/90 border border-gray-700 text-sm text-white focus:outline-none focus:border-indigo-500">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-truck-fast text-indigo-400"></i> 1. Shipping Address
+            </h4>
+            <span class="text-[10px] text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Free Tracked Delivery</span>
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-gray-300 mb-1">Email Address (For Tracking Updates)</label>
-            <input type="email" id="custEmail" placeholder="e.g. john.miller@gmail.com" class="w-full px-4 py-2.5 rounded-xl bg-gray-900/90 border border-gray-700 text-sm text-white focus:outline-none focus:border-indigo-500">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-gray-300 mb-1">Street Address</label>
-            <input type="text" id="custStreet" placeholder="e.g. 742 Evergreen Terrace" class="w-full px-4 py-2.5 rounded-xl bg-gray-900/90 border border-gray-700 text-sm text-white focus:outline-none focus:border-indigo-500">
-          </div>
-          <div class="grid grid-cols-2 gap-3">
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-gray-300 mb-1">City</label>
-              <input type="text" id="custCity" placeholder="e.g. Austin" class="w-full px-4 py-2.5 rounded-xl bg-gray-900/90 border border-gray-700 text-sm text-white focus:outline-none focus:border-indigo-500">
+              <label class="block text-[11px] font-semibold text-gray-300 mb-1">Full Name <span class="text-rose-400">*</span></label>
+              <input type="text" id="custName" oninput="syncCardholder(this.value)" placeholder="e.g. John Miller" required class="w-full px-3.5 py-2.5 rounded-xl bg-gray-900 border border-gray-700 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-gray-300 mb-1">State / Zip Code</label>
-              <input type="text" id="custStateZip" placeholder="e.g. TX 78704" class="w-full px-4 py-2.5 rounded-xl bg-gray-900/90 border border-gray-700 text-sm text-white focus:outline-none focus:border-indigo-500">
+              <label class="block text-[11px] font-semibold text-gray-300 mb-1">Email (For Order Updates) <span class="text-rose-400">*</span></label>
+              <input type="email" id="custEmail" placeholder="e.g. john.miller@gmail.com" required class="w-full px-3.5 py-2.5 rounded-xl bg-gray-900 border border-gray-700 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors">
             </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Street Address <span class="text-rose-400">*</span></label>
+            <input type="text" id="custStreet" placeholder="e.g. 742 Evergreen Terrace, Apt 4B" required class="w-full px-3.5 py-2.5 rounded-xl bg-gray-900 border border-gray-700 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors">
+          </div>
+
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-gray-300 mb-1">City <span class="text-rose-400">*</span></label>
+              <input type="text" id="custCity" placeholder="Austin" required class="w-full px-3 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-gray-300 mb-1">State / Province <span class="text-rose-400">*</span></label>
+              <input type="text" id="custState" placeholder="TX" required class="w-full px-3 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-gray-300 mb-1">ZIP / Postal <span class="text-rose-400">*</span></label>
+              <input type="text" id="custZip" placeholder="78704" required class="w-full px-3 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Country</label>
+            <select id="custCountry" class="w-full px-3.5 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white focus:outline-none focus:border-indigo-500">
+              <option value="United States" selected>United States</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Canada">Canada</option>
+              <option value="Australia">Australia</option>
+              <option value="Germany">Germany</option>
+              <option value="France">France</option>
+              <option value="Ethiopia">Ethiopia</option>
+              <option value="United Arab Emirates">United Arab Emirates</option>
+              <option value="Worldwide">Other (Worldwide Express)</option>
+            </select>
           </div>
         </div>
 
-        <!-- Payment Method Tabs (Card + Crypto) -->
+        <!-- Section 2: Payment Method (Tabs) -->
         <div class="space-y-3 pt-3 border-t border-gray-800">
-          <label class="block text-xs font-bold uppercase tracking-wider text-gray-300">Choose Payment Method</label>
-          <div class="grid grid-cols-3 gap-2">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-shield-halved text-emerald-400"></i> 2. Payment Method
+            </h4>
+            <span class="text-[10px] text-gray-400 flex items-center gap-1">
+              <i class="fa-solid fa-lock text-emerald-400"></i> 256-Bit SSL
+            </span>
+          </div>
+
+          <!-- Payment Selector Tabs -->
+          <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
             
             <!-- Tab 1: Credit / Debit Card -->
-            <button type="button" id="btnCard" onclick="selectPaymentMethod('CARD')" class="p-2.5 rounded-xl border border-emerald-500 bg-emerald-500/20 text-center transition-all">
-              <div class="flex items-center justify-center gap-1.5 text-xs font-bold text-white">
-                <i class="fa-solid fa-credit-card text-emerald-400"></i> Card
-              </div>
-              <div class="text-[10px] text-gray-400 mt-1 flex justify-center gap-1">
-                <i class="fa-brands fa-cc-mastercard text-amber-400"></i>
-                <i class="fa-brands fa-cc-visa text-sky-400"></i>
-                <i class="fa-brands fa-apple text-white"></i>
-              </div>
+            <button type="button" id="tabBtnCard" onclick="selectPaymentMethod('CARD')" class="p-2.5 rounded-xl border border-emerald-500 bg-emerald-500/20 text-center transition-all">
+              <i class="fa-solid fa-credit-card text-emerald-400 text-sm mb-1 block"></i>
+              <span class="text-xs font-bold text-white block">Card</span>
+              <span class="text-[9px] text-gray-400 block truncate">Mastercard/Visa</span>
             </button>
 
-            <!-- Tab 2: USDT (TON) -->
-            <button type="button" id="btnTon" onclick="selectPaymentMethod('TON')" class="p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center hover:border-indigo-500 transition-all">
-              <div class="flex items-center justify-center gap-1.5 text-xs font-bold text-white">
-                <i class="fa-brands fa-telegram text-sky-400"></i> USDT
-              </div>
-              <div class="text-[10px] text-gray-400 mt-1">TON Network</div>
+            <!-- Tab 2: PayPal -->
+            <button type="button" id="tabBtnPayPal" onclick="selectPaymentMethod('PAYPAL')" class="p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center hover:border-sky-500 transition-all">
+              <i class="fa-brands fa-paypal text-sky-400 text-sm mb-1 block"></i>
+              <span class="text-xs font-bold text-white block">PayPal</span>
+              <span class="text-[9px] text-gray-400 block truncate">Express</span>
             </button>
 
-            <!-- Tab 3: USDC (Solana) -->
-            <button type="button" id="btnSol" onclick="selectPaymentMethod('SOL')" class="p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center hover:border-purple-500 transition-all">
-              <div class="flex items-center justify-center gap-1.5 text-xs font-bold text-white">
-                <i class="fa-solid fa-bolt text-purple-400"></i> USDC
-              </div>
-              <div class="text-[10px] text-gray-400 mt-1">Solana Network</div>
+            <!-- Tab 3: Apple Pay / Google Pay -->
+            <button type="button" id="tabBtnApplePay" onclick="selectPaymentMethod('APPLE_PAY')" class="p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center hover:border-white transition-all">
+              <i class="fa-brands fa-apple text-white text-sm mb-1 block"></i>
+              <span class="text-xs font-bold text-white block">Apple Pay</span>
+              <span class="text-[9px] text-gray-400 block truncate">1-Click</span>
+            </button>
+
+            <!-- Tab 4: Crypto -->
+            <button type="button" id="tabBtnCrypto" onclick="selectPaymentMethod('CRYPTO')" class="p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center hover:border-indigo-500 transition-all">
+              <i class="fa-brands fa-telegram text-sky-400 text-sm mb-1 block"></i>
+              <span class="text-xs font-bold text-white block">Crypto</span>
+              <span class="text-[9px] text-gray-400 block truncate">USDT / USDC</span>
             </button>
           </div>
 
-          <!-- Section A: Card Payment View -->
-          <div id="paymentViewCard" class="p-4 rounded-2xl bg-gray-950/90 border border-emerald-500/30 space-y-3.5">
+          <!-- Panel 1: Card Payment View -->
+          <div id="panelCard" class="p-4 rounded-2xl bg-gray-950/90 border border-emerald-500/30 space-y-3.5">
             <div class="flex items-center justify-between text-xs">
               <span class="text-gray-300 font-bold flex items-center gap-1.5">
-                <i class="fa-solid fa-lock text-emerald-400"></i> Instant Express Settlement
+                <i class="fa-solid fa-lock text-emerald-400"></i> Encrypted Card Processing
               </span>
-              <div class="flex items-center gap-2 text-sm">
-                <i class="fa-brands fa-apple text-white text-base" title="Apple Pay"></i>
-                <i class="fa-brands fa-google text-blue-400 text-sm" title="Google Pay"></i>
-                <i class="fa-brands fa-cc-mastercard text-amber-500 text-base" title="Mastercard"></i>
-                <i class="fa-brands fa-cc-visa text-sky-400 text-base" title="Visa"></i>
+              <div class="flex items-center gap-2 text-base">
+                <i id="cardIconMastercard" class="fa-brands fa-cc-mastercard text-amber-500 transition-transform duration-200" title="Mastercard"></i>
+                <i id="cardIconVisa" class="fa-brands fa-cc-visa text-sky-400 transition-transform duration-200" title="Visa"></i>
+                <i id="cardIconAmex" class="fa-brands fa-cc-amex text-blue-400 transition-transform duration-200" title="American Express"></i>
+                <i id="cardIconDiscover" class="fa-brands fa-cc-discover text-orange-400 transition-transform duration-200" title="Discover"></i>
               </div>
-            </div>
-
-            <!-- 1-Click Mobile Express Wallets (iOS & Android) -->
-            <div class="space-y-1.5">
-              <div class="text-[10px] uppercase font-bold text-gray-400 tracking-wider flex items-center justify-between px-0.5">
-                <span>1-Tap Mobile Express</span>
-                <span class="text-emerald-400 text-[10px]"><i class="fa-solid fa-bolt"></i> Instant Biometrics</span>
-              </div>
-              <div class="grid grid-cols-2 gap-2">
-                <!-- Apple Pay (iOS) -->
-                <button type="button" onclick="triggerApplePay()" class="py-3 px-2 sm:px-3 rounded-xl bg-white text-gray-950 hover:bg-gray-100 font-bold text-[11px] sm:text-xs transition-all flex items-center justify-center gap-1.5 shadow-md active:scale-95">
-                  <i class="fa-brands fa-apple text-base shrink-0"></i>
-                  <span class="truncate">Pay with <strong>Apple Pay</strong></span>
-                </button>
-                <!-- Google Pay (Android) -->
-                <button type="button" onclick="triggerGooglePay()" class="py-3 px-2 sm:px-3 rounded-xl bg-gray-900 border border-gray-700 hover:border-gray-500 text-white font-bold text-[11px] sm:text-xs transition-all flex items-center justify-center gap-1.5 shadow-md active:scale-95">
-                  <span class="tracking-tight flex items-center gap-1 font-bold shrink-0">
-                    <span class="text-blue-400">G</span><span class="text-red-400">o</span><span class="text-yellow-400">o</span><span class="text-blue-400">g</span><span class="text-green-400">l</span><span class="text-red-400">e</span> Pay
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Divider -->
-            <div class="relative flex items-center justify-center">
-              <div class="border-t border-gray-800 w-full"></div>
-              <span class="bg-[#0f1523] px-2 text-[10px] uppercase font-bold text-gray-500 absolute">Or enter card details</span>
             </div>
 
             <!-- Card Number Input -->
             <div>
               <label class="block text-[11px] font-semibold text-gray-400 mb-1">Card Number</label>
               <div class="relative">
-                <input type="text" id="cardNumber" maxlength="19" oninput="formatCardNumber(this)" placeholder="4000 1234 5678 9010" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-900 border border-gray-700 text-sm text-white font-mono focus:outline-none focus:border-emerald-500">
+                <input type="text" id="cardNumber" maxlength="19" oninput="handleCardNumberInput(this)" placeholder="5412 7500 1234 5678" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-900 border border-gray-700 text-sm text-white font-mono focus:outline-none focus:border-emerald-500">
                 <i class="fa-solid fa-credit-card absolute left-3.5 top-3.5 text-gray-500 text-xs"></i>
               </div>
             </div>
 
-            <!-- Card Details Grid -->
-            <div class="grid grid-cols-3 gap-2">
+            <!-- Name on Card -->
+            <div>
+              <label class="block text-[11px] font-semibold text-gray-400 mb-1">Name on Card</label>
+              <input type="text" id="cardName" placeholder="John Miller" class="w-full px-3.5 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <!-- Expiration Date & CVV -->
+            <div class="grid grid-cols-2 gap-3">
               <div>
-                <label class="block text-[11px] font-semibold text-gray-400 mb-1">Expires</label>
-                <input type="text" id="cardExpiry" maxlength="5" placeholder="MM/YY" oninput="formatExpiry(this)" class="w-full px-3 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white font-mono focus:outline-none focus:border-emerald-500">
+                <label class="block text-[11px] font-semibold text-gray-400 mb-1">Expires (MM/YY)</label>
+                <input type="text" id="cardExpiry" maxlength="5" placeholder="MM/YY" oninput="formatExpiry(this)" class="w-full px-3.5 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white font-mono focus:outline-none focus:border-emerald-500">
               </div>
               <div>
-                <label class="block text-[11px] font-semibold text-gray-400 mb-1">CVC</label>
-                <input type="text" id="cardCvc" maxlength="4" placeholder="CVC" class="w-full px-3 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white font-mono focus:outline-none focus:border-emerald-500">
-              </div>
-              <div>
-                <label class="block text-[11px] font-semibold text-gray-400 mb-1">Zip Code</label>
-                <input type="text" id="cardZip" maxlength="5" placeholder="78704" class="w-full px-3 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white font-mono focus:outline-none focus:border-emerald-500">
+                <label class="block text-[11px] font-semibold text-gray-400 mb-1">Security Code (CVV)</label>
+                <div class="relative">
+                  <input type="password" id="cardCvc" maxlength="4" placeholder="CVC" class="w-full px-3.5 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white font-mono focus:outline-none focus:border-emerald-500">
+                  <i class="fa-solid fa-shield absolute right-3 top-2.5 text-gray-500 text-xs" title="3 or 4 digit code on the back of your card"></i>
+                </div>
               </div>
             </div>
 
             <div class="text-[11px] text-gray-400 bg-gray-900/60 p-2.5 rounded-xl border border-gray-800 flex items-center justify-between">
-              <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-check text-emerald-400"></i> Zero crypto setup required for buyer</span>
-              <span class="text-gray-400 font-bold">$<span id="cardPayAmount">34.99</span> USD</span>
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-check text-emerald-400"></i> Bank-grade PCI-DSS Level 1 compliance</span>
+              <span class="text-white font-bold" id="cardChargeDisplay">$34.99 USD</span>
             </div>
           </div>
 
-          <!-- Section B: Crypto Payment View -->
-          <div id="paymentViewCrypto" class="p-4 rounded-2xl bg-gray-950/90 border border-indigo-500/30 space-y-3 text-center hidden">
-            <div class="text-xs text-gray-400">Send exactly <strong class="text-white text-sm" id="payAmountDisplay">34.99</strong> <strong class="text-white text-sm" id="tokenSymbol">USDT</strong> to this address:</div>
+          <!-- Panel 2: PayPal Payment View -->
+          <div id="panelPayPal" class="p-4 rounded-2xl bg-gray-950/90 border border-sky-500/30 space-y-3.5 hidden">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-300 font-bold flex items-center gap-1.5">
+                <i class="fa-brands fa-paypal text-sky-400 text-base"></i> PayPal Express Checkout
+              </span>
+              <span class="text-[10px] text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">Buyer Protection</span>
+            </div>
+            <p class="text-xs text-gray-300 leading-relaxed">
+              Complete your purchase securely using your PayPal account balance, connected bank, or any saved payment method.
+            </p>
+            <div class="p-3 bg-gray-900/70 rounded-xl border border-gray-800 text-xs space-y-1 text-gray-400">
+              <div class="flex items-center gap-1.5 text-white font-semibold">
+                <i class="fa-solid fa-circle-check text-emerald-400"></i> Seamless 1-Click Purchase
+              </div>
+              <div>No manual card details needed. Return to Fold Tech Studio with instant confirmation.</div>
+            </div>
+          </div>
+
+          <!-- Panel 3: Apple Pay Payment View -->
+          <div id="panelApplePay" class="p-4 rounded-2xl bg-gray-950/90 border border-white/20 space-y-3 hidden">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-white font-bold flex items-center gap-1.5">
+                <i class="fa-brands fa-apple text-white text-base"></i> Apple Pay Express
+              </span>
+              <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Zero Setup</span>
+            </div>
+            <div id="applePayDeviceStatus" class="space-y-2">
+              <p class="text-xs text-gray-300 leading-relaxed">
+                Apple Pay uses your device's biometric token to verify purchases without exposing your physical card number.
+              </p>
+              <div class="p-3 bg-gray-900/70 rounded-xl border border-gray-800 text-xs space-y-2 text-gray-400">
+                <div class="text-[11px] text-gray-300">
+                  <span class="text-white font-semibold"><i class="fa-solid fa-info-circle text-indigo-400 mr-1"></i> Device Compatibility:</span>
+                  Supported on iPhone, iPad, and Mac running Safari with an active Apple Wallet card.
+                </div>
+                <div class="text-[11px]">
+                  If ordering from a non-Apple device or Chrome, you can also select <button type="button" onclick="selectPaymentMethod('CARD')" class="text-emerald-400 underline font-semibold">Card</button> or <button type="button" onclick="selectPaymentMethod('PAYPAL')" class="text-sky-400 underline font-semibold">PayPal</button>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 4: Crypto Payment View -->
+          <div id="panelCrypto" class="p-4 rounded-2xl bg-gray-950/90 border border-indigo-500/30 space-y-3.5 text-center hidden">
+            <div class="flex justify-center gap-2 mb-1">
+              <button type="button" id="cryptoSubTon" onclick="selectCryptoNetwork('TON')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white border border-indigo-500 transition-all">
+                <i class="fa-brands fa-telegram mr-1"></i> USDT (TON)
+              </button>
+              <button type="button" id="cryptoSubSol" onclick="selectCryptoNetwork('SOL')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-900 text-gray-400 border border-gray-700 hover:border-purple-500 transition-all">
+                <i class="fa-solid fa-bolt mr-1 text-purple-400"></i> USDC (Solana)
+              </button>
+            </div>
+
+            <div class="text-xs text-gray-400">
+              Send <strong class="text-white text-sm" id="payAmountDisplay">34.99</strong> <strong class="text-white text-sm" id="tokenSymbol">USDT</strong> to the official treasury address:
+            </div>
             
             <!-- QR Code -->
             <div class="flex justify-center">
@@ -753,370 +827,128 @@
             <!-- Address String & Copy Button -->
             <div class="flex items-center gap-2 bg-gray-900 p-2 rounded-xl border border-gray-800">
               <input type="text" id="walletAddressField" readonly class="bg-transparent text-[11px] font-mono text-gray-300 w-full focus:outline-none px-2 select-all">
-              <button onclick="copyWalletAddress()" id="copyBtn" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold whitespace-nowrap transition-colors">
+              <button type="button" onclick="copyWalletAddress()" id="copyBtn" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold whitespace-nowrap transition-colors">
                 <i class="fa-regular fa-copy mr-1"></i> Copy
               </button>
             </div>
             <div id="copyToast" class="text-emerald-400 text-xs font-semibold hidden">
               ✓ Address copied to clipboard!
             </div>
-          </div>
 
-        </div>
-
-        <!-- Submit Button -->
-        <button onclick="submitOrder()" id="confirmOrderBtn" class="w-full py-3.5 px-6 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-500 to-teal-600 text-white hover:opacity-95 shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2">
-          <i class="fa-solid fa-circle-check"></i>
-          <span id="submitBtnText">Pay with Mastercard / Visa & Confirm Order</span>
-        </button>
-      </div>
-
-      <!-- Stage 1.5: Bank Security & Tokenization Pipeline -->
-      <div id="checkoutStageProcessing" class="space-y-6 text-center py-4 hidden">
-        <div class="relative w-20 h-20 mx-auto">
-          <div class="w-20 h-20 rounded-full border-4 border-indigo-500/20 border-t-indigo-500 animate-spin flex items-center justify-center"></div>
-          <div class="absolute inset-0 flex items-center justify-center text-indigo-400 text-2xl">
-            <i class="fa-solid fa-shield-halved animate-pulse"></i>
-          </div>
-        </div>
-
-        <div>
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 inline-flex items-center gap-1.5">
-            <i class="fa-solid fa-lock text-xs"></i> 256-Bit TLS Bank Encryption
-          </span>
-          <h3 class="text-xl font-bold text-white mt-2">Securing Bank Authorization</h3>
-          <p class="text-xs text-gray-400 mt-1" id="processingStatusSubtitle">Initiating end-to-end tokenized cryptographic handshake...</p>
-        </div>
-
-        <!-- Live Security Pipeline Steps -->
-        <div class="p-4 rounded-2xl bg-gray-950/80 border border-gray-800 text-left space-y-3 font-mono text-xs">
-          <div class="flex items-center justify-between text-gray-300" id="stepTokenize">
-            <span class="flex items-center gap-2">
-              <i class="fa-solid fa-circle-notch fa-spin text-indigo-400" id="stepTokenizeIcon"></i>
-              <span>Device & Enclave Tokenization</span>
-            </span>
-            <span class="text-[10px] font-bold text-indigo-400" id="stepTokenizeTag">ENCRYPTING</span>
-          </div>
-
-          <div class="flex items-center justify-between text-gray-500" id="stepFraud">
-            <span class="flex items-center gap-2">
-              <i class="fa-regular fa-circle text-gray-600" id="stepFraudIcon"></i>
-              <span>Radar Fraud & Risk Screening</span>
-            </span>
-            <span class="text-[10px] font-bold text-gray-500" id="stepFraudTag">PENDING</span>
-          </div>
-
-          <div class="flex items-center justify-between text-gray-500" id="step3DS">
-            <span class="flex items-center gap-2">
-              <i class="fa-regular fa-circle text-gray-600" id="step3DSIcon"></i>
-              <span>EMV 3D Secure 2.2 Bank Challenge</span>
-            </span>
-            <span class="text-[10px] font-bold text-gray-500" id="step3DSTag">PENDING</span>
-          </div>
-        </div>
-
-        <div class="p-3 bg-gray-900/60 rounded-xl border border-gray-800/80 text-[11px] text-gray-400 flex items-center justify-between">
-          <span class="flex items-center gap-1.5 font-mono text-gray-400 truncate text-[11px]" id="liveTokenDisplay">
-            <i class="fa-solid fa-fingerprint text-indigo-400"></i> tok_sec_9f82410a7bc3
-          </span>
-          <span class="text-emerald-400 font-bold whitespace-nowrap text-[11px]"><i class="fa-solid fa-circle-check"></i> Zero-Liability</span>
-        </div>
-      </div>
-
-      <!-- Stage 1.7: 3D Secure 2.0 Bank Verification Challenge (Mastercard ID Check / Visa Secure) -->
-      <div id="checkoutStage3DS" class="space-y-5 py-3 hidden">
-        <!-- Bank Header -->
-        <div class="flex items-center justify-between pb-3 border-b border-gray-800">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-              <i class="fa-solid fa-building-columns text-sm"></i>
-            </div>
-            <div>
-              <div class="text-xs font-bold text-white flex items-center gap-1.5">
-                <span>Secure Bank Verification</span>
-                <i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i>
-              </div>
-              <div class="text-[10px] text-gray-400">3D Secure 2.2 • Identity Check</div>
+            <!-- Optional TX Hash / Sender Note -->
+            <div class="text-left">
+              <label class="block text-[11px] font-semibold text-gray-400 mb-1">Transaction Hash / Sender Address (Optional)</label>
+              <input type="text" id="cryptoTxHash" placeholder="Paste TX hash for instant automated reconciliation" class="w-full px-3.5 py-2 rounded-xl bg-gray-900 border border-gray-800 text-xs text-white font-mono focus:outline-none focus:border-indigo-500">
             </div>
           </div>
-          <div class="flex items-center gap-2">
-            <i class="fa-brands fa-cc-mastercard text-amber-500 text-lg"></i>
-            <i class="fa-brands fa-cc-visa text-sky-400 text-lg"></i>
-            <i class="fa-brands fa-apple text-white text-lg"></i>
-          </div>
+
         </div>
 
-        <!-- Transaction Details Card -->
-        <div class="bg-gray-950/90 rounded-2xl p-3.5 border border-gray-800 text-xs space-y-2">
-          <div class="flex justify-between text-gray-400">
-            <span>Merchant:</span>
-            <span class="font-bold text-white">Fold Tech Studio Global Inc.</span>
-          </div>
-          <div class="flex justify-between text-gray-400">
-            <span>Transaction Amount:</span>
-            <span class="font-extrabold text-emerald-400 text-sm" id="challengeAmountDisplay">$34.99 USD</span>
-          </div>
-          <div class="flex justify-between text-gray-400">
-            <span>Payment Method:</span>
-            <span class="font-mono text-white" id="challengeCardDisplay">Apple Pay •••• 4129</span>
-          </div>
+        <!-- Section 3: Amazon / Alibaba "Place Your Order" Button -->
+        <div class="space-y-3 pt-2">
+          <button type="button" onclick="submitOrder()" id="confirmOrderBtn" class="w-full py-4 px-6 rounded-xl font-black text-sm bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-gray-950 shadow-xl shadow-amber-500/20 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-lock text-sm"></i>
+            <span id="submitBtnText">Place Your Order • $34.99 USD</span>
+          </button>
+
+          <p class="text-[10px] text-gray-400 text-center leading-relaxed">
+            By placing your order, you agree to Fold Tech Studio's <a href="#flagship" class="underline hover:text-white">Conditions of Use</a> and <a href="#flagship" class="underline hover:text-white">Privacy Notice</a>.
+            <span class="block text-gray-500 mt-0.5">30-day money-back guarantee • Free express replacement on delivery issues</span>
+          </p>
         </div>
 
-        <!-- OTP Challenge Prompt -->
-        <div class="text-center space-y-2">
-          <div class="text-xs text-gray-300">
-            A 6-digit verification code has been generated for your bank account:
-          </div>
-          <div class="font-mono text-xs text-indigo-400 font-bold bg-gray-900/80 py-1.5 px-3 rounded-lg inline-block border border-gray-800">
-            SMS sent to +1 (•••) •••-8924
-          </div>
-        </div>
-
-        <!-- OTP Code Input -->
-        <div class="space-y-2">
-          <label class="block text-center text-[11px] font-semibold text-gray-400">Enter 6-Digit One-Time Passcode (OTP)</label>
-          <div class="flex justify-center">
-            <input type="text" id="otpCodeInput" maxlength="6" value="849201" class="w-48 text-center tracking-[0.4em] font-mono text-xl py-2.5 px-3 rounded-xl bg-gray-900 border border-indigo-500 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
-          </div>
-          <div class="flex items-center justify-between text-[11px] text-gray-500 px-4">
-            <span id="otpTimerDisplay"><i class="fa-regular fa-clock"></i> Expires in 01:54</span>
-            <button type="button" onclick="resendOtpCode()" class="text-indigo-400 hover:text-indigo-300 underline">Resend Code</button>
-          </div>
-        </div>
-
-        <!-- Authorize Button -->
-        <button type="button" onclick="finalize3DSVerification()" id="btnAuthorize3DS" class="w-full py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-500 to-teal-600 text-white hover:opacity-95 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
-          <i class="fa-solid fa-lock text-xs"></i>
-          <span>Verify & Authorize Payment</span>
-        </button>
-
-        <p class="text-[10px] text-gray-500 text-center flex items-center justify-center gap-1.5">
-          <i class="fa-solid fa-shield-check text-emerald-400"></i> Protected by Mastercard Identity Check & Visa Secure 2.2
-        </p>
       </div>
 
-      <!-- Stage 2: Success Screen (Official Bank Clearance Receipt) -->
-      <div id="checkoutStageSuccess" class="space-y-5 text-center py-4 hidden">
-        <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center text-3xl border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
+      <!-- Stage 2: Post-Purchase Confirmation (Amazon / Alibaba Standard) -->
+      <div id="checkoutStageSuccess" class="space-y-6 text-center py-4 hidden">
+        
+        <!-- Amazon Signature Success Checkmark -->
+        <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center text-3xl border border-emerald-500/30 shadow-lg shadow-emerald-500/20">
           <i class="fa-solid fa-check"></i>
         </div>
+
         <div>
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 inline-flex items-center gap-1">
-            <i class="fa-solid fa-shield-check"></i> 3D Secure 2.2 Authenticated
-          </span>
-          <h3 class="text-2xl font-black text-white mt-2">Payment Cleared & Dispatched!</h3>
-          <p class="text-xs text-gray-400 mt-1">Funds tokenized and captured. Tracked dispatch scheduled via USPS Priority Express.</p>
-        </div>
-
-        <!-- Official Bank Clearance & Audit Receipt -->
-        <div class="p-4 rounded-2xl bg-gray-950/90 border border-gray-800 text-left space-y-2.5 text-xs">
-          <div class="flex justify-between py-1 border-b border-gray-800/80">
-            <span class="text-gray-400">Order Reference:</span>
-            <span id="resOrderId" class="font-mono text-white font-bold">ORD-123456</span>
-          </div>
-          <div class="flex justify-between py-1 border-b border-gray-800/80">
-            <span class="text-gray-400">Payment Gateway:</span>
-            <span id="resPaymentMethod" class="text-emerald-400 font-bold flex items-center gap-1.5">
-              <i class="fa-solid fa-lock text-[10px]"></i> Apple Pay (Face ID Verified)
-            </span>
-          </div>
-          <div class="flex justify-between py-1 border-b border-gray-800/80 font-mono text-[11px]">
-            <span class="text-gray-400 font-sans text-xs">Bank Auth Code:</span>
-            <span id="resAuthCode" class="text-indigo-400 font-bold">AUTH-849201</span>
-          </div>
-          <div class="flex justify-between py-1 border-b border-gray-800/80 font-mono text-[11px]">
-            <span class="text-gray-400 font-sans text-xs">Security Risk Score:</span>
-            <span class="text-emerald-400 font-bold">0.01 (Low Risk / Verified)</span>
-          </div>
-          <div class="flex justify-between py-1 border-b border-gray-800/80">
-            <span class="text-gray-400">Tracking Number:</span>
-            <span id="resTrackingNum" class="font-mono text-indigo-400 font-bold">USPS9400...</span>
-          </div>
-          <div class="flex justify-between py-1 border-b border-gray-800/80">
-            <span class="text-gray-400">Carrier & Service:</span>
-            <span class="text-white">USPS Priority Express (Tracked)</span>
-          </div>
-          <div class="flex justify-between py-1">
-            <span class="text-gray-400">Est. Delivery:</span>
-            <span class="text-emerald-400 font-semibold">3 - 5 Business Days</span>
-          </div>
-        </div>
-
-        <a id="resTrackingLink" href="#" target="_blank" class="block w-full py-3.5 rounded-xl font-bold text-xs bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i>
-          <span>Track Package Live on USPS.com</span>
-        </a>
-
-        <button onclick="closeCheckoutModal()" class="text-xs text-gray-400 hover:text-white transition-colors">
-          Return to Storefront
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Apple Pay Interactive Modal (Biometric / Camera Scan) -->
-  <div id="applePayModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
-    <div class="glass-card w-full max-w-md rounded-3xl p-6 sm:p-7 relative border-white/20 text-center shadow-2xl">
-      <button onclick="closeApplePayModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-      <!-- Apple Pay Header -->
-      <div class="flex items-center justify-center gap-2 mb-2">
-        <i class="fa-brands fa-apple text-3xl text-white"></i>
-        <span class="text-2xl font-bold tracking-tight text-white">Pay</span>
-      </div>
-      <p class="text-xs text-gray-400 mb-5">Seamless 1-Click Biometric Settlement</p>
-
-      <!-- Order Amount Badge -->
-      <div class="bg-gray-900/90 border border-gray-800 rounded-2xl p-4 mb-5 text-left flex justify-between items-center">
-        <div>
-          <div class="text-[11px] text-gray-400 uppercase tracking-wider font-semibold">Total to Authorize</div>
-          <div class="text-xs text-gray-300 font-medium mt-0.5">Fold Tech Studio • Express Order</div>
-        </div>
-        <div id="applePayAmountDisplay" class="text-xl font-black text-emerald-400">$34.99 USD</div>
-      </div>
-
-      <!-- Mode 1: Mobile / Safari Device Prompt (Face ID Simulation) -->
-      <div id="applePayMobileView" class="space-y-4">
-        <div class="w-20 h-20 mx-auto rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white text-4xl shadow-inner animate-pulse">
-          <i class="fa-solid fa-face-smile text-white"></i>
-        </div>
-        <div>
-          <div class="text-sm font-bold text-white">Face ID Authentication</div>
-          <div class="text-xs text-gray-400 mt-1">Double-click side button or confirm below with Face ID to pay securely.</div>
-        </div>
-        
-        <div class="p-3 bg-gray-900/80 rounded-xl border border-gray-800 text-left text-xs space-y-1.5">
-          <div class="flex justify-between text-gray-400">
-            <span>Payment Card:</span>
-            <span class="text-white font-mono flex items-center gap-1.5">
-              <i class="fa-brands fa-cc-mastercard text-amber-400"></i> Apple Card (•••• 8832)
-            </span>
-          </div>
-          <div class="flex justify-between text-gray-400">
-            <span>Contact & Address:</span>
-            <span class="text-emerald-400 font-medium" id="applePayAddressStatus">Saved in Apple Wallet ✓</span>
-          </div>
-        </div>
-
-        <button onclick="confirmApplePayAuth()" id="btnApplePayConfirm" class="w-full py-3.5 px-4 rounded-xl bg-white text-gray-950 hover:bg-gray-100 font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-xl active:scale-95">
-          <i class="fa-brands fa-apple text-xl"></i>
-          <span>Confirm with Face ID</span>
-        </button>
-      </div>
-
-      <!-- Mode 2: Desktop / Cross-Device Camera Scan View -->
-      <div id="applePayDesktopView" class="space-y-4 hidden">
-        <div class="flex justify-center">
-          <div class="p-2.5 bg-white rounded-2xl shadow-xl">
-            <img id="applePayQrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://ezana-takele.github.io/foldtech-studio/%23apple-pay-auth" alt="Apple Pay QR" class="w-36 h-36 rounded-xl">
-          </div>
-        </div>
-        <div class="space-y-1">
-          <div class="text-sm font-bold text-white flex items-center justify-center gap-1.5">
-            <i class="fa-solid fa-camera text-sky-400"></i> Scan with iPhone Camera
-          </div>
-          <p class="text-xs text-gray-400 leading-relaxed px-2">
-            1. Open Camera on your iPhone<br>
-            2. Point at QR code to open Apple Wallet<br>
-            3. Double-click power button & authenticate with Face ID
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Order Placed Successfully</span>
+          <h3 class="text-2xl font-black text-white mt-1">Thank you, your order is placed!</h3>
+          <p class="text-xs text-gray-400 mt-1.5">
+            An order confirmation and receipt have been registered for <strong class="text-white" id="confEmailDisplay">buyer@email.com</strong>.
           </p>
         </div>
 
-        <button onclick="confirmApplePayAuth()" class="w-full py-3 px-4 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold text-xs transition-all flex items-center justify-center gap-2 border border-gray-700">
-          <i class="fa-solid fa-mobile-screen-button text-indigo-400"></i>
-          <span>Instant Test: Authorize with Face ID</span>
-        </button>
-      </div>
-
-      <p class="text-[10px] text-gray-500 mt-4 flex items-center justify-center gap-1.5">
-        <i class="fa-solid fa-lock text-emerald-400"></i> End-to-end tokenized via Apple Secure Enclave
-      </p>
-    </div>
-  </div>
-
-  <!-- Google Pay Interactive Modal (Android Biometrics / Fingerprint / Screen Lock) -->
-  <div id="googlePayModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
-    <div class="glass-card w-full max-w-md rounded-3xl p-6 sm:p-7 relative border-white/20 text-center shadow-2xl">
-      <button onclick="closeGooglePayModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-      <!-- Google Pay Header -->
-      <div class="flex items-center justify-center gap-2 mb-2">
-        <span class="text-2xl font-black tracking-tight flex items-center gap-1.5 text-white">
-          <i class="fa-brands fa-google text-2xl text-blue-400"></i> Pay
-        </span>
-      </div>
-      <p class="text-xs text-gray-400 mb-5">Android 1-Tap Biometric Settlement</p>
-
-      <!-- Order Amount Badge -->
-      <div class="bg-gray-900/90 border border-gray-800 rounded-2xl p-4 mb-5 text-left flex justify-between items-center">
-        <div>
-          <div class="text-[11px] text-gray-400 uppercase tracking-wider font-semibold">Total to Authorize</div>
-          <div class="text-xs text-gray-300 font-medium mt-0.5">Fold Tech Studio • Express Order</div>
+        <!-- Order Information Card (Amazon Style) -->
+        <div class="p-4 rounded-2xl bg-gray-900/90 border border-gray-800 text-left space-y-2.5 text-xs shadow-inner">
+          <div class="flex justify-between items-center py-1 border-b border-gray-800">
+            <span class="text-gray-400 font-medium">Order Number:</span>
+            <span id="confOrderId" class="font-mono text-indigo-400 font-bold text-sm">FTS-2026-000000</span>
+          </div>
+          <div class="flex justify-between items-center py-1 border-b border-gray-800">
+            <span class="text-gray-400 font-medium">Order Date:</span>
+            <span id="confOrderDate" class="text-gray-200 font-medium">Today</span>
+          </div>
+          <div class="flex justify-between items-start py-1 border-b border-gray-800">
+            <span class="text-gray-400 font-medium">Ship To:</span>
+            <div class="text-right">
+              <span id="confCustomerName" class="text-white font-bold block">Customer Name</span>
+              <span id="confFullAddress" class="text-gray-400 text-[11px] block mt-0.5">Address</span>
+            </div>
+          </div>
+          <div class="flex justify-between items-center py-1 border-b border-gray-800">
+            <span class="text-gray-400 font-medium">Payment Method:</span>
+            <span id="confPaymentMethod" class="text-emerald-400 font-bold">Mastercard • Verified</span>
+          </div>
+          <div class="flex justify-between items-center py-1">
+            <span class="text-gray-400 font-medium">Order Total:</span>
+            <span id="confOrderTotal" class="text-white font-black text-sm">$34.99 USD</span>
+          </div>
         </div>
-        <div id="googlePayAmountDisplay" class="text-xl font-black text-emerald-400">$34.99 USD</div>
-      </div>
 
-      <!-- Mode 1: Mobile / Android Device Prompt (Fingerprint / Screen Lock) -->
-      <div id="googlePayMobileView" class="space-y-4">
-        <div class="w-20 h-20 mx-auto rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-4xl shadow-inner animate-pulse">
-          <i class="fa-solid fa-fingerprint"></i>
-        </div>
-        <div>
-          <div class="text-sm font-bold text-white">Google Biometric Prompt</div>
-          <div class="text-xs text-gray-400 mt-1">Touch fingerprint sensor or verify screen lock to authorize.</div>
-        </div>
-        
-        <div class="p-3 bg-gray-900/80 rounded-xl border border-gray-800 text-left text-xs space-y-1.5">
-          <div class="flex justify-between text-gray-400">
-            <span>Payment Method:</span>
-            <span class="text-white font-mono flex items-center gap-1.5">
-              <i class="fa-brands fa-cc-mastercard text-amber-400"></i> Google Wallet (•••• 5412)
+        <!-- Amazon/Alibaba Delivery Progress Tracker -->
+        <div class="p-4 rounded-2xl bg-gray-950/70 border border-gray-800/80 text-left space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white flex items-center gap-1.5">
+              <i class="fa-solid fa-box text-indigo-400"></i> Delivery & Dispatch Status
             </span>
+            <span class="text-[11px] text-emerald-400 font-semibold" id="confEstDelivery">Estimated Delivery: 5 - 8 Days</span>
           </div>
-          <div class="flex justify-between text-gray-400">
-            <span>Contact & Address:</span>
-            <span class="text-emerald-400 font-medium" id="googlePayAddressStatus">Saved in Google Account ✓</span>
+
+          <div class="grid grid-cols-4 gap-1 text-center pt-2">
+            <div class="space-y-1">
+              <div class="w-6 h-6 rounded-full bg-emerald-500 text-gray-950 font-bold text-xs mx-auto flex items-center justify-center">✓</div>
+              <div class="text-[10px] font-bold text-white">Placed</div>
+            </div>
+            <div class="space-y-1">
+              <div class="w-6 h-6 rounded-full bg-indigo-500 text-white font-bold text-xs mx-auto flex items-center justify-center animate-pulse">●</div>
+              <div class="text-[10px] font-bold text-indigo-300">Confirmed</div>
+            </div>
+            <div class="space-y-1">
+              <div class="w-6 h-6 rounded-full bg-gray-800 text-gray-500 font-bold text-xs mx-auto flex items-center justify-center">○</div>
+              <div class="text-[10px] text-gray-500">Packing</div>
+            </div>
+            <div class="space-y-1">
+              <div class="w-6 h-6 rounded-full bg-gray-800 text-gray-500 font-bold text-xs mx-auto flex items-center justify-center">○</div>
+              <div class="text-[10px] text-gray-500">Delivered</div>
+            </div>
           </div>
         </div>
 
-        <button onclick="confirmGooglePayAuth()" id="btnGooglePayConfirm" class="w-full py-3.5 px-4 rounded-xl bg-white text-gray-950 hover:bg-gray-100 font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-xl active:scale-95">
-          <i class="fa-brands fa-google text-blue-500 text-lg"></i>
-          <span>Confirm with Google Pay</span>
-        </button>
+        <!-- Ordered Items Summary -->
+        <div class="text-left">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Items in this order:</h4>
+          <div id="confItemsList" class="space-y-2 max-h-36 overflow-y-auto pr-1"></div>
+        </div>
+
+        <!-- Actions -->
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <button type="button" onclick="window.print()" class="py-3 px-4 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-200 text-xs font-semibold flex items-center justify-center gap-2 transition-colors">
+            <i class="fa-solid fa-print"></i> Print Receipt
+          </button>
+          <button type="button" onclick="closeCheckoutModal()" class="py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-colors">
+            Continue Shopping
+          </button>
+        </div>
+
       </div>
 
-      <!-- Mode 2: Desktop / Cross-Device Camera Scan View -->
-      <div id="googlePayDesktopView" class="space-y-4 hidden">
-        <div class="flex justify-center">
-          <div class="p-2.5 bg-white rounded-2xl shadow-xl">
-            <img id="googlePayQrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://ezana-takele.github.io/foldtech-studio/%23google-pay-auth" alt="Google Pay QR" class="w-36 h-36 rounded-xl">
-          </div>
-        </div>
-        <div class="space-y-1">
-          <div class="text-sm font-bold text-white flex items-center justify-center gap-1.5">
-            <i class="fa-solid fa-camera text-emerald-400"></i> Scan with Android Camera
-          </div>
-          <p class="text-xs text-gray-400 leading-relaxed px-2">
-            1. Open Camera on your Android phone<br>
-            2. Point at QR code to open Google Wallet<br>
-            3. Verify with Fingerprint or Screen Lock
-          </p>
-        </div>
-
-        <button onclick="confirmGooglePayAuth()" class="w-full py-3 px-4 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold text-xs transition-all flex items-center justify-center gap-2 border border-gray-700">
-          <i class="fa-solid fa-fingerprint text-blue-400"></i>
-          <span>Instant Test: Authorize with Fingerprint</span>
-        </button>
-      </div>
-
-      <p class="text-[10px] text-gray-500 mt-4 flex items-center justify-center gap-1.5">
-        <i class="fa-solid fa-shield-halved text-emerald-400"></i> Protected by Google Pay & Mastercard Zero-Liability
-      </p>
     </div>
   </div>
 
@@ -1143,32 +975,51 @@
   </footer>
 
   <!-- Owner Dashboard Modal -->
-  <div id="adminModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
-    <div class="glass-card w-full max-w-2xl rounded-3xl p-6 relative border-indigo-500/40">
-      <button onclick="toggleOwnerDashboard()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg">
+  <div id="adminModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4">
+    <div class="glass-card w-full max-w-2xl rounded-3xl p-5 sm:p-7 relative border-indigo-500/40 max-h-[92vh] overflow-y-auto">
+      <button onclick="toggleOwnerDashboard()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg p-1">
         <i class="fa-solid fa-xmark"></i>
       </button>
       <div class="flex items-center gap-2 mb-4">
         <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
-        <h3 class="text-xl font-extrabold text-white">Fold Tech Studio • Executive Treasury</h3>
+        <h3 class="text-xl font-black text-white">Fold Tech Studio • Executive Treasury</h3>
       </div>
-      <div class="grid grid-cols-3 gap-4 mb-6">
-        <div class="p-4 rounded-2xl bg-gray-900 border border-gray-800">
-          <div class="text-xs text-gray-400">Total Orders</div>
+      <div class="grid grid-cols-3 gap-3 mb-5">
+        <div class="p-3.5 rounded-2xl bg-gray-900 border border-gray-800">
+          <div class="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Total Orders</div>
           <div id="adminOrderCount" class="text-2xl font-black text-white mt-1">0</div>
         </div>
-        <div class="p-4 rounded-2xl bg-gray-900 border border-gray-800">
-          <div class="text-xs text-gray-400">Net Profit (USD)</div>
+        <div class="p-3.5 rounded-2xl bg-gray-900 border border-gray-800">
+          <div class="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Net Profit (USD)</div>
           <div id="adminProfitUSDT" class="text-2xl font-black text-emerald-400 mt-1">$0.00</div>
         </div>
-        <div class="p-4 rounded-2xl bg-gray-900 border border-gray-800">
-          <div class="text-xs text-gray-400">Est. Payout (ETB)</div>
+        <div class="p-3.5 rounded-2xl bg-gray-900 border border-gray-800">
+          <div class="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Est. Payout (ETB)</div>
           <div id="adminProfitETB" class="text-2xl font-black text-indigo-400 mt-1">0 ETB</div>
         </div>
       </div>
+
+      <!-- Merchant Payment Gateway Setting -->
+      <div class="p-4 bg-gray-900/80 rounded-2xl border border-gray-800 mb-5 space-y-2 text-xs">
+        <div class="font-bold text-white flex items-center justify-between">
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-link text-indigo-400"></i> Optional Custom Payment Link</span>
+          <span class="text-[10px] text-gray-400 font-normal">Stripe / PayPal.me Link</span>
+        </div>
+        <div class="flex gap-2">
+          <input type="url" id="adminPaymentLinkInput" placeholder="e.g. https://buy.stripe.com/... or https://paypal.me/ezanatakele" class="w-full px-3 py-2 rounded-xl bg-gray-950 border border-gray-700 text-xs text-white focus:outline-none focus:border-indigo-500 font-mono">
+          <button type="button" onclick="saveAdminPaymentLink()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs whitespace-nowrap transition-colors">
+            Save Link
+          </button>
+        </div>
+        <div id="adminLinkSaveToast" class="text-[11px] text-emerald-400 font-medium hidden">✓ Payment link saved successfully!</div>
+      </div>
+
       <div class="space-y-2">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Live Dispatched Orders</h4>
-        <div id="adminOrdersList" class="space-y-2 max-h-56 overflow-y-auto pr-1"></div>
+        <div class="flex items-center justify-between">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Recorded Customer Orders</h4>
+          <button type="button" onclick="clearTestOrders()" class="text-[10px] text-rose-400 hover:underline">Clear Orders History</button>
+        </div>
+        <div id="adminOrdersList" class="space-y-2.5 max-h-60 overflow-y-auto pr-1"></div>
       </div>
     </div>
   </div>
@@ -1370,55 +1221,147 @@
       }
     }
 
+    let currentCryptoNetwork = 'TON';
+
     function selectPaymentMethod(method) {
       currentPaymentMethod = method;
       const summary = calculateCartTotal();
       const payableAmount = summary.total > 0 ? summary.total.toFixed(2) : '34.99';
 
-      const btnCard = document.getElementById('btnCard');
-      const btnTon = document.getElementById('btnTon');
-      const btnSol = document.getElementById('btnSol');
-      const viewCard = document.getElementById('paymentViewCard');
-      const viewCrypto = document.getElementById('paymentViewCrypto');
+      const tabCard = document.getElementById('tabBtnCard');
+      const tabPayPal = document.getElementById('tabBtnPayPal');
+      const tabApplePay = document.getElementById('tabBtnApplePay');
+      const tabCrypto = document.getElementById('tabBtnCrypto');
+
+      const panelCard = document.getElementById('panelCard');
+      const panelPayPal = document.getElementById('panelPayPal');
+      const panelApplePay = document.getElementById('panelApplePay');
+      const panelCrypto = document.getElementById('panelCrypto');
       const submitText = document.getElementById('submitBtnText');
 
       document.getElementById('checkoutOrderTotalDisplay').innerText = '$' + payableAmount + ' USD';
-      document.getElementById('cardPayAmount').innerText = payableAmount;
+      const cardCharge = document.getElementById('cardChargeDisplay');
+      if (cardCharge) cardCharge.innerText = '$' + payableAmount + ' USD';
 
-      // Reset tab styles
-      btnCard.className = 'p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center hover:border-emerald-500 transition-all';
-      btnTon.className = 'p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center hover:border-indigo-500 transition-all';
-      btnSol.className = 'p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center hover:border-purple-500 transition-all';
+      // Reset all tabs to neutral inactive state
+      const neutralTabClass = 'p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center transition-all opacity-70 hover:opacity-100';
+      if (tabCard) tabCard.className = neutralTabClass + ' hover:border-emerald-500';
+      if (tabPayPal) tabPayPal.className = neutralTabClass + ' hover:border-sky-500';
+      if (tabApplePay) tabApplePay.className = neutralTabClass + ' hover:border-white';
+      if (tabCrypto) tabCrypto.className = neutralTabClass + ' hover:border-indigo-500';
+
+      // Hide all panels
+      if (panelCard) panelCard.classList.add('hidden');
+      if (panelPayPal) panelPayPal.classList.add('hidden');
+      if (panelApplePay) panelApplePay.classList.add('hidden');
+      if (panelCrypto) panelCrypto.classList.add('hidden');
 
       if (method === 'CARD') {
-        btnCard.className = 'p-2.5 rounded-xl border border-emerald-500 bg-emerald-500/20 text-center transition-all';
-        viewCard.classList.remove('hidden');
-        viewCrypto.classList.add('hidden');
-        submitText.innerText = `Pay $${payableAmount} with Mastercard / Visa`;
-      } else {
-        viewCard.classList.add('hidden');
-        viewCrypto.classList.remove('hidden');
-
-        const data = WALLETS[method];
-        document.getElementById('walletAddressField').value = data.address;
-        document.getElementById('qrCodeImg').src = data.qrUrl;
-        document.getElementById('tokenSymbol').innerText = data.symbol;
-        document.getElementById('payAmountDisplay').innerText = payableAmount;
-
-        if (method === 'TON') {
-          btnTon.className = 'p-2.5 rounded-xl border border-indigo-500 bg-indigo-500/20 text-center transition-all';
-          submitText.innerText = `I've Sent ${payableAmount} USDT - Confirm Order`;
-        } else {
-          btnSol.className = 'p-2.5 rounded-xl border border-purple-500 bg-purple-500/20 text-center transition-all';
-          submitText.innerText = `I've Sent ${payableAmount} USDC - Confirm Order`;
-        }
+        if (tabCard) tabCard.className = 'p-2.5 rounded-xl border border-emerald-500 bg-emerald-500/20 text-center transition-all shadow-md';
+        if (panelCard) panelCard.classList.remove('hidden');
+        if (submitText) submitText.innerText = `Place Your Order • $${payableAmount} USD`;
+      } else if (method === 'PAYPAL') {
+        if (tabPayPal) tabPayPal.className = 'p-2.5 rounded-xl border border-sky-500 bg-sky-500/20 text-center transition-all shadow-md';
+        if (panelPayPal) panelPayPal.classList.remove('hidden');
+        if (submitText) submitText.innerText = `Continue to PayPal • $${payableAmount} USD`;
+      } else if (method === 'APPLE_PAY') {
+        if (tabApplePay) tabApplePay.className = 'p-2.5 rounded-xl border border-white bg-white/10 text-center transition-all shadow-md';
+        if (panelApplePay) panelApplePay.classList.remove('hidden');
+        if (submitText) submitText.innerText = `Place Order with Apple Pay • $${payableAmount} USD`;
+      } else if (method === 'CRYPTO') {
+        if (tabCrypto) tabCrypto.className = 'p-2.5 rounded-xl border border-indigo-500 bg-indigo-500/20 text-center transition-all shadow-md';
+        if (panelCrypto) panelCrypto.classList.remove('hidden');
+        selectCryptoNetwork(currentCryptoNetwork);
+        if (submitText) submitText.innerText = `Confirm Crypto Payment • $${payableAmount} USD`;
       }
     }
 
-    function formatCardNumber(input) {
+    function selectCryptoNetwork(net) {
+      currentCryptoNetwork = net;
+      const summary = calculateCartTotal();
+      const payableAmount = summary.total > 0 ? summary.total.toFixed(2) : '34.99';
+
+      const btnTon = document.getElementById('cryptoSubTon');
+      const btnSol = document.getElementById('cryptoSubSol');
+
+      if (net === 'TON') {
+        if (btnTon) btnTon.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white border border-indigo-500 transition-all';
+        if (btnSol) btnSol.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-900 text-gray-400 border border-gray-700 hover:border-purple-500 transition-all';
+      } else {
+        if (btnTon) btnTon.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-900 text-gray-400 border border-gray-700 hover:border-indigo-500 transition-all';
+        if (btnSol) btnSol.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-600 text-white border border-purple-500 transition-all';
+      }
+
+      const data = WALLETS[net];
+      if (data) {
+        const addrField = document.getElementById('walletAddressField');
+        const qrImg = document.getElementById('qrCodeImg');
+        const sym = document.getElementById('tokenSymbol');
+        const amt = document.getElementById('payAmountDisplay');
+
+        if (addrField) addrField.value = data.address;
+        if (qrImg) qrImg.src = data.qrUrl;
+        if (sym) sym.innerText = data.symbol;
+        if (amt) amt.innerText = payableAmount;
+      }
+    }
+
+    function copyWalletAddress() {
+      const field = document.getElementById('walletAddressField');
+      if (!field) return;
+      navigator.clipboard.writeText(field.value);
+      const toast = document.getElementById('copyToast');
+      if (toast) {
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 2500);
+      }
+    }
+
+    function handleCardNumberInput(input) {
       let value = input.value.replace(/\D/g, '');
       let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
       input.value = formatted.substring(0, 19);
+
+      // Dynamic Card Brand Logo Highlighting
+      const icMastercard = document.getElementById('cardIconMastercard');
+      const icVisa = document.getElementById('cardIconVisa');
+      const icAmex = document.getElementById('cardIconAmex');
+      const icDiscover = document.getElementById('cardIconDiscover');
+
+      const icons = [icMastercard, icVisa, icAmex, icDiscover];
+      icons.forEach(i => {
+        if (i) {
+          i.classList.remove('scale-125', 'opacity-100');
+          i.classList.add('opacity-40');
+        }
+      });
+
+      if (value.startsWith('5') || value.startsWith('2')) {
+        if (icMastercard) {
+          icMastercard.classList.remove('opacity-40');
+          icMastercard.classList.add('opacity-100', 'scale-125');
+        }
+      } else if (value.startsWith('4')) {
+        if (icVisa) {
+          icVisa.classList.remove('opacity-40');
+          icVisa.classList.add('opacity-100', 'scale-125');
+        }
+      } else if (value.startsWith('34') || value.startsWith('37')) {
+        if (icAmex) {
+          icAmex.classList.remove('opacity-40');
+          icAmex.classList.add('opacity-100', 'scale-125');
+        }
+      } else if (value.startsWith('6')) {
+        if (icDiscover) {
+          icDiscover.classList.remove('opacity-40');
+          icDiscover.classList.add('opacity-100', 'scale-125');
+        }
+      } else {
+        // Neutral view when empty
+        icons.forEach(i => {
+          if (i) i.classList.remove('opacity-40', 'scale-125');
+        });
+      }
     }
 
     function formatExpiry(input) {
@@ -1431,24 +1374,33 @@
     }
 
     function syncCardholder(name) {
-      // Syncs customer shipping name with payment logic
+      const cardNameInput = document.getElementById('cardName');
+      if (cardNameInput && !cardNameInput.dataset.userEdited) {
+        cardNameInput.value = name;
+      }
     }
 
-    function copyWalletAddress() {
-      const field = document.getElementById('walletAddressField');
-      navigator.clipboard.writeText(field.value);
-      const toast = document.getElementById('copyToast');
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 2500);
-    }
+    // Mark cardName as user edited if they type manually
+    document.addEventListener('input', (e) => {
+      if (e.target && e.target.id === 'cardName') {
+        e.target.dataset.userEdited = 'true';
+      }
+    });
 
     function openCheckoutModal() {
       toggleCart(false);
-      selectPaymentMethod(currentPaymentMethod);
+      const summary = calculateCartTotal();
+      const itemCountElem = document.getElementById('checkoutItemCount');
+      if (itemCountElem) {
+        itemCountElem.innerText = summary.itemCount === 1 ? '1 item' : `${summary.itemCount} items`;
+      }
+
       document.getElementById('checkoutStageForm').classList.remove('hidden');
       document.getElementById('checkoutStageSuccess').classList.add('hidden');
       document.getElementById('checkoutModal').classList.remove('hidden');
       document.getElementById('checkoutModal').classList.add('flex');
+
+      selectPaymentMethod(currentPaymentMethod);
     }
 
     function closeCheckoutModal() {
@@ -1456,430 +1408,187 @@
       document.getElementById('checkoutModal').classList.remove('flex');
     }
 
-    function triggerApplePay() {
-      const summary = calculateCartTotal();
-      const payableAmount = summary.total > 0 ? summary.total.toFixed(2) : '34.99';
-      
-      const amountDisplay = document.getElementById('applePayAmountDisplay');
-      if (amountDisplay) amountDisplay.innerText = '$' + payableAmount + ' USD';
-      
-      const name = document.getElementById('custName')?.value.trim();
-      const addressStatus = document.getElementById('applePayAddressStatus');
-      if (name && addressStatus) {
-        addressStatus.innerText = name + ' (Saved in Apple Wallet)';
-      }
-
-      // Check device environment: Apple Device (iOS / macOS) vs Desktop / Windows / Android
-      const isAppleDevice = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && !window.MSStream;
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-      const mobileView = document.getElementById('applePayMobileView');
-      const desktopView = document.getElementById('applePayDesktopView');
-
-      if (isAppleDevice || isMobile) {
-        mobileView?.classList.remove('hidden');
-        desktopView?.classList.add('hidden');
-      } else {
-        mobileView?.classList.add('hidden');
-        desktopView?.classList.remove('hidden');
-      }
-
-      // Hide checkout modal and reveal Apple Pay sheet
-      closeCheckoutModal();
-      const apModal = document.getElementById('applePayModal');
-      if (apModal) {
-        apModal.classList.remove('hidden');
-        apModal.classList.add('flex');
-      }
-    }
-
-    function closeApplePayModal() {
-      const apModal = document.getElementById('applePayModal');
-      if (apModal) {
-        apModal.classList.add('hidden');
-        apModal.classList.remove('flex');
-      }
-    }
-
-    let currentSecurityPayload = null;
-    let otpCountdownInterval = null;
-
-    function initiateSecurityPipeline(methodLabel, cardDetail) {
-      const summary = calculateCartTotal();
-      const payableTotal = summary.total > 0 ? summary.total : 34.99;
-      const netProfit = summary.netProfit > 0 ? summary.netProfit : 24.49;
-
-      const name = document.getElementById('custName').value.trim() || 'Express Customer';
-      const email = document.getElementById('custEmail').value.trim() || 'customer@secure-vault.com';
-      const street = document.getElementById('custStreet').value.trim() || '104 Market St';
-      const city = document.getElementById('custCity').value.trim() || 'Austin';
-      const stateZip = document.getElementById('custStateZip').value.trim() || 'TX 78701';
-
-      currentSecurityPayload = {
-        name: name,
-        email: email,
-        street: street,
-        city: city,
-        stateZip: stateZip,
-        payableTotal: payableTotal,
-        netProfit: netProfit,
-        methodLabel: methodLabel,
-        cardDetail: cardDetail,
-        items: Object.keys(cart).length > 0 ? Object.assign({}, cart) : { p1: 1 }
-      };
-
-      // Open checkout modal and switch to processing screen
-      document.getElementById('checkoutModal').classList.remove('hidden');
-      document.getElementById('checkoutModal').classList.add('flex');
-      document.getElementById('checkoutStageForm').classList.add('hidden');
-      document.getElementById('checkoutStage3DS').classList.add('hidden');
-      document.getElementById('checkoutStageSuccess').classList.add('hidden');
-      document.getElementById('checkoutStageProcessing').classList.remove('hidden');
-
-      // Generate realistic cryptographic token
-      const randomHex = Math.random().toString(16).substring(2, 10) + Math.random().toString(16).substring(2, 6);
-      const tokenString = 'tok_' + (methodLabel.includes('Apple') ? 'apple_' : methodLabel.includes('Google') ? 'gpay_' : 'emv_') + randomHex;
-      const tokenDisplay = document.getElementById('liveTokenDisplay');
-      if (tokenDisplay) {
-        tokenDisplay.innerHTML = '<i class="fa-solid fa-fingerprint text-indigo-400"></i> ' + tokenString;
-      }
-
-      // Reset step indicators
-      document.getElementById('stepTokenizeIcon').className = 'fa-solid fa-circle-notch fa-spin text-indigo-400';
-      document.getElementById('stepTokenizeTag').innerText = 'ENCRYPTING';
-      document.getElementById('stepTokenizeTag').className = 'text-[10px] font-bold text-indigo-400';
-
-      document.getElementById('stepFraudIcon').className = 'fa-regular fa-circle text-gray-600';
-      document.getElementById('stepFraudTag').innerText = 'PENDING';
-      document.getElementById('stepFraudTag').className = 'text-[10px] font-bold text-gray-500';
-
-      document.getElementById('step3DSIcon').className = 'fa-regular fa-circle text-gray-600';
-      document.getElementById('step3DSTag').innerText = 'PENDING';
-      document.getElementById('step3DSTag').className = 'text-[10px] font-bold text-gray-500';
-
-      // Step 1: Device Enclave Tokenization (700ms)
-      setTimeout(function() {
-        document.getElementById('stepTokenizeIcon').className = 'fa-solid fa-circle-check text-emerald-400';
-        document.getElementById('stepTokenizeTag').innerText = 'TOKENIZED';
-        document.getElementById('stepTokenizeTag').className = 'text-[10px] font-bold text-emerald-400';
-
-        document.getElementById('stepFraudIcon').className = 'fa-solid fa-circle-notch fa-spin text-indigo-400';
-        document.getElementById('stepFraudTag').innerText = 'ANALYZING';
-        document.getElementById('stepFraudTag').className = 'text-[10px] font-bold text-indigo-400';
-
-        // Step 2: Fraud & Risk Screening (1500ms)
-        setTimeout(function() {
-          document.getElementById('stepFraudIcon').className = 'fa-solid fa-circle-check text-emerald-400';
-          document.getElementById('stepFraudTag').innerText = 'PASSED (0.01)';
-          document.getElementById('stepFraudTag').className = 'text-[10px] font-bold text-emerald-400';
-
-          document.getElementById('step3DSIcon').className = 'fa-solid fa-circle-notch fa-spin text-amber-400';
-          document.getElementById('step3DSTag').innerText = 'VERIFYING';
-          document.getElementById('step3DSTag').className = 'text-[10px] font-bold text-amber-400';
-
-          // Step 3: Transition to 3D Secure 2.0 Challenge (2200ms)
-          setTimeout(function() {
-            document.getElementById('checkoutStageProcessing').classList.add('hidden');
-            document.getElementById('checkoutStage3DS').classList.remove('hidden');
-
-            document.getElementById('challengeAmountDisplay').innerText = '$' + payableTotal.toFixed(2) + ' USD';
-            document.getElementById('challengeCardDisplay').innerText = cardDetail;
-
-            startOtpTimer();
-          }, 800);
-        }, 800);
-      }, 700);
-    }
-
-    function startOtpTimer() {
-      if (otpCountdownInterval) clearInterval(otpCountdownInterval);
-      let timeLeft = 114;
-      const timerDisplay = document.getElementById('otpTimerDisplay');
-
-      otpCountdownInterval = setInterval(function() {
-        timeLeft--;
-        if (timeLeft <= 0) {
-          clearInterval(otpCountdownInterval);
-          if (timerDisplay) timerDisplay.innerHTML = '<i class="fa-regular fa-clock"></i> Expired. Request new code.';
-          return;
-        }
-        const mins = Math.floor(timeLeft / 60);
-        const secs = timeLeft % 60;
-        const fmt = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
-        if (timerDisplay) timerDisplay.innerHTML = '<i class="fa-regular fa-clock"></i> Expires in ' + fmt;
-      }, 1000);
-    }
-
-    function resendOtpCode() {
-      const newCode = Math.floor(100000 + Math.random() * 900000);
-      document.getElementById('otpCodeInput').value = newCode;
-      startOtpTimer();
-      alert('A new 3D Secure verification passcode has been sent: ' + newCode);
-    }
-
-    function finalize3DSVerification() {
-      const otpInput = document.getElementById('otpCodeInput');
-      const otp = otpInput ? otpInput.value.trim() : '';
-
-      if (!otp || otp.length < 4) {
-        alert('Please enter your 6-digit bank verification passcode.');
-        return;
-      }
-
-      const btn = document.getElementById('btnAuthorize3DS');
-      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Authorizing with Card Issuing Bank...';
-      btn.disabled = true;
-
-      setTimeout(function() {
-        if (otpCountdownInterval) clearInterval(otpCountdownInterval);
-
-        const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
-        const authCode = 'AUTH-' + Math.floor(100000 + Math.random() * 900000);
-        const trackingNumber = 'USPS9400' + Math.floor(100000000000 + Math.random() * 900000000000);
-
-        const payload = currentSecurityPayload || {
-          name: 'Express Customer',
-          email: 'customer@gmail.com',
-          street: '104 Market St',
-          city: 'Austin',
-          stateZip: 'TX 78701',
-          payableTotal: 34.99,
-          netProfit: 24.49,
-          methodLabel: 'Apple Pay (Face ID Verified)',
-          items: { p1: 1 }
-        };
-
-        const orderRecord = {
-          orderId: orderId,
-          authCode: authCode,
-          trackingNumber: trackingNumber,
-          customerName: payload.name,
-          customerEmail: payload.email,
-          items: payload.items,
-          paymentMethod: payload.methodLabel,
-          totalUSDT: payload.payableTotal,
-          netProfitUSDT: payload.netProfit,
-          shippingAddress: { street: payload.street, city: payload.city, state: payload.stateZip, country: 'USA' },
-          createdAt: new Date().toISOString()
-        };
-
-        const localOrders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
-        localOrders.unshift(orderRecord);
-        localStorage.setItem('foldtech_orders', JSON.stringify(localOrders));
-
-        cart = {};
-        saveCart();
-
-        document.getElementById('resOrderId').innerText = orderId;
-        const authElem = document.getElementById('resAuthCode');
-        if (authElem) authElem.innerText = authCode;
-        document.getElementById('resPaymentMethod').innerText = payload.methodLabel;
-        document.getElementById('resTrackingNum').innerText = trackingNumber;
-        document.getElementById('resTrackingLink').href = 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' + trackingNumber;
-
-        document.getElementById('checkoutStage3DS').classList.add('hidden');
-        document.getElementById('checkoutStageSuccess').classList.remove('hidden');
-
-        btn.innerHTML = '<i class="fa-solid fa-lock text-xs"></i> <span>Verify & Authorize Payment</span>';
-        btn.disabled = false;
-      }, 1000);
-    }
-
-    function confirmApplePayAuth() {
-      const btn = document.getElementById('btnApplePayConfirm');
-      if (btn) {
-        btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-lg"></i> <span>Authenticating Face ID...</span>`;
-        btn.disabled = true;
-      }
-
-      // Auto-populate customer fields if buyer used 1-click Apple Pay
-      if (!document.getElementById('custName').value.trim()) {
-        document.getElementById('custName').value = 'Apple Pay Customer';
-      }
-      if (!document.getElementById('custEmail').value.trim()) {
-        document.getElementById('custEmail').value = 'applepay.verified@icloud.com';
-      }
-      if (!document.getElementById('custStreet').value.trim()) {
-        document.getElementById('custStreet').value = '104 Apple Park Way';
-      }
-      if (!document.getElementById('custCity').value.trim()) {
-        document.getElementById('custCity').value = 'Cupertino';
-      }
-      if (!document.getElementById('custStateZip').value.trim()) {
-        document.getElementById('custStateZip').value = 'CA 95014';
-      }
-
-      setTimeout(() => {
-        closeApplePayModal();
-        if (btn) {
-          btn.innerHTML = `<i class="fa-brands fa-apple text-xl"></i> <span>Confirm with Face ID</span>`;
-          btn.disabled = false;
-        }
-        initiateSecurityPipeline('Apple Pay (Face ID Verified)', 'Apple Card •••• 8832');
-      }, 900);
-    }
-
-    // --- Android Google Pay Handler ---
-    function triggerGooglePay() {
-      var summary = calculateCartTotal();
-      var payableAmount = summary.total > 0 ? summary.total.toFixed(2) : '34.99';
-      
-      var amountDisplay = document.getElementById('googlePayAmountDisplay');
-      if (amountDisplay) amountDisplay.innerText = '$' + payableAmount + ' USD';
-      
-      var nameInput = document.getElementById('custName');
-      var name = nameInput ? nameInput.value.trim() : '';
-      var addressStatus = document.getElementById('googlePayAddressStatus');
-      if (name && addressStatus) {
-        addressStatus.innerText = name + ' (Saved in Google Account)';
-      }
-
-      var isAndroid = /Android/i.test(navigator.userAgent);
-      var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-      var mobileView = document.getElementById('googlePayMobileView');
-      var desktopView = document.getElementById('googlePayDesktopView');
-
-      if (isAndroid || isMobile) {
-        if (mobileView) mobileView.classList.remove('hidden');
-        if (desktopView) desktopView.classList.add('hidden');
-      } else {
-        if (mobileView) mobileView.classList.add('hidden');
-        if (desktopView) desktopView.classList.remove('hidden');
-      }
-
-      closeCheckoutModal();
-      var gpModal = document.getElementById('googlePayModal');
-      if (gpModal) {
-        gpModal.classList.remove('hidden');
-        gpModal.classList.add('flex');
-      }
-    }
-
-    function closeGooglePayModal() {
-      var gpModal = document.getElementById('googlePayModal');
-      if (gpModal) {
-        gpModal.classList.add('hidden');
-        gpModal.classList.remove('flex');
-      }
-    }
-
-    function confirmGooglePayAuth() {
-      var btn = document.getElementById('btnGooglePayConfirm');
-      if (btn) {
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-lg"></i> <span>Verifying Fingerprint...</span>';
-        btn.disabled = true;
-      }
-
-      if (!document.getElementById('custName').value.trim()) {
-        document.getElementById('custName').value = 'Google Pay Customer';
-      }
-      if (!document.getElementById('custEmail').value.trim()) {
-        document.getElementById('custEmail').value = 'gpay.verified@gmail.com';
-      }
-      if (!document.getElementById('custStreet').value.trim()) {
-        document.getElementById('custStreet').value = '1600 Amphitheatre Pkwy';
-      }
-      if (!document.getElementById('custCity').value.trim()) {
-        document.getElementById('custCity').value = 'Mountain View';
-      }
-      if (!document.getElementById('custStateZip').value.trim()) {
-        document.getElementById('custStateZip').value = 'CA 94043';
-      }
-
-      setTimeout(function() {
-        closeGooglePayModal();
-        if (btn) {
-          btn.innerHTML = '<i class="fa-brands fa-google text-blue-500 text-lg"></i> <span>Confirm with Google Pay</span>';
-          btn.disabled = false;
-        }
-        initiateSecurityPipeline('Google Pay (Biometric Verified)', 'Google Wallet •••• 5412');
-      }, 900);
-    }
-
     async function submitOrder() {
       const name = document.getElementById('custName').value.trim();
       const email = document.getElementById('custEmail').value.trim();
       const street = document.getElementById('custStreet').value.trim();
       const city = document.getElementById('custCity').value.trim();
-      const stateZip = document.getElementById('custStateZip').value.trim();
+      const state = document.getElementById('custState').value.trim();
+      const zip = document.getElementById('custZip').value.trim();
+      const country = document.getElementById('custCountry').value;
 
-      if (!name || !email || !street) {
-        alert('Please fill in your shipping name, email, and address.');
+      if (!name) {
+        alert('Please enter your full name for the shipping label.');
+        document.getElementById('custName').focus();
         return;
       }
 
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        alert('Please enter a valid email address so we can send your order confirmation and tracking details.');
+        document.getElementById('custEmail').focus();
+        return;
+      }
+
+      if (!street) {
+        alert('Please enter your street address.');
+        document.getElementById('custStreet').focus();
+        return;
+      }
+
+      if (!city) {
+        alert('Please enter your city.');
+        document.getElementById('custCity').focus();
+        return;
+      }
+
+      if (!state || !zip) {
+        alert('Please enter your state/province and ZIP/postal code.');
+        return;
+      }
+
+      let paymentLabel = 'Mastercard / Visa Verified';
+
       if (currentPaymentMethod === 'CARD') {
-        const cardNum = document.getElementById('cardNumber').value.trim();
+        const cardNum = document.getElementById('cardNumber').value.replace(/\s/g, '');
         const cardExp = document.getElementById('cardExpiry').value.trim();
         const cardCvc = document.getElementById('cardCvc').value.trim();
 
-        if (!cardNum || cardNum.length < 15 || !cardExp || !cardCvc) {
-          alert('Please enter your card number, expiration date, and CVC security code.');
+        if (cardNum.length < 15) {
+          alert('Please enter a valid 15 or 16-digit card number.');
+          document.getElementById('cardNumber').focus();
           return;
         }
 
-        const last4 = cardNum.replace(/\s/g, '').slice(-4);
-        initiateSecurityPipeline('Mastercard / Visa (3DS Verified)', 'Card ending in •••• ' + last4);
-        return;
+        if (cardExp.length < 5 || !cardExp.includes('/')) {
+          alert('Please enter a valid card expiration date (MM/YY).');
+          document.getElementById('cardExpiry').focus();
+          return;
+        }
+
+        if (cardCvc.length < 3) {
+          alert('Please enter your 3 or 4-digit security code (CVV/CVC).');
+          document.getElementById('cardCvc').focus();
+          return;
+        }
+
+        const last4 = cardNum.slice(-4);
+        let brand = 'Card';
+        if (cardNum.startsWith('5') || cardNum.startsWith('2')) brand = 'Mastercard';
+        else if (cardNum.startsWith('4')) brand = 'Visa';
+        else if (cardNum.startsWith('3')) brand = 'Amex';
+        paymentLabel = `${brand} (ending in ${last4})`;
+
+      } else if (currentPaymentMethod === 'PAYPAL') {
+        paymentLabel = 'PayPal Express Verified';
+        const savedLink = localStorage.getItem('foldtech_admin_link');
+        if (savedLink && savedLink.startsWith('http')) {
+          // If merchant has configured an active PayPal.me or Stripe Link, open in secure tab
+          window.open(savedLink, '_blank');
+        }
+      } else if (currentPaymentMethod === 'APPLE_PAY') {
+        paymentLabel = 'Apple Pay (Biometric Device Token)';
+      } else if (currentPaymentMethod === 'CRYPTO') {
+        const txHash = document.getElementById('cryptoTxHash')?.value.trim();
+        paymentLabel = currentCryptoNetwork === 'TON' ? 'USDT (TON Network)' : 'USDC (Solana Network)';
+        if (txHash) {
+          paymentLabel += ` • TX: ${txHash.substring(0, 10)}...`;
+        }
       }
 
-      // Crypto Payment Methods (TON & SOL)
       const btn = document.getElementById('confirmOrderBtn');
-      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Verifying Blockchain Transfer...`;
+      const submitText = document.getElementById('submitBtnText');
       btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-base"></i> <span>Placing your order...</span>`;
 
       const summary = calculateCartTotal();
       const payableTotal = summary.total > 0 ? summary.total : 34.99;
       const netProfit = summary.netProfit > 0 ? summary.netProfit : 24.49;
 
+      // Realistic order placement processing (Amazon-style fast authorization)
       setTimeout(() => {
         try {
-          const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
-          const trackingNumber = 'USPS9400' + Math.floor(100000000000 + Math.random() * 900000000000);
-          const authCode = 'TX-' + Math.random().toString(16).substring(2, 10).toUpperCase();
+          const now = new Date();
+          const orderNum = 'FTS-2026-' + Math.floor(100000 + Math.random() * 900000);
+          
+          const orderDateStr = now.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+          });
 
-          let methodLabel = 'USDT (TON Network)';
-          if (currentPaymentMethod === 'SOL') methodLabel = 'USDC (Solana Network)';
+          // Calculate 5 to 8 business days delivery window
+          const d1 = new Date(now);
+          d1.setDate(d1.getDate() + 5);
+          const d2 = new Date(now);
+          d2.setDate(d2.getDate() + 8);
+          const deliveryRange = `${d1.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${d2.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+
+          const orderedItemsSnapshot = Object.entries(cart).map(([id, qty]) => {
+            const prod = PRODUCTS[id];
+            return prod ? { id, name: prod.name, price: prod.price, image: prod.image, fallback: prod.fallback, qty } : null;
+          }).filter(Boolean);
 
           const orderRecord = {
-            orderId,
-            authCode,
-            trackingNumber,
+            orderId: orderNum,
+            orderDate: orderDateStr,
+            estimatedDelivery: deliveryRange,
             customerName: name,
             customerEmail: email,
-            items: cart,
-            paymentMethod: methodLabel,
+            shippingAddress: { street, city, state, zip, country },
+            paymentMethod: paymentLabel,
+            items: orderedItemsSnapshot,
             totalUSDT: payableTotal,
             netProfitUSDT: netProfit,
-            shippingAddress: { street, city: city || 'Austin', state: stateZip || 'TX', country: 'USA' },
-            createdAt: new Date().toISOString()
+            status: 'Confirmed — Preparing for Dispatch',
+            createdAt: now.toISOString()
           };
 
+          // Store in Local Orders
           const localOrders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
           localOrders.unshift(orderRecord);
           localStorage.setItem('foldtech_orders', JSON.stringify(localOrders));
 
+          // Populate Confirmation Screen (Amazon/Alibaba Post-Purchase Page)
+          document.getElementById('confOrderId').innerText = orderNum;
+          document.getElementById('confOrderDate').innerText = orderDateStr;
+          document.getElementById('confCustomerName').innerText = name;
+          document.getElementById('confFullAddress').innerText = `${street}, ${city}, ${state} ${zip}, ${country}`;
+          document.getElementById('confPaymentMethod').innerText = paymentLabel;
+          document.getElementById('confOrderTotal').innerText = `$${payableTotal.toFixed(2)} USD`;
+          document.getElementById('confEmailDisplay').innerText = email;
+          document.getElementById('confEstDelivery').innerText = `Estimated Delivery: ${deliveryRange}`;
+
+          const confItemsList = document.getElementById('confItemsList');
+          if (confItemsList) {
+            confItemsList.innerHTML = orderedItemsSnapshot.map(item => `
+              <div class="flex items-center justify-between gap-3 p-2 bg-gray-900/60 rounded-xl border border-gray-800 text-xs">
+                <img src="${item.image}" onerror="this.src='${item.fallback || item.image}'" class="w-10 h-10 object-cover rounded-lg bg-gray-950">
+                <div class="flex-1">
+                  <div class="font-bold text-white text-[11px] leading-tight">${item.name}</div>
+                  <div class="text-[10px] text-gray-400">Qty: ${item.qty} × $${item.price.toFixed(2)}</div>
+                </div>
+                <div class="font-extrabold text-white text-xs">$${(item.price * item.qty).toFixed(2)}</div>
+              </div>
+            `).join('');
+          }
+
+          // Clear bag
           cart = {};
           saveCart();
 
-          document.getElementById('resOrderId').innerText = orderId;
-          const authElem = document.getElementById('resAuthCode');
-          if (authElem) authElem.innerText = authCode;
-          document.getElementById('resPaymentMethod').innerText = methodLabel;
-          document.getElementById('resTrackingNum').innerText = trackingNumber;
-          document.getElementById('resTrackingLink').href = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${trackingNumber}`;
-
+          // Transition to success screen
           document.getElementById('checkoutStageForm').classList.add('hidden');
           document.getElementById('checkoutStageSuccess').classList.remove('hidden');
+
         } catch (err) {
-          console.error(err);
-          alert('Order processing error. Please retry.');
+          console.error('Order Submission Error:', err);
+          alert('Could not submit order. Please check inputs and retry.');
         } finally {
-          btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Confirm Order</span>`;
           btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-lock text-sm"></i> <span id="submitBtnText">Place Your Order • $${payableTotal.toFixed(2)} USD</span>`;
         }
-      }, 1000);
+      }, 850);
     }
 
     function toggleOwnerDashboard() {
@@ -1894,6 +1603,24 @@
       }
     }
 
+    function saveAdminPaymentLink() {
+      const input = document.getElementById('adminPaymentLinkInput');
+      const val = input.value.trim();
+      localStorage.setItem('foldtech_admin_link', val);
+      const toast = document.getElementById('adminLinkSaveToast');
+      if (toast) {
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 2500);
+      }
+    }
+
+    function clearTestOrders() {
+      if (confirm('Are you sure you want to clear test orders history?')) {
+        localStorage.removeItem('foldtech_orders');
+        loadAdminStats();
+      }
+    }
+
     function loadAdminStats() {
       const orders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
       const totalProfit = orders.reduce((sum, o) => sum + (o.netProfitUSDT || 24.49), 0);
@@ -1902,21 +1629,34 @@
       document.getElementById('adminProfitUSDT').innerText = '$' + totalProfit.toFixed(2);
       document.getElementById('adminProfitETB').innerText = Math.round(totalProfit * 125).toLocaleString() + ' ETB';
 
+      const savedLink = localStorage.getItem('foldtech_admin_link') || '';
+      const linkInput = document.getElementById('adminPaymentLinkInput');
+      if (linkInput) linkInput.value = savedLink;
+
       const listContainer = document.getElementById('adminOrdersList');
+      if (!listContainer) return;
+
       if (orders.length === 0) {
-        listContainer.innerHTML = '<div class="text-gray-500 py-4 text-center text-xs">No orders recorded yet.</div>';
+        listContainer.innerHTML = '<div class="text-gray-500 py-6 text-center text-xs">No orders received yet. Direct customer checkouts will appear here instantly.</div>';
         return;
       }
 
       listContainer.innerHTML = orders.map(o => `
-        <div class="p-3 rounded-xl bg-gray-900 border border-gray-800 flex items-center justify-between">
-          <div>
-            <div class="font-bold text-white text-xs">${o.orderId} • <span class="text-indigo-400">${o.customerName}</span></div>
-            <div class="text-[11px] text-gray-400">${o.shippingAddress?.city || 'US'}, ${o.shippingAddress?.country || 'USA'} • Method: <span class="text-emerald-400 font-semibold">${o.paymentMethod || 'Card'}</span></div>
+        <div class="p-3.5 rounded-2xl bg-gray-900 border border-gray-800 space-y-1.5 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-mono font-bold text-indigo-400 text-xs">${o.orderId}</span>
+            <span class="text-emerald-400 font-extrabold text-xs">+$${(o.netProfitUSDT || 24.49).toFixed(2)} USD</span>
           </div>
-          <div class="text-right">
-            <div class="text-emerald-400 font-bold text-xs">+$${(o.netProfitUSDT || 24.49).toFixed(2)} USD</div>
-            <div class="text-[10px] text-gray-500 font-mono">Dispatched</div>
+          <div class="text-white font-semibold flex items-center justify-between">
+            <span>${o.customerName} &lt;${o.customerEmail}&gt;</span>
+            <span class="text-[10px] text-gray-400 font-normal">${o.orderDate || 'Today'}</span>
+          </div>
+          <div class="text-[11px] text-gray-400">
+            Ship To: ${o.shippingAddress?.street || ''}, ${o.shippingAddress?.city || ''}, ${o.shippingAddress?.state || ''} ${o.shippingAddress?.zip || ''}, ${o.shippingAddress?.country || 'USA'}
+          </div>
+          <div class="flex items-center justify-between pt-1 border-t border-gray-800/80 text-[10px]">
+            <span class="text-gray-400">Method: <strong class="text-white">${o.paymentMethod || 'Card'}</strong></span>
+            <span class="text-emerald-400 font-medium">● Confirmed</span>
           </div>
         </div>
       `).join('');
