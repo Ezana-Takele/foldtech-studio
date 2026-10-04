@@ -163,11 +163,6 @@
 
       <!-- Right Actions: Cart & Checkout -->
       <div class="flex items-center gap-3">
-        <!-- Live Traffic HUD Pill -->
-        <button type="button" onclick="toggleOwnerDashboard()" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-indigo-300 text-xs font-mono hover:border-indigo-400 transition-all cursor-pointer shadow-sm" title="Live Traffic & Conversion Analytics">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span id="navLiveMetricsText">1,842 views • 468 clicks</span>
-        </button>
 
         <div class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-gray-900 border border-gray-800 text-gray-300">
           <i class="fa-brands fa-cc-mastercard text-amber-500 text-sm"></i>
@@ -1027,8 +1022,10 @@
       <i class="fa-brands fa-apple text-white" title="Apple Pay"></i>
       <i class="fa-brands fa-telegram text-sky-400" title="USDT"></i>
     </div>
-    <div>© 2026 Fold Tech Studio. Worldwide Tracked Express Fulfillment. Direct Cryptocurrency & Card Settlements.</div>
-    <div>
+    <div onclick="handleSecretFooterClick()" class="cursor-pointer select-none text-[11px] text-gray-500 hover:text-gray-400 transition-colors" title="Fold Tech Studio">
+      © 2026 Fold Tech Studio. Worldwide Tracked Express Fulfillment. Direct Cryptocurrency & Card Settlements.
+    </div>
+    <div id="ownerPortalFooterTrigger" class="hidden">
       <button onclick="toggleOwnerDashboard()" class="text-indigo-400 hover:text-indigo-300 font-mono underline text-[11px]">
         [Store Admin Dashboard & Payout Tracker]
       </button>
@@ -1038,11 +1035,16 @@
   <!-- Owner Dashboard Modal -->
   <div id="adminModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4">
     <div class="glass-card w-full max-w-3xl rounded-3xl p-5 sm:p-7 relative border-indigo-500/40 max-h-[92vh] overflow-y-auto space-y-5">
-      <button onclick="toggleOwnerDashboard()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg p-1">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
+      <div class="absolute top-5 right-5 flex items-center gap-2">
+        <button onclick="lockOwnerAccess()" class="px-2.5 py-1 rounded-lg bg-gray-800 hover:bg-rose-900/60 border border-gray-700 hover:border-rose-500/40 text-gray-300 hover:text-rose-300 text-[10px] font-mono transition-colors" title="Lock owner session">
+          <i class="fa-solid fa-lock text-[9px]"></i> Lock Session
+        </button>
+        <button onclick="toggleOwnerDashboard()" class="text-gray-400 hover:text-white text-lg p-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
 
-      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+      <div class="flex items-center justify-between border-b border-gray-800 pb-3 pr-28">
         <div class="flex items-center gap-2">
           <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
           <h3 class="text-xl font-black text-white">Fold Tech Studio • Analytics & Executive Treasury</h3>
@@ -2305,15 +2307,77 @@
       }, 700);
     }
 
-    function toggleOwnerDashboard() {
+    // ==========================================
+    // OWNER SECURITY & AUTHENTICATION PORTAL
+    // ==========================================
+    const OWNER_AUTH_KEY = 'foldtech_owner_authorized';
+
+    function checkOwnerAuth() {
+      return localStorage.getItem(OWNER_AUTH_KEY) === 'true';
+    }
+
+    function unlockOwnerAccess() {
+      localStorage.setItem(OWNER_AUTH_KEY, 'true');
+      const trigger = document.getElementById('ownerPortalFooterTrigger');
+      if (trigger) trigger.classList.remove('hidden');
+    }
+
+    function lockOwnerAccess() {
+      localStorage.removeItem(OWNER_AUTH_KEY);
+      const trigger = document.getElementById('ownerPortalFooterTrigger');
+      if (trigger) trigger.classList.add('hidden');
       const modal = document.getElementById('adminModal');
-      if (modal.classList.contains('hidden')) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        loadAdminStats();
-      } else {
+      if (modal) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+      }
+      alert('Owner session locked. Access restricted to authorized owner.');
+    }
+
+    function toggleOwnerDashboard(forceOpen = false) {
+      const modal = document.getElementById('adminModal');
+      if (!modal) return;
+
+      if (!forceOpen && !modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        return;
+      }
+
+      if (!checkOwnerAuth()) {
+        const pin = prompt('Fold Tech Studio Owner Verification\nEnter Owner PIN or Passphrase:');
+        if (pin === '2026' || pin === 'ezana' || pin === 'admin') {
+          unlockOwnerAccess();
+        } else {
+          if (pin !== null) alert('Access Denied. Owner access only.');
+          return;
+        }
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      loadAdminStats();
+    }
+
+    // Keyboard shortcut Ctrl + Shift + A / Cmd + Shift + A for owner access
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        toggleOwnerDashboard();
+      }
+    });
+
+    // Secret triple-click easter egg on footer copyright
+    let footerClicks = 0;
+    let footerClickTimer = null;
+    function handleSecretFooterClick() {
+      footerClicks++;
+      clearTimeout(footerClickTimer);
+      if (footerClicks >= 3) {
+        footerClicks = 0;
+        toggleOwnerDashboard();
+      } else {
+        footerClickTimer = setTimeout(() => { footerClicks = 0; }, 1200);
       }
     }
 
