@@ -1015,7 +1015,7 @@
 
   <!-- Storefront Footer -->
   <footer class="border-t border-gray-900 mt-20 py-8 px-6 text-center text-xs text-gray-500 space-y-3">
-    <div class="flex items-center justify-center gap-3">
+    <div class="flex items-center justify-center gap-3 cursor-pointer select-none" onclick="handleSecretOwnerClick()" title="Fold Tech Studio">
       <div class="w-6 h-6 rounded-lg bg-indigo-600/30 flex items-center justify-center text-indigo-400 text-xs">
         <i class="fa-solid fa-layer-group"></i>
       </div>
@@ -1028,9 +1028,10 @@
       <i class="fa-brands fa-telegram text-sky-400" title="USDT"></i>
     </div>
     <div>© 2026 Fold Tech Studio. Worldwide Tracked Express Fulfillment. Direct Cryptocurrency & Card Settlements.</div>
-    <div>
-      <button onclick="toggleOwnerDashboard()" class="text-indigo-400 hover:text-indigo-300 font-mono underline text-[11px]">
-        [Store Admin Dashboard & Payout Tracker]
+    <div id="ownerPortalFooterTrigger" class="hidden">
+      <button type="button" onclick="toggleOwnerDashboard(true)" class="text-indigo-400 hover:text-indigo-300 font-mono text-[11px] flex items-center justify-center gap-1.5 mx-auto transition-colors py-1">
+        <i class="fa-solid fa-lock text-[10px] text-amber-400"></i>
+        <span>[Ezana Executive Portal & Payout Tracker]</span>
       </button>
     </div>
   </footer>
@@ -1211,8 +1212,8 @@
         wholesale: 10.50,
         rating: 4.9,
         reviews: 842,
-        image: 'magfold_hero.jpg',
-        fallback: 'https://images.unsplash.com/photo-1622445262464-84b150777731?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p1.jpg',
+        fallback: 'magfold_hero.jpg',
         desc: 'Origami fold charging station for iPhone (15W), Apple Watch, and AirPods simultaneously.'
       },
       p2: {
@@ -1226,7 +1227,7 @@
         wholesale: 6.20,
         rating: 4.8,
         reviews: 418,
-        image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p2.jpg',
         fallback: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop&q=80',
         desc: 'Dual USB-C PD fast power block. Powers MacBook Air, MagFold, and iPad at full wattage.'
       },
@@ -1241,7 +1242,7 @@
         wholesale: 3.40,
         rating: 4.9,
         reviews: 654,
-        image: 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p3.jpg',
         fallback: 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=800&auto=format&fit=crop&q=80',
         desc: 'Magnetic vegan leather wallet. Snaps to iPhone, holds 3 cards, and folds into portrait/landscape stand.'
       },
@@ -1256,7 +1257,7 @@
         wholesale: 5.50,
         rating: 4.8,
         reviews: 392,
-        image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p4.jpg',
         fallback: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800&auto=format&fit=crop&q=80',
         desc: 'Dual-sided waterproof vegan leather mat. Spills wipe clean instantly, provides flawless optical glide.'
       },
@@ -1271,7 +1272,7 @@
         wholesale: 12.80,
         rating: 4.9,
         reviews: 912,
-        image: 'https://images.unsplash.com/photo-1609592424368-80e922e9e8f6?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p5.jpg',
         fallback: 'https://images.unsplash.com/photo-1609592424368-80e922e9e8f6?w=800&auto=format&fit=crop&q=80',
         desc: 'Strong snap magnetic battery pack with digital LED display and foldable zinc alloy kickstand.'
       },
@@ -1286,7 +1287,7 @@
         wholesale: 15.00,
         rating: 4.9,
         reviews: 524,
-        image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p6.jpg',
         fallback: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
         desc: 'Heavy-duty 100W GaN charging hub with 3x USB-C PD and 1x USB-A. Fast-charges 2 MacBooks at once.'
       },
@@ -1301,7 +1302,7 @@
         wholesale: 14.20,
         rating: 4.9,
         reviews: 431,
-        image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p7.jpg',
         fallback: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&auto=format&fit=crop&q=80',
         desc: 'Aerospace aluminum rotating stand for iPad Pro/Air with strong neodymium magnetic alignment.'
       },
@@ -1316,7 +1317,7 @@
         wholesale: 8.50,
         rating: 4.8,
         reviews: 388,
-        image: 'https://images.unsplash.com/photo-1507646227500-4d389b0012be?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p8.jpg',
         fallback: 'https://images.unsplash.com/photo-1507646227500-4d389b0012be?w=800&auto=format&fit=crop&q=80',
         desc: 'Built-in thermoelectric Peltier cooling chip prevents iPhone overheating during 15W wireless GPS charging.'
       },
@@ -1331,7 +1332,7 @@
         wholesale: 11.00,
         rating: 4.9,
         reviews: 620,
-        image: 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p9.jpg',
         fallback: 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=800&auto=format&fit=crop&q=80',
         desc: 'Asymmetric anti-glare screen lamp with 2.4G wireless desktop rotary controller and ambient RGB backlight.'
       },
@@ -1346,7 +1347,7 @@
         wholesale: 3.10,
         rating: 4.7,
         reviews: 284,
-        image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p10.jpg',
         fallback: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
         desc: 'Weighted magnetic dock with 5 matching magnetic cable collars. Eliminates floor cable drops forever.'
       },
@@ -1361,7 +1362,7 @@
         wholesale: 18.50,
         rating: 4.9,
         reviews: 742,
-        image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p11.jpg',
         fallback: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800&auto=format&fit=crop&q=80',
         desc: '-45dB Hybrid Active Noise Cancellation, spatial audio tracking, and 36-hour titanium charging case.'
       },
@@ -1376,7 +1377,7 @@
         wholesale: 7.80,
         rating: 4.8,
         reviews: 351,
-        image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p12.jpg',
         fallback: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=800&auto=format&fit=crop&q=80',
         desc: 'Palm-sized 10W neodymium driver with 360 sound, deep bass radiator, and integrated carabiner clip.'
       },
@@ -1391,7 +1392,7 @@
         wholesale: 5.20,
         rating: 4.9,
         reviews: 498,
-        image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p13.jpg',
         fallback: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80',
         desc: 'Crushproof EVA ballistic nylon pouch with elastic cable loops, SD card slots, and waterproof YKK zippers.'
       },
@@ -1406,7 +1407,7 @@
         wholesale: 3.80,
         rating: 4.9,
         reviews: 580,
-        image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p14.jpg',
         fallback: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
         desc: 'Interchangeable magnetic heads: USB-C to USB-C, Lightning, and Micro-USB. Kevlar braided.'
       },
@@ -1421,7 +1422,7 @@
         wholesale: 4.20,
         rating: 4.8,
         reviews: 310,
-        image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p15.jpg',
         fallback: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&auto=format&fit=crop&q=80',
         desc: 'Real 3K weave carbon fiber plates silence jingling keys. Holds up to 8 keys with deep pocket clip.'
       },
@@ -1436,7 +1437,7 @@
         wholesale: 5.90,
         rating: 4.9,
         reviews: 440,
-        image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p16.jpg',
         fallback: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80',
         desc: 'Quick pop-up card access with mechanical trigger. Blocks 13.56 MHz RFID scanner theft.'
       },
@@ -1451,7 +1452,7 @@
         wholesale: 9.40,
         rating: 4.8,
         reviews: 367,
-        image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p17.jpg',
         fallback: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&auto=format&fit=crop&q=80',
         desc: 'Solid weighted aluminum stand with dual magnetic spots for iPhone StandBy mode and AirPods.'
       },
@@ -1466,7 +1467,7 @@
         wholesale: 4.50,
         rating: 4.9,
         reviews: 295,
-        image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p18.jpg',
         fallback: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&auto=format&fit=crop&q=80',
         desc: 'High-density slow-rebound cloud memory foam with breathable cooling silk fabric. Relieves wrist fatigue.'
       },
@@ -1481,7 +1482,7 @@
         wholesale: 3.20,
         rating: 4.8,
         reviews: 219,
-        image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p19.jpg',
         fallback: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80',
         desc: 'Heavy-duty 4-bolt enclosed waterproof protection with stainless steel wire loop for luggage and keys.'
       },
@@ -1496,7 +1497,7 @@
         wholesale: 7.10,
         rating: 4.9,
         reviews: 582,
-        image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p20.jpg',
         fallback: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop&q=80',
         desc: 'Universal slider plugs for 180+ countries (US, UK, EU, AU) plus 3x USB-C PD and 2x USB-A ports.'
       },
@@ -1511,7 +1512,7 @@
         wholesale: 8.00,
         rating: 4.7,
         reviews: 184,
-        image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p21.jpg',
         fallback: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&auto=format&fit=crop&q=80',
         desc: 'Medical-grade dual 254nm UV-C lamps eliminate 99.9% of bacteria in 3 minutes. Top wireless charge lid.'
       },
@@ -1526,7 +1527,7 @@
         wholesale: 16.50,
         rating: 4.8,
         reviews: 263,
-        image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p22.jpg',
         fallback: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=800&auto=format&fit=crop&q=80',
         desc: 'Four high-efficiency SunPower monocrystalline panels. Dual USB-A fast charging under direct sunlight.'
       },
@@ -1541,7 +1542,7 @@
         wholesale: 2.40,
         rating: 4.8,
         reviews: 412,
-        image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p23.jpg',
         fallback: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&auto=format&fit=crop&q=80',
         desc: 'Ultra-thin double jointed magnetic finger loop and adjustable desktop kickstand. 2.2kg magnetic hold.'
       },
@@ -1556,7 +1557,7 @@
         wholesale: 21.00,
         rating: 4.9,
         reviews: 320,
-        image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop&q=80',
+        image: 'images/p24.jpg',
         fallback: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop&q=80',
         desc: 'Next-gen PD 3.1 28V/5A charging brick. Fast-charges 16" MacBook Pro to 50% in 28 minutes.'
       }
@@ -2305,9 +2306,49 @@
       }, 700);
     }
 
-    function toggleOwnerDashboard() {
+    // ==========================================
+    // OWNER SECURITY, DASHBOARD & PAYOUT TRACKER
+    // ==========================================
+    function checkOwnerAuth() {
+      return localStorage.getItem('foldtech_is_owner') === 'true';
+    }
+
+    function unlockOwnerAccess() {
+      localStorage.setItem('foldtech_is_owner', 'true');
+      const trigger = document.getElementById('ownerPortalFooterTrigger');
+      if (trigger) trigger.classList.remove('hidden');
+    }
+
+    let secretOwnerClickCount = 0;
+    function handleSecretOwnerClick() {
+      secretOwnerClickCount++;
+      if (secretOwnerClickCount >= 3) {
+        secretOwnerClickCount = 0;
+        toggleOwnerDashboard();
+      }
+      setTimeout(() => { secretOwnerClickCount = 0; }, 2000);
+    }
+
+    // Secret Owner Shortcut: Ctrl + Shift + A
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        toggleOwnerDashboard();
+      }
+    });
+
+    function toggleOwnerDashboard(bypassPrompt = false) {
       const modal = document.getElementById('adminModal');
       if (modal.classList.contains('hidden')) {
+        if (!checkOwnerAuth() && !bypassPrompt) {
+          const pin = prompt('Enter Owner Access PIN:');
+          if (pin === '2026' || pin === 'ezana' || pin === 'ezana2026') {
+            unlockOwnerAccess();
+          } else {
+            if (pin !== null) alert('Access Denied: Invalid Security PIN.');
+            return;
+          }
+        }
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         loadAdminStats();
@@ -2328,16 +2369,23 @@
       }
     }
 
+    // Automatically purge old test orders so confirmed payouts start clean at $0.00
+    if (!localStorage.getItem('foldtech_test_orders_purged_v5')) {
+      localStorage.removeItem('foldtech_orders');
+      localStorage.setItem('foldtech_test_orders_purged_v5', 'true');
+    }
+
     function clearTestOrders() {
-      if (confirm('Are you sure you want to clear test orders history?')) {
+      if (confirm('Are you sure you want to clear test orders and reset payouts to $0.00?')) {
         localStorage.removeItem('foldtech_orders');
         loadAdminStats();
+        alert('All test orders cleared. Treasury reset to $0.00 USD / 0 ETB.');
       }
     }
 
     function loadAdminStats() {
       const orders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
-      const totalProfit = orders.reduce((sum, o) => sum + (o.netProfitUSDT || 24.49), 0);
+      const totalProfit = orders.reduce((sum, o) => sum + (Number(o.netProfitUSDT) || 0), 0);
 
       document.getElementById('adminOrderCount').innerText = orders.length;
       document.getElementById('adminProfitUSDT').innerText = '$' + totalProfit.toFixed(2);
@@ -2363,7 +2411,7 @@
         <div class="p-3.5 rounded-2xl bg-gray-900 border border-gray-800 space-y-1.5 text-xs">
           <div class="flex items-center justify-between">
             <span class="font-mono font-bold text-indigo-400 text-xs">${o.orderId}</span>
-            <span class="text-emerald-400 font-extrabold text-xs">+$${(o.netProfitUSDT || 24.49).toFixed(2)} USD</span>
+            <span class="text-emerald-400 font-extrabold text-xs">+$${(Number(o.netProfitUSDT) || 0).toFixed(2)} USD</span>
           </div>
           <div class="text-white font-semibold flex items-center justify-between">
             <span>${o.customerName} &lt;${o.customerEmail}&gt;</span>
@@ -2638,6 +2686,17 @@
         } else {
           recordEvent('traffic_channel', 'direct');
         }
+      }
+
+      // Secret Owner Gateway Detection
+      const adminParam = urlParams.get('admin');
+      const ownerParam = urlParams.get('owner');
+      if (adminParam === 'ezana' || ownerParam === 'true' || adminParam === '2026') {
+        unlockOwnerAccess();
+        setTimeout(() => toggleOwnerDashboard(true), 300);
+      } else if (checkOwnerAuth()) {
+        const trigger = document.getElementById('ownerPortalFooterTrigger');
+        if (trigger) trigger.classList.remove('hidden');
       }
 
       recordEvent('view');
