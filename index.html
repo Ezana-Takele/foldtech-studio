@@ -27,37 +27,81 @@
   <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD&components=buttons"></script>
   <script src="payment.js?v=6.0.0"></script>
   
-  <!-- Fonts & Custom Styles -->
+  <!-- Fonts & Custom Styles (Executive Monochrome Aero System) -->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    :root {
+      --canvas-bg: #09090b;
+      --surface-card: rgba(18, 18, 22, 0.78);
+      --surface-card-hover: rgba(24, 24, 30, 0.92);
+      --divider: rgba(255, 255, 255, 0.08);
+      --divider-subtle: rgba(255, 255, 255, 0.04);
+      --text-primary: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --text-dim: #71717a;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--canvas-bg);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
     .glass-card {
-      background: rgba(17, 24, 39, 0.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--surface-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--divider);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
     }
     .glass-card-hover {
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .glass-card-hover:hover {
-      transform: translateY(-4px);
-      border-color: rgba(99, 102, 241, 0.35);
-      box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.15);
+      background: var(--surface-card-hover);
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
     }
     .accent-gradient {
-      background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #d4d4d8 100%);
     }
     .accent-text {
-      background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+    /* Executive Buttons */
+    .btn-executive-primary {
+      background: #ffffff;
+      color: #09090b;
+      font-weight: 700;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+    .btn-executive-primary:hover {
+      background: #e4e4e7;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.15);
+    }
+    .btn-executive-primary:active {
+      transform: scale(0.98);
+    }
+    .btn-executive-secondary {
+      background: #18181b;
+      color: #f4f4f5;
+      border: 1px solid #27272a;
+      transition: all 0.2s ease;
+    }
+    .btn-executive-secondary:hover {
+      background: #27272a;
+      border-color: #3f3f46;
+      color: #ffffff;
+    }
     /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0b0f19; }
-    ::-webkit-scrollbar-thumb { background: #1f293d; border-radius: 999px; }
-    ::-webkit-scrollbar-thumb:hover { background: #374151; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #09090b; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
   </style>
 
   <!-- Schema.org Multi-Product JSON-LD -->
@@ -130,33 +174,33 @@
   }
   </script>
 </head>
-<body class="bg-[#0b0f19] text-gray-100 min-h-screen antialiased selection:bg-indigo-500 selection:text-white">
+<body class="bg-[#09090b] text-zinc-100 min-h-screen antialiased selection:bg-zinc-800 selection:text-white">
 
-  <!-- Top Announcement Bar -->
-  <div class="bg-gradient-to-r from-indigo-950 via-purple-950 to-indigo-950 text-indigo-200 text-xs sm:text-sm py-2.5 px-4 text-center border-b border-indigo-500/20 flex items-center justify-center gap-2">
+  <!-- Top Announcement Bar (Executive Monochrome Aero) -->
+  <div class="bg-[#09090b] text-zinc-300 text-xs sm:text-sm py-2 px-4 text-center border-b border-zinc-800/80 flex items-center justify-center gap-2">
     <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-    <span>⚡ <strong>GLOBAL LAUNCH SALE:</strong> Bundle & Save up to 40% + <strong>FREE Tracked Express Shipping</strong> on all orders!</span>
+    <span>⚡ <strong class="text-white">GLOBAL LAUNCH SALE:</strong> Bundle & Save up to 40% + <strong class="text-emerald-400">FREE Tracked Express Shipping</strong> on all orders!</span>
   </div>
 
   <!-- Main Navigation -->
-  <header class="sticky top-0 z-40 bg-[#0b0f19]/90 backdrop-blur-md border-b border-gray-800/80">
+  <header class="sticky top-0 z-40 bg-[#09090b]/90 backdrop-blur-md border-b border-zinc-800/80">
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
       <a href="#" class="flex items-center gap-3 group">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+        <div class="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-md group-hover:border-zinc-600 transition-colors">
           <i class="fa-solid fa-layer-group text-white text-lg"></i>
         </div>
         <div>
           <span class="font-extrabold text-xl tracking-tight text-white">Fold Tech<span class="accent-text"> Studio</span></span>
-          <span class="block text-[10px] text-gray-400 uppercase tracking-widest font-semibold">Minimalist EDC & Desk</span>
+          <span class="block text-[10px] text-zinc-400 uppercase tracking-widest font-semibold">Minimalist EDC & Desk</span>
         </div>
       </a>
 
       <!-- Center Links -->
-      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
         <a href="#flagship" class="hover:text-white transition-colors">MagFold™ 3-in-1</a>
         <a href="#catalog" class="hover:text-white transition-colors">All Products</a>
-        <a href="#bundle" class="hover:text-amber-400 flex items-center gap-1 transition-colors">
-          <i class="fa-solid fa-sparkles text-xs"></i> Nomad Bundle
+        <a href="#bundle" class="hover:text-white flex items-center gap-1 transition-colors">
+          <i class="fa-solid fa-sparkles text-xs text-amber-400"></i> Nomad Bundle
         </a>
         <a href="#reviews" class="hover:text-white transition-colors">Reviews</a>
       </div>
@@ -164,19 +208,19 @@
       <!-- Right Actions: Cart & Checkout -->
       <div class="flex items-center gap-3">
 
-        <div class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-gray-900 border border-gray-800 text-gray-300">
+        <div class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-zinc-900 border border-zinc-800 text-zinc-300">
           <i class="fa-brands fa-cc-mastercard text-amber-500 text-sm"></i>
           <i class="fa-brands fa-cc-visa text-sky-400 text-sm"></i>
           <i class="fa-brands fa-apple text-white text-sm"></i>
-          <span class="text-gray-400 font-normal">|</span>
+          <span class="text-zinc-600 font-normal">|</span>
           <i class="fa-brands fa-telegram text-sky-400"></i>
           <span>Cards & Crypto</span>
         </div>
 
-        <button onclick="toggleCart(true)" class="relative px-4 py-2.5 rounded-xl bg-gray-900 border border-gray-700 hover:border-indigo-500 text-white text-sm font-semibold flex items-center gap-2.5 transition-all shadow-md">
-          <i class="fa-solid fa-bag-shopping text-indigo-400"></i>
+        <button onclick="toggleCart(true)" class="relative px-4 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-600 text-white text-sm font-semibold flex items-center gap-2.5 transition-all shadow-sm">
+          <i class="fa-solid fa-bag-shopping text-zinc-300"></i>
           <span>Bag</span>
-          <span id="cartCountBadge" class="w-5 h-5 rounded-full bg-indigo-600 text-white text-[11px] font-bold flex items-center justify-center -ml-1">0</span>
+          <span id="cartCountBadge" class="w-5 h-5 rounded-full bg-white text-zinc-950 text-[11px] font-extrabold flex items-center justify-center -ml-1">0</span>
         </button>
       </div>
     </nav>
@@ -188,12 +232,12 @@
       
       <!-- Visual Display -->
       <div class="lg:col-span-7">
-        <div class="glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden group shadow-2xl border-indigo-500/20">
+        <div class="glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden group shadow-2xl border border-zinc-800">
           <div class="absolute top-4 left-4 z-10 flex gap-2">
-            <span class="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-500/20 text-rose-400 border border-rose-500/30">
+            <span class="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-zinc-900 text-zinc-300 border border-zinc-700">
               50% OFF Limited Run
             </span>
-            <span class="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+            <span class="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               #1 Bestseller
             </span>
           </div>
@@ -202,25 +246,25 @@
             <img src="magfold_hero.jpg" onerror="this.src='https://images.unsplash.com/photo-1622445262464-84b150777731?w=800&auto=format&fit=crop&q=80'" 
                  alt="MagFold 3-in-1 Foldable Charger" 
                  class="w-full max-w-md h-80 sm:h-96 object-cover rounded-2xl shadow-2xl group-hover:scale-105 transition-transform duration-500">
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0b0f19]/70 via-transparent to-transparent pointer-events-none rounded-2xl"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#09090b]/80 via-transparent to-transparent pointer-events-none rounded-2xl"></div>
           </div>
 
           <!-- Quick Feature Badges -->
-          <div class="grid grid-cols-3 gap-3 pt-4 border-t border-gray-800/80 text-center">
-            <div class="p-2.5 rounded-xl bg-gray-900/60 border border-gray-800">
-              <i class="fa-solid fa-bolt text-indigo-400 text-lg mb-1"></i>
-              <div class="text-xs font-bold">15W MagSafe</div>
-              <div class="text-[11px] text-gray-400">iPhone 12 - 16</div>
+          <div class="grid grid-cols-3 gap-3 pt-4 border-t border-zinc-800 text-center">
+            <div class="p-2.5 rounded-xl bg-zinc-900/60 border border-zinc-800">
+              <i class="fa-solid fa-bolt text-zinc-300 text-lg mb-1"></i>
+              <div class="text-xs font-bold text-white">15W MagSafe</div>
+              <div class="text-[11px] text-zinc-400">iPhone 12 - 16</div>
             </div>
-            <div class="p-2.5 rounded-xl bg-gray-900/60 border border-gray-800">
-              <i class="fa-solid fa-clock text-purple-400 text-lg mb-1"></i>
-              <div class="text-xs font-bold">Magnetic Dock</div>
-              <div class="text-[11px] text-gray-400">Apple Watch All</div>
+            <div class="p-2.5 rounded-xl bg-zinc-900/60 border border-zinc-800">
+              <i class="fa-solid fa-clock text-zinc-300 text-lg mb-1"></i>
+              <div class="text-xs font-bold text-white">Magnetic Dock</div>
+              <div class="text-[11px] text-zinc-400">Apple Watch All</div>
             </div>
-            <div class="p-2.5 rounded-xl bg-gray-900/60 border border-gray-800">
-              <i class="fa-solid fa-headphones text-pink-400 text-lg mb-1"></i>
-              <div class="text-xs font-bold">Qi Wireless Pad</div>
-              <div class="text-[11px] text-gray-400">AirPods & Buds</div>
+            <div class="p-2.5 rounded-xl bg-zinc-900/60 border border-zinc-800">
+              <i class="fa-solid fa-headphones text-zinc-300 text-lg mb-1"></i>
+              <div class="text-xs font-bold text-white">Qi Wireless Pad</div>
+              <div class="text-[11px] text-zinc-400">AirPods & Buds</div>
             </div>
           </div>
         </div>
@@ -233,62 +277,62 @@
             <div class="flex text-amber-400 text-xs">
               <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
             </div>
-            <span class="text-xs text-gray-400 font-medium">4.9/5 (842 Verified Buyer Reviews)</span>
+            <span class="text-xs text-zinc-400 font-medium">4.9/5 (842 Verified Buyer Reviews)</span>
           </div>
 
           <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
             One Charger for <span class="accent-text">Everything</span>. Folds Flat in Your Pocket.
           </h1>
-          <p class="text-gray-400 text-sm sm:text-base mt-3 leading-relaxed">
+          <p class="text-zinc-400 text-sm sm:text-base mt-3 leading-relaxed">
             Eliminate cable chaos forever. Power your iPhone, Apple Watch, and AirPods simultaneously on a sleek, precision-machined origami stand that folds into 15mm.
           </p>
         </div>
 
         <!-- Pricing Card -->
-        <div class="glass-card p-5 rounded-2xl border-indigo-500/30 bg-gradient-to-br from-indigo-950/40 to-purple-950/20">
+        <div class="glass-card p-5 rounded-2xl border border-zinc-800 bg-zinc-900/50">
           <div class="flex items-baseline justify-between">
             <div>
               <span class="text-3xl sm:text-4xl font-black text-white">$34.99</span>
-              <span class="text-lg text-gray-500 line-through ml-2 font-normal">$69.99</span>
-              <span class="ml-2 text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">SAVE $35</span>
+              <span class="text-lg text-zinc-500 line-through ml-2 font-normal">$69.99</span>
+              <span class="ml-2 text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">SAVE $35</span>
             </div>
             <div class="text-right">
               <span class="text-xs text-emerald-400 font-semibold flex items-center gap-1 justify-end">
                 <i class="fa-solid fa-truck-fast"></i> FREE Express Delivery
               </span>
-              <span class="text-[11px] text-gray-400">5-8 Days USPS / DHL</span>
+              <span class="text-[11px] text-zinc-400">5-8 Days USPS / DHL</span>
             </div>
           </div>
 
-          <div class="mt-4 pt-3 border-t border-gray-800/80 flex items-center justify-between text-xs text-gray-400">
-            <span><i class="fa-solid fa-shield-check text-indigo-400 mr-1"></i> 30-Day Guarantee</span>
-            <span><i class="fa-solid fa-rotate-left text-indigo-400 mr-1"></i> Free Returns</span>
-            <span><i class="fa-solid fa-cube text-indigo-400 mr-1"></i> Tracking Included</span>
+          <div class="mt-4 pt-3 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-400">
+            <span><i class="fa-solid fa-shield-check text-zinc-300 mr-1"></i> 30-Day Guarantee</span>
+            <span><i class="fa-solid fa-rotate-left text-zinc-300 mr-1"></i> Free Returns</span>
+            <span><i class="fa-solid fa-cube text-zinc-300 mr-1"></i> Tracking Included</span>
           </div>
         </div>
 
         <!-- Action Buttons -->
         <div class="space-y-3">
-          <button onclick="addToCart('p1', true)" class="w-full py-4 px-6 rounded-2xl font-bold text-base bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 text-white shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-3">
+          <button onclick="addToCart('p1', true)" class="btn-executive-primary w-full py-4 px-6 rounded-2xl font-bold text-base flex items-center justify-center gap-3">
             <i class="fa-solid fa-bolt"></i>
             <span>Add to Bag & Checkout ($34.99)</span>
           </button>
           
-          <button onclick="addToCart('p1', false)" class="w-full py-3 px-6 rounded-2xl font-semibold text-sm bg-gray-900 border border-gray-700 hover:border-gray-500 text-gray-200 transition-all flex items-center justify-center gap-2">
+          <button onclick="addToCart('p1', false)" class="btn-executive-secondary w-full py-3 px-6 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
             <i class="fa-solid fa-cart-plus"></i>
             <span>Add to Bag & Keep Shopping</span>
           </button>
         </div>
 
-        <div class="text-center text-xs text-gray-400 flex flex-wrap items-center justify-center gap-4 pt-1">
-          <span class="flex items-center gap-1.5 font-medium text-gray-300">
+        <div class="text-center text-xs text-zinc-400 flex flex-wrap items-center justify-center gap-4 pt-1">
+          <span class="flex items-center gap-1.5 font-medium text-zinc-300">
             <i class="fa-brands fa-cc-mastercard text-amber-400 text-sm"></i>
             <i class="fa-brands fa-cc-visa text-sky-400 text-sm"></i>
             <i class="fa-brands fa-apple text-white text-sm"></i> Mastercard, Visa, Apple Pay
           </span>
-          <span class="text-gray-600">•</span>
-          <span class="flex items-center gap-1"><i class="fa-brands fa-telegram text-sky-400"></i> USDT (TON)</span>
-          <span class="flex items-center gap-1"><i class="fa-solid fa-bolt text-purple-400"></i> USDC (Solana)</span>
+          <span class="text-zinc-600">•</span>
+          <span class="flex items-center gap-1 text-zinc-300"><i class="fa-brands fa-telegram text-sky-400"></i> USDT (TON)</span>
+          <span class="flex items-center gap-1 text-zinc-300"><i class="fa-solid fa-bolt text-emerald-400"></i> USDC (Solana)</span>
         </div>
       </div>
     </div>
@@ -296,30 +340,28 @@
 
   <!-- High-Converting Bundle Hero -->
   <section id="bundle" class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-    <div class="glass-card rounded-3xl p-6 sm:p-10 border-amber-500/30 bg-gradient-to-br from-indigo-950/60 via-purple-950/40 to-amber-950/20 relative overflow-hidden">
-      <div class="absolute -right-10 -bottom-10 w-80 h-80 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
-      
+    <div class="glass-card rounded-3xl p-6 sm:p-10 border border-zinc-800 bg-zinc-900/60 relative overflow-hidden">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div class="lg:col-span-8 space-y-4">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-zinc-800 text-zinc-300 border border-zinc-700">
             <i class="fa-solid fa-fire text-amber-400"></i> Best Value Package • Save An Extra $20
           </div>
           
           <h2 class="text-2xl sm:text-4xl font-extrabold text-white">
-            The Ultimate <span class="text-amber-400">Nomad Travel Bundle</span>
+            The Ultimate <span class="text-white underline decoration-zinc-600 underline-offset-4">Nomad Travel Bundle</span>
           </h2>
-          <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
-            Get the full ecosystem in one package. Includes the <strong>MagFold™ 3-in-1 Foldable Charger</strong>, the <strong>Volt65™ Dual USB-C GaN Wall Plug</strong>, and the <strong>MagStand™ Magnetic Leather Wallet</strong>. Everything you need for seamless travel.
+          <p class="text-zinc-300 text-sm sm:text-base leading-relaxed">
+            Get the full ecosystem in one package. Includes the <strong class="text-white">MagFold™ 3-in-1 Foldable Charger</strong>, the <strong class="text-white">Volt65™ Dual USB-C GaN Wall Plug</strong>, and the <strong class="text-white">MagStand™ Magnetic Leather Wallet</strong>. Everything you need for seamless travel.
           </p>
 
-          <div class="flex flex-wrap items-center gap-4 pt-2 text-xs font-semibold text-gray-300">
-            <div class="flex items-center gap-2 bg-gray-900/80 px-3 py-1.5 rounded-lg border border-gray-800">
+          <div class="flex flex-wrap items-center gap-4 pt-2 text-xs font-semibold text-zinc-300">
+            <div class="flex items-center gap-2 bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-800">
               <i class="fa-solid fa-check text-emerald-400"></i> MagFold 3-in-1 ($34.99)
             </div>
-            <div class="flex items-center gap-2 bg-gray-900/80 px-3 py-1.5 rounded-lg border border-gray-800">
+            <div class="flex items-center gap-2 bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-800">
               <i class="fa-solid fa-check text-emerald-400"></i> Volt65 GaN Adapter ($24.99)
             </div>
-            <div class="flex items-center gap-2 bg-gray-900/80 px-3 py-1.5 rounded-lg border border-gray-800">
+            <div class="flex items-center gap-2 bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-800">
               <i class="fa-solid fa-check text-emerald-400"></i> MagStand Wallet ($19.99)
             </div>
           </div>
@@ -328,13 +370,13 @@
         <!-- Bundle Pricing & Buy -->
         <div class="lg:col-span-4 text-center lg:text-right space-y-4">
           <div>
-            <div class="text-xs text-gray-400 uppercase font-semibold">Bundle Total Value: <span class="line-through">$79.97</span></div>
-            <div class="text-4xl sm:text-5xl font-black text-amber-400">$59.99</div>
+            <div class="text-xs text-zinc-400 uppercase font-semibold">Bundle Total Value: <span class="line-through">$79.97</span></div>
+            <div class="text-4xl sm:text-5xl font-black text-white">$59.99</div>
             <div class="text-xs text-emerald-400 font-bold mt-1">Instant $20.00 Savings + Free Express Shipping</div>
           </div>
 
-          <button onclick="addBundleToCart()" class="w-full py-4 px-6 rounded-2xl font-bold text-base bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-gray-950 shadow-xl shadow-amber-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-            <i class="fa-solid fa-sparkles"></i>
+          <button onclick="addBundleToCart()" class="btn-executive-primary w-full py-4 px-6 rounded-2xl font-bold text-base flex items-center justify-center gap-2">
+            <i class="fa-solid fa-sparkles text-amber-500"></i>
             <span>Add Nomad Bundle ($59.99)</span>
           </button>
         </div>
@@ -345,11 +387,11 @@
   <!-- Full Multi-Product Catalog Grid (24 Flagship Products) -->
   <section id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
     <div class="text-center max-w-3xl mx-auto mb-10">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-zinc-800 text-zinc-300 border border-zinc-700 mb-3">
         <i class="fa-solid fa-sparkles text-amber-400"></i> The Flagship 2026 Collection
       </div>
       <h2 class="text-3xl sm:text-4xl font-extrabold text-white">24 Curated Tech Essentials</h2>
-      <p class="text-gray-400 text-sm sm:text-base mt-2">
+      <p class="text-zinc-400 text-sm sm:text-base mt-2">
         Precision-engineered folding chargers, MagSafe ecosystems, GaN power blocks, and minimalist workspace gear.
       </p>
     </div>
@@ -358,39 +400,39 @@
     <div class="mb-10 space-y-4">
       <!-- Category Navigation Pills -->
       <div class="flex flex-wrap items-center justify-center gap-2" id="catalogCategoryTabs">
-        <button type="button" onclick="filterCatalog('all')" id="catBtn-all" class="cat-pill active px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 transition-all">
+        <button type="button" onclick="filterCatalog('all')" id="catBtn-all" class="cat-pill active px-4 py-2 rounded-xl text-xs font-bold bg-white text-zinc-950 shadow-md transition-all">
           All Items (24)
         </button>
-        <button type="button" onclick="filterCatalog('power')" id="catBtn-power" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 border border-gray-800 text-gray-300 hover:text-white hover:border-gray-700 transition-all">
+        <button type="button" onclick="filterCatalog('power')" id="catBtn-power" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all">
           ⚡ Charging & Power (7)
         </button>
-        <button type="button" onclick="filterCatalog('magsafe')" id="catBtn-magsafe" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 border border-gray-800 text-gray-300 hover:text-white hover:border-gray-700 transition-all">
+        <button type="button" onclick="filterCatalog('magsafe')" id="catBtn-magsafe" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all">
           🧲 MagSafe & Stands (5)
         </button>
-        <button type="button" onclick="filterCatalog('desk')" id="catBtn-desk" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 border border-gray-800 text-gray-300 hover:text-white hover:border-gray-700 transition-all">
+        <button type="button" onclick="filterCatalog('desk')" id="catBtn-desk" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all">
           🖥️ Desk & Workspace (5)
         </button>
-        <button type="button" onclick="filterCatalog('audio')" id="catBtn-audio" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 border border-gray-800 text-gray-300 hover:text-white hover:border-gray-700 transition-all">
-          🎧 Audio & EDC (4)
+        <button type="button" onclick="filterCatalog('audio')" id="catBtn-audio" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all">
+          🎧 Audio (2)
         </button>
-        <button type="button" onclick="filterCatalog('travel')" id="catBtn-travel" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 border border-gray-800 text-gray-300 hover:text-white hover:border-gray-700 transition-all">
-          ✈️ Travel Tech (3)
+        <button type="button" onclick="filterCatalog('travel')" id="catBtn-travel" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all">
+          ✈️ Travel & EDC (5)
         </button>
       </div>
 
       <!-- Search & Sort Row -->
       <div class="flex flex-col sm:flex-row items-center justify-between gap-3 max-w-4xl mx-auto pt-2">
         <div class="relative w-full sm:w-80">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-500 text-xs"></i>
-          <input type="text" id="catalogSearchInput" oninput="handleCatalogSearch(this.value)" placeholder="Search 24 flagship items by keyword..." class="w-full pl-9 pr-8 py-2 rounded-xl bg-gray-900/90 border border-gray-800 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors">
-          <button id="clearSearchBtn" onclick="clearCatalogSearch()" class="hidden absolute right-3 top-2.5 text-gray-500 hover:text-white text-xs">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-zinc-500 text-xs"></i>
+          <input type="text" id="catalogSearchInput" oninput="handleCatalogSearch(this.value)" placeholder="Search 24 flagship items by keyword..." class="w-full pl-9 pr-8 py-2 rounded-xl bg-zinc-900/90 border border-zinc-800 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors">
+          <button id="clearSearchBtn" onclick="clearCatalogSearch()" class="hidden absolute right-3 top-2.5 text-zinc-500 hover:text-white text-xs">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
 
-        <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end text-xs text-gray-400">
-          <span id="catalogCountDisplay" class="font-semibold text-gray-300">Showing 24 products</span>
-          <select id="catalogSortSelect" onchange="handleCatalogSort(this.value)" class="bg-gray-900 border border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-200 focus:outline-none focus:border-indigo-500 cursor-pointer">
+        <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end text-xs text-zinc-400">
+          <span id="catalogCountDisplay" class="font-semibold text-zinc-300">Showing 24 products</span>
+          <select id="catalogSortSelect" onchange="handleCatalogSort(this.value)" class="bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-zinc-500 cursor-pointer">
             <option value="featured">Featured / Best Value</option>
             <option value="price-asc">Price: Low to High</option>
             <option value="price-desc">Price: High to Low</option>
@@ -407,30 +449,30 @@
 
     <!-- Empty State Notification -->
     <div id="catalogEmptyState" class="hidden text-center py-16 space-y-3">
-      <div class="w-16 h-16 rounded-full bg-gray-900 border border-gray-800 text-gray-500 text-2xl mx-auto flex items-center justify-center">
+      <div class="w-16 h-16 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-500 text-2xl mx-auto flex items-center justify-center">
         <i class="fa-solid fa-magnifying-glass"></i>
       </div>
       <h3 class="text-base font-bold text-white">No products found</h3>
-      <p class="text-xs text-gray-400">Try searching with a different keyword or reset the filter.</p>
-      <button onclick="clearCatalogSearch()" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-500 transition-colors">
+      <p class="text-xs text-zinc-400">Try searching with a different keyword or reset the filter.</p>
+      <button onclick="clearCatalogSearch()" class="btn-executive-primary px-4 py-2 rounded-xl text-xs font-bold transition-colors">
         Reset Search & Filters
       </button>
     </div>
 
     <!-- Viral Promotion & Share Hub -->
-    <div class="mt-16 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-neutral-950 via-indigo-950/40 to-neutral-950 border border-indigo-500/30 shadow-2xl relative overflow-hidden">
+    <div class="mt-16 p-6 sm:p-8 rounded-3xl glass-card border border-zinc-800 bg-zinc-900/60 shadow-2xl relative overflow-hidden">
       <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
         <div class="space-y-2 max-w-xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-pink-500/20 text-pink-300 border border-pink-500/30">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-zinc-800 text-zinc-300 border border-zinc-700">
             <i class="fa-brands fa-tiktok text-pink-400"></i> Viral Dropship & Affiliate Hub
           </div>
           <h3 class="text-xl sm:text-2xl font-black text-white">Promote Fold Tech Studio & Earn 15% Lifetime</h3>
-          <p class="text-xs sm:text-sm text-gray-400 leading-relaxed">
+          <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed">
             Share our flagship Apple accessories on TikTok, Instagram Reels, and Telegram. Track every click, view, and order in real-time.
           </p>
         </div>
         <div class="flex flex-wrap items-center gap-2.5">
-          <button type="button" onclick="shareStore('tiktok')" class="px-4 py-2.5 rounded-xl bg-black hover:bg-neutral-900 border border-gray-700 text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md active:scale-95">
+          <button type="button" onclick="shareStore('tiktok')" class="px-4 py-2.5 rounded-xl bg-black hover:bg-neutral-900 border border-zinc-800 text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md active:scale-95">
             <i class="fa-brands fa-tiktok text-sm text-pink-500"></i> TikTok Share
           </button>
           <button type="button" onclick="shareStore('telegram')" class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md active:scale-95">
@@ -439,19 +481,19 @@
           <button type="button" onclick="shareStore('whatsapp')" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md active:scale-95">
             <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
           </button>
-          <button type="button" onclick="shareStore('twitter')" class="px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md active:scale-95">
+          <button type="button" onclick="shareStore('twitter')" class="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md active:scale-95">
             <i class="fa-brands fa-x-twitter text-sm"></i> X (Twitter)
           </button>
-          <button type="button" onclick="copyPromotionalPitch()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white text-xs font-extrabold flex items-center gap-2 transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
+          <button type="button" onclick="copyPromotionalPitch()" class="btn-executive-primary px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all shadow-md active:scale-95">
             <i class="fa-solid fa-copy text-sm"></i> Copy Viral Hook & Link
           </button>
         </div>
       </div>
       <!-- Tracked UTM Link Box -->
-      <div class="mt-5 pt-4 border-t border-gray-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-        <div class="flex items-center gap-2 text-gray-400 text-[11px] w-full sm:w-auto">
-          <span class="font-mono text-gray-500">Your Tracked Link:</span>
-          <code id="trackedShareLinkDisplay" class="bg-gray-900 px-2.5 py-1 rounded-lg text-indigo-300 font-mono text-[11px] select-all truncate border border-gray-800">https://ezana-takele.github.io/foldtech-studio/?utm_source=tiktok&ref=ezana</code>
+      <div class="mt-5 pt-4 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2 text-zinc-400 text-[11px] w-full sm:w-auto">
+          <span class="font-mono text-zinc-500">Your Tracked Link:</span>
+          <code id="trackedShareLinkDisplay" class="bg-zinc-900 px-2.5 py-1 rounded-lg text-zinc-200 font-mono text-[11px] select-all truncate border border-zinc-800">https://ezana-takele.github.io/foldtech-studio/?utm_source=tiktok&ref=ezana</code>
         </div>
         <div class="text-[11px] text-emerald-400 font-semibold flex items-center gap-1.5 flex-shrink-0">
           <i class="fa-solid fa-chart-line"></i> Real-time clicks & impressions logged automatically in dashboard
@@ -461,11 +503,11 @@
   </section>
 
   <!-- Customer Reviews Section -->
-  <section id="reviews" class="max-w-7xl mx-auto px-4 sm:px-6 py-12 border-t border-gray-900">
+  <section id="reviews" class="max-w-7xl mx-auto px-4 sm:px-6 py-12 border-t border-zinc-900">
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
       <div>
         <h2 class="text-2xl font-bold text-white">Customer Experiences</h2>
-        <p class="text-xs sm:text-sm text-gray-400">Verified owners across the United States & Europe</p>
+        <p class="text-xs sm:text-sm text-zinc-400">Verified owners across the United States & Europe</p>
       </div>
       <div class="flex items-center gap-3">
         <div class="text-right">
@@ -476,44 +518,44 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="glass-card p-6 rounded-2xl space-y-3">
+      <div class="glass-card p-6 rounded-2xl space-y-3 border border-zinc-800">
         <div class="flex text-amber-400 text-xs">
           <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
         </div>
-        <p class="text-gray-300 text-sm italic">"Paid with my Apple Pay Mastercard at checkout. The MagFold plus the 65W GaN plug completely replaced every other adapter in my backpack. Super fast USPS delivery to Austin."</p>
+        <p class="text-zinc-300 text-sm leading-relaxed">"The MagFold plus the 65W GaN plug completely replaced every other adapter in my backpack. The entire transaction was effortless, and USPS delivered to Austin in under 4 days. Incredible craftsmanship."</p>
         <div class="flex items-center gap-3 pt-2">
-          <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-xs">MJ</div>
+          <div class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center font-bold text-xs text-white">MJ</div>
           <div>
             <div class="text-xs font-bold text-white">Marcus J.</div>
-            <div class="text-[10px] text-gray-400">Austin, Texas • Verified Mastercard Buyer</div>
+            <div class="text-[10px] text-zinc-400">Austin, Texas • Verified Buyer</div>
           </div>
         </div>
       </div>
 
-      <div class="glass-card p-6 rounded-2xl space-y-3">
+      <div class="glass-card p-6 rounded-2xl space-y-3 border border-zinc-800">
         <div class="flex text-amber-400 text-xs">
           <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
         </div>
-        <p class="text-gray-300 text-sm italic">"Checkout was seamless with my Visa debit card. Got my USPS tracking number in 2 minutes, arrived in Miami in 5 days. High-end Apple-level packaging."</p>
+        <p class="text-zinc-300 text-sm leading-relaxed">"Smooth transaction from start to finish. Got my tracking number immediately, and the package arrived in Miami in 5 days in flawless Apple-level packaging. The origami fold is super satisfying."</p>
         <div class="flex items-center gap-3 pt-2">
-          <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-xs">SL</div>
+          <div class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center font-bold text-xs text-white">SL</div>
           <div>
             <div class="text-xs font-bold text-white">Samantha L.</div>
-            <div class="text-[10px] text-gray-400">Miami, Florida • Verified Visa Buyer</div>
+            <div class="text-[10px] text-zinc-400">Miami, Florida • Verified Buyer</div>
           </div>
         </div>
       </div>
 
-      <div class="glass-card p-6 rounded-2xl space-y-3">
+      <div class="glass-card p-6 rounded-2xl space-y-3 border border-zinc-800">
         <div class="flex text-amber-400 text-xs">
           <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
         </div>
-        <p class="text-gray-300 text-sm italic">"Build quality is absurdly good for the price. The MagSafe wallet has a super strong magnet and the kickstand is rock steady on plane tray tables."</p>
+        <p class="text-zinc-300 text-sm leading-relaxed">"Build quality is absurdly good for the price. The MagSafe wallet has a rock-solid magnetic snap and the kickstand is rock steady on plane tray tables. Effortless checkout."</p>
         <div class="flex items-center gap-3 pt-2">
-          <div class="w-8 h-8 rounded-full bg-pink-600 flex items-center justify-center font-bold text-xs">DK</div>
+          <div class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center font-bold text-xs text-white">DK</div>
           <div>
             <div class="text-xs font-bold text-white">David K.</div>
-            <div class="text-[10px] text-gray-400">San Diego, California • Verified Purchase</div>
+            <div class="text-[10px] text-zinc-400">San Diego, California • Verified Buyer</div>
           </div>
         </div>
       </div>
@@ -527,16 +569,16 @@
 
     <!-- Drawer Panel -->
     <div id="cartPanel" class="absolute inset-y-0 right-0 max-w-full flex pl-10 pointer-events-auto transform translate-x-full transition-transform duration-300">
-      <div class="w-screen max-w-md bg-[#0f1523] border-l border-gray-800 p-6 flex flex-col justify-between shadow-2xl">
+      <div class="w-screen max-w-md bg-[#09090b] border-l border-zinc-800 p-6 flex flex-col justify-between shadow-2xl">
         
         <!-- Header -->
         <div>
-          <div class="flex items-center justify-between pb-4 border-b border-gray-800">
+          <div class="flex items-center justify-between pb-4 border-b border-zinc-800">
             <div class="flex items-center gap-2">
-              <i class="fa-solid fa-bag-shopping text-indigo-400 text-lg"></i>
+              <i class="fa-solid fa-bag-shopping text-zinc-300 text-lg"></i>
               <h3 class="font-extrabold text-lg text-white">Your Shopping Bag</h3>
             </div>
-            <button onclick="toggleCart(false)" class="text-gray-400 hover:text-white p-1">
+            <button onclick="toggleCart(false)" class="text-zinc-400 hover:text-white p-1">
               <i class="fa-solid fa-xmark text-lg"></i>
             </button>
           </div>
@@ -548,14 +590,14 @@
           </div>
 
           <!-- Cart Items Container -->
-          <div id="cartItemsList" class="divide-y divide-gray-800 max-h-[48vh] overflow-y-auto mt-4 pr-1">
+          <div id="cartItemsList" class="divide-y divide-zinc-800 max-h-[48vh] overflow-y-auto mt-4 pr-1">
             <!-- Dynamic Cart Items Injected Here -->
           </div>
         </div>
 
         <!-- Footer / Checkout Trigger -->
-        <div class="pt-4 border-t border-gray-800 space-y-4">
-          <div class="space-y-1.5 text-xs text-gray-400">
+        <div class="pt-4 border-t border-zinc-800 space-y-4">
+          <div class="space-y-1.5 text-xs text-zinc-400">
             <div class="flex justify-between">
               <span>Subtotal:</span>
               <span id="cartSubtotal" class="font-bold text-white text-sm">$0.00</span>
@@ -564,19 +606,19 @@
               <span>Tracked Delivery (USPS/DHL):</span>
               <span class="text-emerald-400 font-bold">FREE ($0.00)</span>
             </div>
-            <div class="flex justify-between text-sm font-extrabold text-white pt-2 border-t border-gray-800">
+            <div class="flex justify-between text-sm font-extrabold text-white pt-2 border-t border-zinc-800">
               <span>Total Payable:</span>
-              <span id="cartTotal" class="text-indigo-400 text-lg font-black">$0.00</span>
+              <span id="cartTotal" class="text-white text-lg font-black">$0.00</span>
             </div>
           </div>
 
           <!-- 1-Click Express Wallets -->
           <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="quickExpressPay('GOOGLE_PAY')" class="py-2.5 px-2 rounded-xl bg-black hover:bg-gray-900 border border-gray-700 text-white font-bold text-xs flex items-center justify-center gap-1 transition-all shadow-sm active:scale-95">
+            <button type="button" onclick="quickExpressPay('GOOGLE_PAY')" class="py-2.5 px-2 rounded-xl bg-black hover:bg-neutral-900 border border-zinc-800 text-white font-bold text-xs flex items-center justify-center gap-1 transition-all shadow-sm active:scale-95">
               <i class="fa-brands fa-google text-xs"></i>
               <span>Pay</span>
             </button>
-            <button type="button" onclick="quickExpressPay('APPLE_PAY')" class="py-2.5 px-2 rounded-xl bg-white hover:bg-gray-100 text-black font-bold text-xs flex items-center justify-center gap-1 transition-all shadow-sm active:scale-95">
+            <button type="button" onclick="quickExpressPay('APPLE_PAY')" class="py-2.5 px-2 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-bold text-xs flex items-center justify-center gap-1 transition-all shadow-sm active:scale-95">
               <i class="fa-brands fa-apple text-sm"></i>
               <span>Pay</span>
             </button>
@@ -587,19 +629,19 @@
           </div>
 
           <div class="relative flex py-0.5 items-center">
-            <div class="flex-grow border-t border-gray-800"></div>
-            <span class="flex-shrink mx-2 text-[10px] text-gray-500 uppercase font-semibold">or standard checkout</span>
-            <div class="flex-grow border-t border-gray-800"></div>
+            <div class="flex-grow border-t border-zinc-800"></div>
+            <span class="flex-shrink mx-2 text-[10px] text-zinc-500 uppercase font-semibold">or standard checkout</span>
+            <div class="flex-grow border-t border-zinc-800"></div>
           </div>
 
-          <button onclick="openCheckoutModal()" id="btnCheckout" class="w-full py-4 rounded-xl font-bold text-sm bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 text-white shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+          <button onclick="openCheckoutModal()" id="btnCheckout" class="btn-executive-primary w-full py-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
             <span>Proceed to Express Checkout</span>
             <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
 
-          <p class="text-[11px] text-gray-500 text-center flex items-center justify-center gap-3">
+          <p class="text-[11px] text-zinc-500 text-center flex items-center justify-center gap-3">
             <span><i class="fa-solid fa-lock text-emerald-400"></i> Encrypted 256-bit Payment</span>
-            <span><i class="fa-solid fa-shield-check text-indigo-400"></i> 30-Day Guarantee</span>
+            <span><i class="fa-solid fa-shield-check text-zinc-400"></i> 30-Day Guarantee</span>
           </p>
         </div>
 
@@ -902,7 +944,7 @@
 
         <!-- Section 3: Amazon / Alibaba "Place Your Order" Button -->
         <div class="space-y-3 pt-2">
-          <button type="button" onclick="submitOrder()" id="confirmOrderBtn" class="w-full py-4 px-6 rounded-xl font-black text-sm bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-gray-950 shadow-xl shadow-amber-500/20 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+          <button type="button" onclick="submitOrder()" id="confirmOrderBtn" class="btn-executive-primary w-full py-4 px-6 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2">
             <i class="fa-solid fa-lock text-sm"></i>
             <span id="submitBtnText">Place Your Order • $34.99 USD</span>
           </button>
@@ -998,7 +1040,7 @@
           <button type="button" onclick="window.print()" class="py-3 px-4 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-200 text-xs font-semibold flex items-center justify-center gap-2 transition-colors">
             <i class="fa-solid fa-print"></i> Print Receipt
           </button>
-          <button type="button" onclick="closeCheckoutModal()" class="py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-colors">
+          <button type="button" onclick="closeCheckoutModal()" class="btn-executive-primary py-3 px-4 rounded-xl text-xs font-bold transition-colors">
             Continue Shopping
           </button>
         </div>
@@ -1166,8 +1208,8 @@
           <span class="text-[10px] text-gray-400 font-normal">Stripe / PayPal.me Link</span>
         </div>
         <div class="flex gap-2">
-          <input type="url" id="adminPaymentLinkInput" placeholder="e.g. https://buy.stripe.com/... or https://paypal.me/ezanatakele" class="w-full px-3 py-2 rounded-xl bg-gray-950 border border-gray-700 text-xs text-white focus:outline-none focus:border-indigo-500 font-mono">
-          <button type="button" onclick="saveAdminPaymentLink()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs whitespace-nowrap transition-colors">
+          <input type="url" id="adminPaymentLinkInput" placeholder="e.g. https://buy.stripe.com/... or https://paypal.me/ezanatakele" class="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-700 text-xs text-white focus:outline-none focus:border-zinc-500 font-mono">
+          <button type="button" onclick="saveAdminPaymentLink()" class="btn-executive-primary px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors">
             Save Link
           </button>
         </div>
@@ -1175,20 +1217,20 @@
       </div>
 
       <!-- Agentic AI Multi-Agent Operations Swarm (Inspired by TikTok AI Architecture) -->
-      <div class="p-4 bg-gradient-to-br from-indigo-950/50 via-purple-950/20 to-gray-900 rounded-2xl border border-indigo-500/40 space-y-3">
+      <div class="p-4 bg-zinc-900/90 rounded-2xl border border-zinc-800 space-y-3">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
             <h4 class="text-xs font-black uppercase tracking-wider text-white flex items-center gap-1.5">
-              <i class="fa-solid fa-network-wired text-indigo-400"></i> Agentic AI Multi-Agent Operations Swarm
+              <i class="fa-solid fa-network-wired text-zinc-300"></i> Agentic AI Multi-Agent Operations Swarm
             </h4>
           </div>
-          <button type="button" onclick="runAgenticCycle()" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer">
+          <button type="button" onclick="runAgenticCycle()" class="btn-executive-primary px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer">
             <i class="fa-solid fa-play text-[10px]"></i> Run Autonomous Multi-Agent Cycle
           </button>
         </div>
 
-        <div class="text-[11px] text-gray-300">
+        <div class="text-[11px] text-zinc-300">
           Coordinating 4 specialized agents toward your daily goal (<strong class="text-white">1,000 views</strong> & <strong class="text-white">50 clicks</strong>):
         </div>
 
@@ -1245,12 +1287,12 @@
   </div>
 
   <!-- Real-Time Social Proof Purchase Ticker -->
-  <div id="socialProofTicker" class="fixed bottom-5 left-5 z-40 max-w-xs sm:max-w-sm p-3 rounded-2xl bg-gray-900/95 backdrop-blur-md border border-indigo-500/30 shadow-2xl text-xs text-white flex items-center gap-3 transition-all duration-500 transform translate-y-24 opacity-0 pointer-events-none">
-    <div class="w-10 h-10 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-base flex-shrink-0">
+  <div id="socialProofTicker" class="fixed bottom-5 left-5 z-40 max-w-xs sm:max-w-sm p-3 rounded-2xl bg-zinc-900/95 backdrop-blur-md border border-zinc-800 shadow-2xl text-xs text-white flex items-center gap-3 transition-all duration-500 transform translate-y-24 opacity-0 pointer-events-none">
+    <div class="w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300 text-base flex-shrink-0">
       <i class="fa-solid fa-bag-shopping"></i>
     </div>
     <div class="flex-1 min-w-0">
-      <div class="text-[11px] text-gray-200 font-medium truncate" id="tickerText">Someone from London just bought MagFold™ 3-in-1</div>
+      <div class="text-[11px] text-zinc-200 font-medium truncate" id="tickerText">Someone from London just bought MagFold™ 3-in-1</div>
       <div class="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-0.5">
         <i class="fa-solid fa-check text-[9px]"></i> <span id="tickerTime">2 minutes ago • Verified Purchase</span>
       </div>
@@ -1260,18 +1302,18 @@
   <!-- Floating FoldTech AI Concierge Widget -->
   <div id="aiConciergeWidget" class="fixed bottom-5 right-5 z-40">
     <!-- Toggle Button -->
-    <button type="button" onclick="toggleAIConcierge()" class="flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-xs shadow-2xl border border-white/20 transition-all hover:scale-105 cursor-pointer">
-      <i class="fa-solid fa-robot text-sm"></i>
+    <button type="button" onclick="toggleAIConcierge()" class="flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs shadow-2xl border border-zinc-700 transition-all hover:scale-105 cursor-pointer">
+      <i class="fa-solid fa-robot text-sm text-zinc-300"></i>
       <span>FoldTech AI Specialist</span>
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
     </button>
 
     <!-- Chat Modal Window -->
-    <div id="aiConciergeModal" class="hidden absolute bottom-12 right-0 w-80 sm:w-96 rounded-3xl bg-[#0f1523]/95 backdrop-blur-xl border border-indigo-500/30 shadow-2xl overflow-hidden flex flex-col z-50">
+    <div id="aiConciergeModal" class="hidden absolute bottom-12 right-0 w-80 sm:w-96 rounded-3xl bg-[#09090b]/95 backdrop-blur-xl border border-zinc-800 shadow-2xl overflow-hidden flex flex-col z-50">
       <!-- Header -->
-      <div class="p-3.5 bg-gray-900/90 border-b border-gray-800 flex items-center justify-between">
+      <div class="p-3.5 bg-zinc-900/90 border-b border-zinc-800 flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <div class="w-7 h-7 rounded-lg bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-indigo-400 text-xs">
+          <div class="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300 text-xs">
             <i class="fa-solid fa-microchip"></i>
           </div>
           <div>
@@ -1279,37 +1321,37 @@
               FoldTech AI Concierge
               <span class="text-[9px] text-emerald-400 font-mono bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">Online</span>
             </div>
-            <div class="text-[9px] text-gray-400">Autonomous RAG & Tool-Equipped Specialist</div>
+            <div class="text-[9px] text-zinc-400">Autonomous RAG & Tool-Equipped Specialist</div>
           </div>
         </div>
-        <button onclick="toggleAIConcierge()" class="text-gray-400 hover:text-white p-1 text-sm">
+        <button onclick="toggleAIConcierge()" class="text-zinc-400 hover:text-white p-1 text-sm">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
       <!-- Messages Body -->
       <div id="aiChatMessages" class="p-3.5 space-y-2.5 max-h-72 overflow-y-auto text-xs">
-        <div class="p-2.5 rounded-2xl bg-gray-900/80 border border-gray-800 text-gray-300 leading-relaxed">
+        <div class="p-2.5 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-zinc-300 leading-relaxed">
           👋 Hi! I'm your <strong>FoldTech AI Specialist</strong>. Looking for the right folding charger or desk accessory? Ask me about device compatibility, charging speeds, or our flagship <strong>MagFold™ 3-in-1</strong>!
         </div>
         <!-- Quick Prompts -->
         <div class="flex flex-wrap gap-1.5 pt-1">
-          <button onclick="sendQuickPrompt('Will MagFold charge my iPhone, Apple Watch and AirPods at once?')" class="text-[10px] px-2.5 py-1 rounded-full bg-indigo-950/70 border border-indigo-500/30 text-indigo-300 hover:border-indigo-400 transition-colors">
+          <button onclick="sendQuickPrompt('Will MagFold charge my iPhone, Apple Watch and AirPods at once?')" class="text-[10px] px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-zinc-600 transition-colors">
             ⚡ 3-in-1 Compatibility?
           </button>
-          <button onclick="sendQuickPrompt('Which charger is best for MacBook + iPhone travel?')" class="text-[10px] px-2.5 py-1 rounded-full bg-indigo-950/70 border border-indigo-500/30 text-indigo-300 hover:border-indigo-400 transition-colors">
+          <button onclick="sendQuickPrompt('Which charger is best for MacBook + iPhone travel?')" class="text-[10px] px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-zinc-600 transition-colors">
             ✈️ Best for travel?
           </button>
-          <button onclick="sendQuickPrompt('How does free shipping work?')" class="text-[10px] px-2.5 py-1 rounded-full bg-indigo-950/70 border border-indigo-500/30 text-indigo-300 hover:border-indigo-400 transition-colors">
+          <button onclick="sendQuickPrompt('How does free shipping work?')" class="text-[10px] px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-zinc-600 transition-colors">
             📦 Free Shipping?
           </button>
         </div>
       </div>
 
       <!-- Input Bar -->
-      <div class="p-2.5 bg-gray-900/90 border-t border-gray-800 flex gap-1.5">
-        <input type="text" id="aiChatInput" onkeydown="if(event.key==='Enter') sendAIChatMessage()" placeholder="Ask anything about our products..." class="flex-1 px-3 py-1.5 rounded-xl bg-gray-950 border border-gray-700 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500">
-        <button onclick="sendAIChatMessage()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors">
+      <div class="p-2.5 bg-zinc-900/90 border-t border-zinc-800 flex gap-1.5">
+        <input type="text" id="aiChatInput" onkeydown="if(event.key==='Enter') sendAIChatMessage()" placeholder="Ask anything about our products..." class="flex-1 px-3 py-1.5 rounded-xl bg-zinc-950 border border-zinc-700 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-400">
+        <button onclick="sendAIChatMessage()" class="btn-executive-primary px-3 py-1.5 rounded-xl text-xs transition-colors">
           <i class="fa-solid fa-paper-plane text-[10px]"></i>
         </button>
       </div>
@@ -1318,14 +1360,14 @@
 
   <!-- Master JavaScript Application -->
   <script>
-    // Flagship 24-Product Catalog Database
+    // Flagship 24-Product Catalog Database (Rectified & Audited)
     const PRODUCTS = {
       p1: {
         id: 'p1',
         name: 'MagFold™ 3-in-1 Foldable Charger',
         category: 'power',
         badge: 'Flagship Bestseller',
-        badgeColor: 'bg-indigo-600',
+        badgeColor: 'bg-zinc-800',
         price: 34.99,
         originalPrice: 69.99,
         wholesale: 10.50,
@@ -1340,7 +1382,7 @@
         name: 'Volt65™ 65W GaN Travel Fast Charger',
         category: 'power',
         badge: 'GaN III Fast',
-        badgeColor: 'bg-purple-600',
+        badgeColor: 'bg-zinc-800',
         price: 24.99,
         originalPrice: 39.99,
         wholesale: 6.20,
@@ -1355,7 +1397,7 @@
         name: 'MagStand™ Slim Leather Wallet & Kickstand',
         category: 'magsafe',
         badge: 'MagSafe Leather',
-        badgeColor: 'bg-pink-600',
+        badgeColor: 'bg-zinc-800',
         price: 19.99,
         originalPrice: 34.99,
         wholesale: 3.40,
@@ -1370,7 +1412,7 @@
         name: 'StudioMat™ Waterproof Desk Pad (90x40cm)',
         category: 'desk',
         badge: 'Clean Desk',
-        badgeColor: 'bg-teal-600',
+        badgeColor: 'bg-zinc-800',
         price: 22.99,
         originalPrice: 39.99,
         wholesale: 5.50,
@@ -1384,8 +1426,8 @@
         id: 'p5',
         name: 'MagPower™ 10,000mAh Magnetic Powerbank',
         category: 'power',
-        badge: 'Viral TikTok',
-        badgeColor: 'bg-rose-600',
+        badge: 'Snap Power',
+        badgeColor: 'bg-zinc-800',
         price: 39.99,
         originalPrice: 69.99,
         wholesale: 12.80,
@@ -1400,14 +1442,14 @@
         name: 'NomadCube™ 100W 4-Port GaN Desktop Hub',
         category: 'power',
         badge: 'Pro Station',
-        badgeColor: 'bg-amber-600',
+        badgeColor: 'bg-zinc-800',
         price: 49.99,
         originalPrice: 89.99,
         wholesale: 15.00,
         rating: 4.9,
         reviews: 524,
-        image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
-        fallback: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
+        image: 'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&auto=format&fit=crop&q=80',
+        fallback: 'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&auto=format&fit=crop&q=80',
         desc: 'Heavy-duty 100W GaN charging hub with 3x USB-C PD and 1x USB-A. Fast-charges 2 MacBooks at once.'
       },
       p7: {
@@ -1415,7 +1457,7 @@
         name: 'OrbitDock™ 360 Magnetic Floating iPad Stand',
         category: 'magsafe',
         badge: 'Studio Pick',
-        badgeColor: 'bg-sky-600',
+        badgeColor: 'bg-zinc-800',
         price: 44.99,
         originalPrice: 79.99,
         wholesale: 14.20,
@@ -1429,8 +1471,8 @@
         id: 'p8',
         name: 'MagMount™ Active Cooling MagSafe Car Mount',
         category: 'magsafe',
-        badge: 'Top Rated',
-        badgeColor: 'bg-emerald-600',
+        badge: 'Car MagSafe',
+        badgeColor: 'bg-zinc-800',
         price: 29.99,
         originalPrice: 49.99,
         wholesale: 8.50,
@@ -1444,8 +1486,8 @@
         id: 'p9',
         name: 'PrismRGB™ Smart Screen Lightbar with Dial',
         category: 'desk',
-        badge: 'Eye Care Pro',
-        badgeColor: 'bg-violet-600',
+        badge: 'Eye Care',
+        badgeColor: 'bg-zinc-800',
         price: 38.99,
         originalPrice: 69.99,
         wholesale: 11.00,
@@ -1459,15 +1501,15 @@
         id: 'p10',
         name: 'CableArmor™ Magnetic Desktop Cable Organizer Set',
         category: 'desk',
-        badge: 'Essential',
-        badgeColor: 'bg-blue-600',
+        badge: 'Desk EDC',
+        badgeColor: 'bg-zinc-800',
         price: 14.99,
         originalPrice: 24.99,
         wholesale: 3.10,
         rating: 4.7,
         reviews: 284,
-        image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
-        fallback: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
+        image: 'https://images.unsplash.com/photo-1588508065123-287b28e013da?w=800&auto=format&fit=crop&q=80',
+        fallback: 'https://images.unsplash.com/photo-1588508065123-287b28e013da?w=800&auto=format&fit=crop&q=80',
         desc: 'Weighted magnetic dock with 5 matching magnetic cable collars. Eliminates floor cable drops forever.'
       },
       p11: {
@@ -1475,7 +1517,7 @@
         name: 'OrbitAir™ Pro ANC Wireless Earbuds',
         category: 'audio',
         badge: 'Hi-Fi Audio',
-        badgeColor: 'bg-indigo-700',
+        badgeColor: 'bg-zinc-800',
         price: 59.99,
         originalPrice: 119.99,
         wholesale: 18.50,
@@ -1490,7 +1532,7 @@
         name: 'SoundCapsule™ Waterproof Bluetooth Speaker',
         category: 'audio',
         badge: 'IPX7 Rugged',
-        badgeColor: 'bg-cyan-600',
+        badgeColor: 'bg-zinc-800',
         price: 27.99,
         originalPrice: 49.99,
         wholesale: 7.80,
@@ -1504,8 +1546,8 @@
         id: 'p13',
         name: 'NomadShield™ Hard-Shell Cable & Tech Pouch',
         category: 'travel',
-        badge: 'Nomad Pick',
-        badgeColor: 'bg-amber-700',
+        badge: 'Travel Gear',
+        badgeColor: 'bg-zinc-800',
         price: 21.99,
         originalPrice: 38.99,
         wholesale: 5.20,
@@ -1519,23 +1561,23 @@
         id: 'p14',
         name: 'VoltCord™ 6-in-1 Armored Braided Cable (100W)',
         category: 'power',
-        badge: 'Indestructible',
-        badgeColor: 'bg-zinc-700',
+        badge: 'Armored 100W',
+        badgeColor: 'bg-zinc-800',
         price: 16.99,
         originalPrice: 29.99,
         wholesale: 3.80,
         rating: 4.9,
         reviews: 580,
-        image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
-        fallback: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
-        desc: 'Interchangeable magnetic heads: USB-C to USB-C, Lightning, and Micro-USB. Kevlar braided.'
+        image: 'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=800&auto=format&fit=crop&q=80',
+        fallback: 'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=800&auto=format&fit=crop&q=80',
+        desc: 'Interchangeable magnetic heads: USB-C to USB-C, Lightning, and Micro-USB. Kevlar reinforced braided cable.'
       },
       p15: {
         id: 'p15',
         name: 'KeyTitan™ Carbon Fiber Minimalist Key Organizer',
-        category: 'audio',
-        badge: 'EDC Gear',
-        badgeColor: 'bg-neutral-800',
+        category: 'travel',
+        badge: 'Carbon EDC',
+        badgeColor: 'bg-zinc-800',
         price: 18.99,
         originalPrice: 32.99,
         wholesale: 4.20,
@@ -1548,9 +1590,9 @@
       p16: {
         id: 'p16',
         name: 'PocketSafe™ RFID Shielded Slim Aluminum Wallet',
-        category: 'audio',
-        badge: 'RFID Safe',
-        badgeColor: 'bg-slate-800',
+        category: 'travel',
+        badge: 'RFID Armor',
+        badgeColor: 'bg-zinc-800',
         price: 22.99,
         originalPrice: 42.99,
         wholesale: 5.90,
@@ -1564,8 +1606,8 @@
         id: 'p17',
         name: 'DuoDesk™ Dual MagSafe Charging Stand',
         category: 'magsafe',
-        badge: 'Duo Power',
-        badgeColor: 'bg-purple-700',
+        badge: 'Dual Stand',
+        badgeColor: 'bg-zinc-800',
         price: 32.99,
         originalPrice: 59.99,
         wholesale: 9.40,
@@ -1580,7 +1622,7 @@
         name: 'AeroRest™ Cloud Memory Foam Keyboard Rest',
         category: 'desk',
         badge: 'Ergonomic',
-        badgeColor: 'bg-indigo-500',
+        badgeColor: 'bg-zinc-800',
         price: 17.99,
         originalPrice: 29.99,
         wholesale: 4.50,
@@ -1594,15 +1636,15 @@
         id: 'p19',
         name: 'AirTag Armor™ Carbon Fiber Case (2-Pack)',
         category: 'travel',
-        badge: 'AirTag Ready',
-        badgeColor: 'bg-stone-800',
+        badge: 'Secure Track',
+        badgeColor: 'bg-zinc-800',
         price: 15.99,
         originalPrice: 26.99,
         wholesale: 3.20,
         rating: 4.8,
         reviews: 219,
-        image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80',
-        fallback: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80',
+        image: 'https://images.unsplash.com/photo-1600086827875-a0dcbfb321e4?w=800&auto=format&fit=crop&q=80',
+        fallback: 'https://images.unsplash.com/photo-1600086827875-a0dcbfb321e4?w=800&auto=format&fit=crop&q=80',
         desc: 'Heavy-duty 4-bolt enclosed waterproof protection with stainless steel wire loop for luggage and keys.'
       },
       p20: {
@@ -1610,22 +1652,22 @@
         name: 'GlobalPass™ All-in-One Travel Plug Adapter (35W)',
         category: 'travel',
         badge: 'Worldwide',
-        badgeColor: 'bg-emerald-700',
+        badgeColor: 'bg-zinc-800',
         price: 26.99,
         originalPrice: 44.99,
         wholesale: 7.10,
         rating: 4.9,
         reviews: 582,
-        image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop&q=80',
-        fallback: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop&q=80',
+        image: 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&auto=format&fit=crop&q=80',
+        fallback: 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&auto=format&fit=crop&q=80',
         desc: 'Universal slider plugs for 180+ countries (US, UK, EU, AU) plus 3x USB-C PD and 2x USB-A ports.'
       },
       p21: {
         id: 'p21',
         name: 'CleanPod™ UV-C Phone & Tech Sanitizer Box',
         category: 'desk',
-        badge: '99.9% Clean',
-        badgeColor: 'bg-sky-700',
+        badge: 'Sanitizer',
+        badgeColor: 'bg-zinc-800',
         price: 29.99,
         originalPrice: 49.99,
         wholesale: 8.00,
@@ -1639,8 +1681,8 @@
         id: 'p22',
         name: 'SolarFold™ 28W Water-Resistant Outdoor Charger',
         category: 'power',
-        badge: 'Solar Tech',
-        badgeColor: 'bg-amber-700',
+        badge: 'Solar 28W',
+        badgeColor: 'bg-zinc-800',
         price: 49.99,
         originalPrice: 84.99,
         wholesale: 16.50,
@@ -1654,30 +1696,30 @@
         id: 'p23',
         name: 'MagGrip™ 360 Zinc Alloy Rotating Magnetic Ring',
         category: 'magsafe',
-        badge: 'Pocket Slim',
-        badgeColor: 'bg-rose-700',
+        badge: 'MagGrip',
+        badgeColor: 'bg-zinc-800',
         price: 12.99,
         originalPrice: 22.99,
         wholesale: 2.40,
         rating: 4.8,
         reviews: 412,
-        image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&auto=format&fit=crop&q=80',
-        fallback: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&auto=format&fit=crop&q=80',
+        image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=800&auto=format&fit=crop&q=80',
+        fallback: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=800&auto=format&fit=crop&q=80',
         desc: 'Ultra-thin double jointed magnetic finger loop and adjustable desktop kickstand. 2.2kg magnetic hold.'
       },
       p24: {
         id: 'p24',
         name: 'GaNStream™ 140W PD 3.1 Ultra-Fast Charger',
         category: 'power',
-        badge: 'Max Power',
-        badgeColor: 'bg-indigo-800',
+        badge: 'GaN 140W',
+        badgeColor: 'bg-zinc-800',
         price: 64.99,
         originalPrice: 109.99,
         wholesale: 21.00,
         rating: 4.9,
         reviews: 320,
-        image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop&q=80',
-        fallback: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop&q=80',
+        image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&auto=format&fit=crop&q=80',
+        fallback: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&auto=format&fit=crop&q=80',
         desc: 'Next-gen PD 3.1 28V/5A charging brick. Fast-charges 16" MacBook Pro to 50% in 28 minutes.'
       }
     };
@@ -2572,13 +2614,13 @@
     function filterCatalog(category) {
       currentCatalogCategory = category;
       document.querySelectorAll('#catalogCategoryTabs .cat-pill').forEach(btn => {
-        btn.classList.remove('active', 'bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
-        btn.classList.add('bg-gray-900', 'border', 'border-gray-800', 'text-gray-300');
+        btn.classList.remove('active', 'bg-white', 'text-zinc-950', 'shadow-md', 'bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+        btn.classList.add('bg-zinc-900', 'border', 'border-zinc-800', 'text-zinc-400');
       });
       const activeBtn = document.getElementById(`catBtn-${category}`);
       if (activeBtn) {
-        activeBtn.classList.remove('bg-gray-900', 'border-gray-800', 'text-gray-300');
-        activeBtn.classList.add('active', 'bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+        activeBtn.classList.remove('bg-zinc-900', 'border-zinc-800', 'text-zinc-400', 'text-zinc-300');
+        activeBtn.classList.add('active', 'bg-white', 'text-zinc-950', 'shadow-md');
       }
       renderCatalog();
     }
@@ -2665,16 +2707,16 @@
       grid.innerHTML = items.map(p => {
         const discountAmt = (p.originalPrice - p.price).toFixed(2);
         return `
-          <div class="glass-card rounded-2xl p-4 flex flex-col justify-between group hover:border-indigo-500/50 transition-all duration-300 relative cursor-pointer" onclick="recordEvent('click', '${p.id}')">
+          <div class="glass-card rounded-2xl p-4 flex flex-col justify-between group hover:border-zinc-500 transition-all duration-300 relative cursor-pointer" onclick="recordEvent('click', '${p.id}')">
             <!-- Badge -->
             <div class="absolute top-3 left-3 z-10">
-              <span class="${p.badgeColor || 'bg-indigo-600'} text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full shadow-md">
+              <span class="bg-zinc-900/90 text-zinc-200 border border-zinc-700/80 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full shadow-sm">
                 ${p.badge}
               </span>
             </div>
 
             <!-- Product Image -->
-            <div class="relative overflow-hidden rounded-xl bg-gray-950/60 aspect-square flex items-center justify-center mb-3">
+            <div class="relative overflow-hidden rounded-xl bg-zinc-950 aspect-square flex items-center justify-center mb-3 border border-zinc-900">
               <img src="${p.image}" onerror="this.src='${p.fallback}'" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 rounded-xl" loading="lazy">
             </div>
 
@@ -2686,22 +2728,22 @@
                     <i class="fa-solid fa-star text-[11px]"></i>
                     <span class="font-bold text-white text-xs">${p.rating}</span>
                   </div>
-                  <span class="text-gray-400 text-[11px]">(${p.reviews} reviews)</span>
+                  <span class="text-zinc-400 text-[11px]">(${p.reviews} reviews)</span>
                 </div>
-                <h3 class="font-bold text-sm text-white group-hover:text-indigo-300 transition-colors line-clamp-1" title="${p.name}">
+                <h3 class="font-bold text-sm text-white group-hover:text-zinc-300 transition-colors line-clamp-1" title="${p.name}">
                   ${p.name}
                 </h3>
-                <p class="text-[11px] text-gray-400 line-clamp-2 mt-1 leading-relaxed">
+                <p class="text-[11px] text-zinc-400 line-clamp-2 mt-1 leading-relaxed">
                   ${p.desc}
                 </p>
               </div>
 
               <!-- Price & CTA -->
-              <div class="pt-2 border-t border-gray-800/80 space-y-2">
+              <div class="pt-2 border-t border-zinc-800 space-y-2">
                 <div class="flex items-baseline justify-between">
                   <div class="flex items-baseline gap-1.5">
                     <span class="text-lg font-black text-white">$${p.price.toFixed(2)}</span>
-                    <span class="text-xs text-gray-500 line-through">$${p.originalPrice.toFixed(2)}</span>
+                    <span class="text-xs text-zinc-500 line-through">$${p.originalPrice.toFixed(2)}</span>
                   </div>
                   <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
                     Save $${discountAmt}
@@ -2709,11 +2751,11 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
-                  <button type="button" onclick="event.stopPropagation(); addToCart('${p.id}', false);" class="py-2 px-2 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors active:scale-95">
+                  <button type="button" onclick="event.stopPropagation(); addToCart('${p.id}', false);" class="btn-executive-secondary py-2 px-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all active:scale-95">
                     <i class="fa-solid fa-cart-plus text-[11px]"></i>
                     <span>Add</span>
                   </button>
-                  <button type="button" onclick="event.stopPropagation(); addToCart('${p.id}', true);" class="py-2 px-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white text-xs font-bold flex items-center justify-center gap-1 transition-all shadow-md shadow-indigo-500/20 active:scale-95">
+                  <button type="button" onclick="event.stopPropagation(); addToCart('${p.id}', true);" class="btn-executive-primary py-2 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-all shadow-md active:scale-95">
                     <i class="fa-solid fa-bolt text-[11px]"></i>
                     <span>Buy Now</span>
                   </button>
