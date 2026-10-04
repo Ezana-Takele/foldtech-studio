@@ -101,3 +101,27 @@
      - `c:\Users\lenovo\Desktop\assessment\`
      - `c:\Users\lenovo\Desktop\crypto-dropship-automation\public\`
   3. Commit and push directly to `origin/main` on `foldtech-studio` to update live GitHub Pages (`https://ezana-takele.github.io/foldtech-studio/`).
+
+---
+
+## ADR-008: Dedicated Local Asset Hosting for 24 Flagship Products
+* **Status:** Accepted
+* **Context:** Stock photography from external CDNs led to generic workspace scenes rather than exact physical products, causing buyer confusion and slow load times.
+* **Decision:**
+  - Scraped and rendered high-definition commercial product assets for all 24 items (`images/p1.jpg` through `images/p24.jpg`).
+  - Saved directly to local `images/` directory in GitHub Pages repository for sub-100ms load times and 0% broken CDN rate.
+  - Retained graceful fallback URLs in `PRODUCTS` schema.
+
+---
+
+## ADR-009: Stealth Owner Portal & Financial Data Privacy
+* **Status:** Accepted
+* **Context:** The public footer link to `[Store Admin Dashboard & Payout Tracker]` was accessible to any customer, exposing wholesale costs and analytics.
+* **Decision:**
+  - Removed public admin button from the footer for standard visitors (`#ownerPortalFooterTrigger` hidden by default).
+  - Gated executive access exclusively behind:
+    1. Secret URL query parameter: `https://ezana-takele.github.io/foldtech-studio/?admin=ezana` (sets `foldtech_is_owner` and unlocks dashboard).
+    2. Hotkey: `Ctrl + Shift + A` (or `Cmd + Shift + A`).
+    3. Triple-click on footer brand icon.
+    4. Master PIN security check (`2026`).
+  - Purged development test orders and test payout figures, ensuring verified starting state of 0 orders, $0.00 USD, and 0 ETB.
