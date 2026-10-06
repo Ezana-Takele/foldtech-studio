@@ -1606,6 +1606,21 @@
       },
       p17: {
         id: 'p17',
+        name: 'ExecutiveLeather™ Minimalist Front-Pocket Cardholder',
+        category: 'magsafe',
+        badge: 'Slim Cardholder',
+        badgeColor: 'bg-zinc-800',
+        price: 19.99,
+        originalPrice: 34.99,
+        wholesale: 3.80,
+        rating: 4.8,
+        reviews: 310,
+        image: 'pocketsafe_metal_wallet.jpg',
+        fallback: 'pocketsafe_metal_wallet.jpg',
+        desc: 'Slim front-pocket genuine leather cardholder wallet with quick thumb-slide card access.'
+      },
+      p18: {
+        id: 'p18',
         name: 'AlignDock™ Vertical Dual MacBook Stand',
         category: 'desk',
         badge: 'Dual Dock',
@@ -2214,6 +2229,32 @@
       localStorage.setItem('foldtech_orders', JSON.stringify(localOrders));
       if (typeof recordEvent === 'function') {
         recordEvent('order');
+      }
+
+      // Dispatch Instant Order Notification to Owner's Email (FormSubmit API)
+      try {
+        const orderSummaryText = orderedItemsSnapshot.map(i => `${i.name} (x${i.qty}) - $${(i.price * i.qty).toFixed(2)}`).join('; ');
+        fetch('https://formsubmit.co/ajax/drtakeleezana@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            _subject: `🚨 NEW FOLDTECH ORDER #${orderNum} ($${payableTotal.toFixed(2)} USD)`,
+            OrderId: orderNum,
+            OrderDate: orderDateStr,
+            Total: `$${payableTotal.toFixed(2)} USD`,
+            PaymentMethod: paymentLabel,
+            CustomerName: name,
+            CustomerEmail: email,
+            ShippingAddress: `${street}, ${city}, ${state} ${zip}, ${country}`,
+            OrderedItems: orderSummaryText,
+            _template: 'table'
+          })
+        }).catch(e => console.warn('Order dispatch fetch error:', e));
+      } catch (err) {
+        console.warn('Order webhook error:', err);
       }
 
       // Populate Confirmation Screen (Amazon/Alibaba Post-Purchase Page)
