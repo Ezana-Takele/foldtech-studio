@@ -390,7 +390,7 @@
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-zinc-800 text-zinc-300 border border-zinc-700 mb-3">
         <i class="fa-solid fa-sparkles text-amber-400"></i> The Flagship 2026 Collection
       </div>
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-white">24 Curated Tech Essentials</h2>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Curated Flagship Essentials</h2>
       <p class="text-zinc-400 text-sm sm:text-base mt-2">
         Precision-engineered folding chargers, MagSafe ecosystems, GaN power blocks, and minimalist workspace gear.
       </p>
@@ -401,22 +401,13 @@
       <!-- Category Navigation Pills -->
       <div class="flex flex-wrap items-center justify-center gap-2" id="catalogCategoryTabs">
         <button type="button" onclick="filterCatalog('all')" id="catBtn-all" class="cat-pill active px-4 py-2 rounded-xl text-xs font-bold bg-white text-zinc-950 shadow-md transition-all">
-          All Items (24)
+          All Items (4)
         </button>
         <button type="button" onclick="filterCatalog('power')" id="catBtn-power" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all">
-          ⚡ Charging & Power (7)
+          ⚡ Charging & Power (3)
         </button>
         <button type="button" onclick="filterCatalog('magsafe')" id="catBtn-magsafe" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all">
-          🧲 MagSafe & Stands (5)
-        </button>
-        <button type="button" onclick="filterCatalog('desk')" id="catBtn-desk" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all">
-          🖥️ Desk & Workspace (5)
-        </button>
-        <button type="button" onclick="filterCatalog('audio')" id="catBtn-audio" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all">
-          🎧 Audio (2)
-        </button>
-        <button type="button" onclick="filterCatalog('travel')" id="catBtn-travel" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all">
-          ✈️ Travel & EDC (5)
+          🧲 MagSafe & Stand (1)
         </button>
       </div>
 
@@ -424,14 +415,14 @@
       <div class="flex flex-col sm:flex-row items-center justify-between gap-3 max-w-4xl mx-auto pt-2">
         <div class="relative w-full sm:w-80">
           <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-zinc-500 text-xs"></i>
-          <input type="text" id="catalogSearchInput" oninput="handleCatalogSearch(this.value)" placeholder="Search 24 flagship items by keyword..." class="w-full pl-9 pr-8 py-2 rounded-xl bg-zinc-900/90 border border-zinc-800 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors">
+          <input type="text" id="catalogSearchInput" oninput="handleCatalogSearch(this.value)" placeholder="Search flagship items by keyword..." class="w-full pl-9 pr-8 py-2 rounded-xl bg-zinc-900/90 border border-zinc-800 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors">
           <button id="clearSearchBtn" onclick="clearCatalogSearch()" class="hidden absolute right-3 top-2.5 text-zinc-500 hover:text-white text-xs">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
 
         <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end text-xs text-zinc-400">
-          <span id="catalogCountDisplay" class="font-semibold text-zinc-300">Showing 24 products</span>
+          <span id="catalogCountDisplay" class="font-semibold text-zinc-300">Showing 4 products</span>
           <select id="catalogSortSelect" onchange="handleCatalogSort(this.value)" class="bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-zinc-500 cursor-pointer">
             <option value="featured">Featured / Best Value</option>
             <option value="price-asc">Price: Low to High</option>
@@ -1388,6 +1379,7 @@
     // Flagship 24-Product Catalog Database (Rectified & Audited)
         // Flagship Curated 4-Item Catalog (Verified First 3 Items + Nomad Bundle Only)
         // Flagship Curated 19-Product Catalog (Strictly Approved Items + Nomad Bundle)
+        // Flagship Curated 4-Item Catalog (Strictly Approved Items + Nomad Bundle)
     const PRODUCTS = {
       p1: {
         id: 'p1',
@@ -1433,231 +1425,6 @@
         image: 'magstand_wallet.jpg',
         fallback: 'magstand_wallet.jpg',
         desc: 'Magnetic vegan leather wallet. Snaps to iPhone, holds 3 cards, and folds into portrait/landscape stand.'
-      },
-      p4: {
-        id: 'p4',
-        name: 'MagPower™ 10,000mAh Magnetic Powerbank',
-        category: 'power',
-        badge: 'Viral TikTok',
-        badgeColor: 'bg-zinc-800',
-        price: 39.99,
-        originalPrice: 69.99,
-        wholesale: 12.80,
-        rating: 4.9,
-        reviews: 912,
-        image: 'magpower_powerbank.jpg',
-        fallback: 'magpower_powerbank.jpg',
-        desc: 'Strong snap magnetic battery pack with digital LED display and foldable zinc alloy kickstand.'
-      },
-      p5: {
-        id: 'p5',
-        name: 'NomadCube™ 100W 4-Port GaN Desktop Hub',
-        category: 'power',
-        badge: 'Pro Station',
-        badgeColor: 'bg-zinc-800',
-        price: 49.99,
-        originalPrice: 89.99,
-        wholesale: 15.00,
-        rating: 4.9,
-        reviews: 524,
-        image: 'nomadcube_hub.jpg',
-        fallback: 'nomadcube_hub.jpg',
-        desc: 'Heavy-duty 100W GaN charging hub with 3x USB-C PD and 1x USB-A. Fast-charges 2 MacBooks at once.'
-      },
-      p6: {
-        id: 'p6',
-        name: 'OrbitDock™ 360 Magnetic Floating iPad Stand',
-        category: 'magsafe',
-        badge: 'Studio Pick',
-        badgeColor: 'bg-zinc-800',
-        price: 44.99,
-        originalPrice: 79.99,
-        wholesale: 14.20,
-        rating: 4.9,
-        reviews: 431,
-        image: 'orbitdock_ipad.jpg',
-        fallback: 'orbitdock_ipad.jpg',
-        desc: 'Aerospace aluminum rotating stand for iPad Pro/Air with strong neodymium magnetic alignment.'
-      },
-      p7: {
-        id: 'p7',
-        name: 'AeroRise™ Ergonomic Aluminum MacBook Riser',
-        category: 'desk',
-        badge: 'Ergonomic Pro',
-        badgeColor: 'bg-zinc-800',
-        price: 34.99,
-        originalPrice: 59.99,
-        wholesale: 9.80,
-        rating: 4.9,
-        reviews: 388,
-        image: 'stand_1.jpg',
-        fallback: 'stand_1.jpg',
-        desc: 'CNC-machined aluminum MacBook riser with thermal cooling ventilation and eye-level ergonomic tilt.'
-      },
-      p8: {
-        id: 'p8',
-        name: 'GaNStream™ 140W PD 3.1 Ultra-Fast Charger',
-        category: 'power',
-        badge: 'Max Power',
-        badgeColor: 'bg-zinc-800',
-        price: 64.99,
-        originalPrice: 109.99,
-        wholesale: 21.00,
-        rating: 4.9,
-        reviews: 320,
-        image: 'ganstream_charger.jpg',
-        fallback: 'ganstream_charger.jpg',
-        desc: 'Next-gen PD 3.1 28V/5A charging brick. Fast-charges 16" MacBook Pro to 50% in 28 minutes.'
-      },
-      p9: {
-        id: 'p9',
-        name: 'StudioMat™ Waterproof Vegan Leather Desk Pad (90x40cm)',
-        category: 'desk',
-        badge: 'Clean Desk',
-        badgeColor: 'bg-zinc-800',
-        price: 22.99,
-        originalPrice: 39.99,
-        wholesale: 5.50,
-        rating: 4.8,
-        reviews: 392,
-        image: 'studiomat_deskpad.jpg',
-        fallback: 'studiomat_deskpad.jpg',
-        desc: 'Dual-sided waterproof vegan leather mat. Spills wipe clean instantly, provides flawless optical glide.'
-      },
-      p10: {
-        id: 'p10',
-        name: 'TitanLink™ Titanium Magnetic Apple Watch Band',
-        category: 'magsafe',
-        badge: 'Grade 2 Titanium',
-        badgeColor: 'bg-zinc-800',
-        price: 39.99,
-        originalPrice: 69.99,
-        wholesale: 8.50,
-        rating: 4.9,
-        reviews: 512,
-        image: 'titanlink_watch_band.jpg',
-        fallback: 'titanlink_watch_band.jpg',
-        desc: 'Aerospace Grade 2 titanium link strap with scratch-resistant DLC coating and magnetic clasp for Apple Watch.'
-      },
-      p11: {
-        id: 'p11',
-        name: 'PrismBeam™ Architectural Matte Studio Desk Lamp',
-        category: 'desk',
-        badge: 'Studio Lighting',
-        badgeColor: 'bg-zinc-800',
-        price: 42.99,
-        originalPrice: 79.99,
-        wholesale: 12.50,
-        rating: 4.8,
-        reviews: 274,
-        image: 'prismbeam_desk_lamp.jpg',
-        fallback: 'prismbeam_desk_lamp.jpg',
-        desc: 'Minimalist architectural matte black studio desk lamp with touch-dimming warm glow and eye-care diffuser.'
-      },
-      p12: {
-        id: 'p12',
-        name: 'AeroBridge™ Solid Wood & Aluminum Monitor Riser Shelf',
-        category: 'desk',
-        badge: 'Workspace Shelf',
-        badgeColor: 'bg-zinc-800',
-        price: 54.99,
-        originalPrice: 94.99,
-        wholesale: 16.00,
-        rating: 4.9,
-        reviews: 419,
-        image: 'aerobridge_monitor_riser.jpg',
-        fallback: 'aerobridge_monitor_riser.jpg',
-        desc: 'Elevated dual-monitor desk shelf riser with anodized aluminum legs to slide keyboard and accessories underneath.'
-      },
-      p13: {
-        id: 'p13',
-        name: 'StudioAcoustic™ Hi-Fi Over-Ear Headphones',
-        category: 'audio',
-        badge: 'Audiophile Sound',
-        badgeColor: 'bg-zinc-800',
-        price: 59.99,
-        originalPrice: 119.99,
-        wholesale: 18.00,
-        rating: 4.9,
-        reviews: 618,
-        image: 'aircushion_headphone_stand.jpg',
-        fallback: 'aircushion_headphone_stand.jpg',
-        desc: 'Audiophile closed-back over-ear headphones with plush memory foam ear cushions and braided detachable cable.'
-      },
-      p14: {
-        id: 'p14',
-        name: 'AeroArmor™ Frosted MagSafe iPhone Protective Case',
-        category: 'magsafe',
-        badge: 'MagSafe Armor',
-        badgeColor: 'bg-zinc-800',
-        price: 18.99,
-        originalPrice: 34.99,
-        wholesale: 3.50,
-        rating: 4.8,
-        reviews: 580,
-        image: 'real_phone_case.jpg',
-        fallback: 'real_phone_case.jpg',
-        desc: 'Ultra-slim shockproof protective case featuring an integrated MagSafe magnetic alignment ring and anti-scratch matte frosted back.'
-      },
-      p15: {
-        id: 'p15',
-        name: 'OrbitShield™ Rugged Aluminum Case for AirPods Pro',
-        category: 'audio',
-        badge: 'AirPods Pro 2',
-        badgeColor: 'bg-zinc-800',
-        price: 21.99,
-        originalPrice: 38.99,
-        wholesale: 4.80,
-        rating: 4.8,
-        reviews: 342,
-        image: 'orbitshield_airpods_case.jpg',
-        fallback: 'orbitshield_airpods_case.jpg',
-        desc: 'CNC anodized aluminum rugged bumper case with magnetic latch lock and carabiner clip for AirPods Pro 2.'
-      },
-      p16: {
-        id: 'p16',
-        name: 'ExecutiveHeritage™ Handcrafted Leather Bi-Fold Wallet',
-        category: 'magsafe',
-        badge: 'Handcrafted Leather',
-        badgeColor: 'bg-zinc-800',
-        price: 24.99,
-        originalPrice: 49.99,
-        wholesale: 5.50,
-        rating: 4.9,
-        reviews: 488,
-        image: 'real_leather_bifold_wallet.jpg',
-        fallback: 'real_leather_bifold_wallet.jpg',
-        desc: 'Handcrafted genuine top-grain leather bi-fold wallet featuring precision edge stitching, multi-card organizing slots, and a full-length cash compartment.'
-      },
-      p17: {
-        id: 'p17',
-        name: 'ExecutiveLeather™ Minimalist Front-Pocket Cardholder',
-        category: 'magsafe',
-        badge: 'Slim Cardholder',
-        badgeColor: 'bg-zinc-800',
-        price: 19.99,
-        originalPrice: 34.99,
-        wholesale: 3.80,
-        rating: 4.8,
-        reviews: 310,
-        image: 'pocketsafe_metal_wallet.jpg',
-        fallback: 'pocketsafe_metal_wallet.jpg',
-        desc: 'Slim front-pocket genuine leather cardholder wallet with quick thumb-slide card access.'
-      },
-      p18: {
-        id: 'p18',
-        name: 'AlignDock™ Vertical Dual MacBook Stand',
-        category: 'desk',
-        badge: 'Dual Dock',
-        badgeColor: 'bg-zinc-800',
-        price: 29.99,
-        originalPrice: 49.99,
-        wholesale: 7.80,
-        rating: 4.9,
-        reviews: 440,
-        image: 'aligndock_vertical_stand.jpg',
-        fallback: 'aligndock_vertical_stand.jpg',
-        desc: 'Solid weighted aluminum vertical dual-slot dock to store MacBook and iPad upright in clamshell mode.'
       },
       bundle: {
         id: 'bundle',
@@ -2954,7 +2721,7 @@
     function shareStore(platform) {
       const baseUrl = window.location.origin + window.location.pathname;
       const trackedUrl = `${baseUrl}?utm_source=${platform}&ref=ezana`;
-      const pitch = `Check out Fold Tech Studio! 24 flagship Apple & EDC folding chargers with 50% discount and FREE express shipping: ${trackedUrl}`;
+      const pitch = `Check out Fold Tech Studio! flagship Apple & EDC folding chargers with 50% discount and FREE express shipping: ${trackedUrl}`;
 
       recordEvent('traffic_channel', platform);
 
@@ -3020,12 +2787,12 @@
       if (!ticker || !textElem) return;
 
       const verifiedRecentBuyers = [
-        { city: 'Austin, TX', item: 'MagFold™ 3-in-1 Origami Station', time: '4 minutes ago' },
-        { city: 'Seattle, WA', item: 'PocketSafe™ RFID Cardholder', time: '11 minutes ago' },
-        { city: 'Brooklyn, NY', item: 'OrbitDock™ Pro iPad Stand', time: '18 minutes ago' },
-        { city: 'Denver, CO', item: 'OrbitAir™ Pro ANC Earbuds', time: '27 minutes ago' },
-        { city: 'San Francisco, CA', item: 'NomadCube™ 100W GaN Hub', time: '36 minutes ago' },
-        { city: 'Chicago, IL', item: 'MagPower™ Kickstand Battery', time: '45 minutes ago' }
+        { city: 'Austin, TX', item: 'MagFold™ 3-in-1 Foldable Charger', time: '4 minutes ago' },
+        { city: 'Seattle, WA', item: 'The Ultimate Nomad Travel Bundle', time: '11 minutes ago' },
+        { city: 'Brooklyn, NY', item: 'Volt65™ 65W GaN Fast Charger', time: '18 minutes ago' },
+        { city: 'Denver, CO', item: 'MagFold™ 3-in-1 Foldable Charger', time: '27 minutes ago' },
+        { city: 'San Francisco, CA', item: 'MagStand™ Slim Leather Wallet', time: '36 minutes ago' },
+        { city: 'Chicago, IL', item: 'The Ultimate Nomad Travel Bundle', time: '45 minutes ago' }
       ];
 
       let idx = 0;
@@ -3229,7 +2996,7 @@
           `;
         } else {
           replyHtml = `
-            All 24 items in our 2026 collection feature minimalist design, premium aerospace materials, and backed by a 2-Year Warranty + Free Tracked Shipping. How else can I assist your desk setup today?
+            All items in our curated collection feature minimalist design, premium aerospace materials, and backed by a 2-Year Warranty + Free Tracked Shipping. How else can I assist your desk setup today?
           `;
         }
 
