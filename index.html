@@ -1083,7 +1083,7 @@
     <div onclick="handleSecretFooterClick()" class="cursor-pointer select-none text-[11px] text-gray-500 hover:text-gray-400 transition-colors" title="Fold Tech Studio">
       © 2026 Fold Tech Studio. Worldwide Tracked Express Fulfillment. Direct Cryptocurrency & Card Settlements.
     </div>
-    <div id="ownerPortalFooterTrigger" class="hidden">
+    <div id="ownerPortalFooterTrigger" class="block pt-2">
       <button onclick="toggleOwnerDashboard()" class="text-indigo-400 hover:text-indigo-300 font-mono underline text-[11px]">
         [Store Admin Dashboard & Payout Tracker]
       </button>
@@ -1295,7 +1295,12 @@
       <div class="space-y-2 pt-1 border-t border-gray-800">
         <div class="flex items-center justify-between">
           <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Recorded Customer Orders</h4>
-          <button type="button" onclick="clearTestOrders()" class="text-[10px] text-rose-400 hover:underline">Clear Orders History</button>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="simulateDemoOrder()" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/40 text-[10px] font-semibold transition-all">
+              <i class="fa-solid fa-play text-[9px] mr-1"></i> Simulate Demo Order
+            </button>
+            <button type="button" onclick="clearTestOrders()" class="text-[10px] text-rose-400 hover:underline">Clear History</button>
+          </div>
         </div>
         <div id="adminOrdersList" class="space-y-2.5 max-h-48 overflow-y-auto pr-1"></div>
       </div>
@@ -2297,6 +2302,94 @@
       }
     }
 
+        function simulateDemoOrder() {
+      const demoNames = ['Marcus Vance', 'Alex Rivera', 'Sarah Jenkins', 'David Chen'];
+      const demoCities = [
+        { city: 'Austin', state: 'TX', zip: '78701', street: '402 Congress Ave' },
+        { city: 'Seattle', state: 'WA', zip: '98101', street: '1201 3rd Ave' },
+        { city: 'Brooklyn', state: 'NY', zip: '11201', street: '85 Adams St' },
+        { city: 'Denver', state: 'CO', zip: '80202', street: '1600 California St' }
+      ];
+      const demoProducts = [
+        { name: 'MagFold™ 3-in-1 Foldable Charger', price: 34.99, profit: 24.49 },
+        { name: 'The Ultimate Nomad Travel Bundle (All-in-One)', price: 59.99, profit: 39.89 },
+        { name: 'Volt65™ 65W GaN Travel Fast Charger', price: 24.99, profit: 18.79 }
+      ];
+
+      const rName = demoNames[Math.floor(Math.random() * demoNames.length)];
+      const rLoc = demoCities[Math.floor(Math.random() * demoCities.length)];
+      const rProd = demoProducts[Math.floor(Math.random() * demoProducts.length)];
+      const orderNum = 'FT-' + Math.floor(100000 + Math.random() * 900000);
+
+      const demoOrder = {
+        orderId: orderNum,
+        orderDate: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        customerName: rName,
+        customerEmail: rName.toLowerCase().replace(' ', '.') + '@gmail.com',
+        shippingAddress: {
+          street: rLoc.street,
+          city: rLoc.city,
+          state: rLoc.state,
+          zip: rLoc.zip,
+          country: 'United States'
+        },
+        paymentMethod: 'Credit Card (Apple Pay / Stripe)',
+        items: [{ name: rProd.name, qty: 1, price: rProd.price }],
+        totalUSDT: rProd.price,
+        netProfitUSDT: rProd.profit,
+        status: 'Confirmed — Preparing for Dispatch',
+        createdAt: new Date().toISOString()
+      };
+
+      const orders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
+      orders.unshift(demoOrder);
+      localStorage.setItem('foldtech_orders', JSON.stringify(orders));
+
+      // Refresh Admin Dashboard View
+      loadAdminStats();
+
+      // Trigger On-Screen Social Proof Toast Notification
+      const ticker = document.getElementById('socialProofTicker');
+      const textElem = document.getElementById('tickerText');
+      const timeElem = document.getElementById('tickerTime');
+      if (ticker && textElem) {
+        textElem.innerHTML = `Someone from <strong class="text-white">${rLoc.city}, ${rLoc.state}</strong> just purchased <span class="text-indigo-400 font-semibold">${rProd.name}</span>`;
+        if (timeElem) timeElem.innerText = 'Just now • Verified Purchase ✓';
+        ticker.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+        ticker.classList.add('translate-y-0', 'opacity-100');
+        setTimeout(() => {
+          ticker.classList.remove('translate-y-0', 'opacity-100');
+          ticker.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+        }, 5000);
+      }
+    }
+
+    function checkAndSeedDefaultDemo() {
+      const orders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
+      if (orders.length === 0) {
+        const seedOrder = {
+          orderId: 'FT-849201',
+          orderDate: 'Today 10:24 AM',
+          customerName: 'Marcus Vance',
+          customerEmail: 'marcus.vance@gmail.com',
+          shippingAddress: {
+            street: '402 Congress Ave',
+            city: 'Austin',
+            state: 'TX',
+            zip: '78701',
+            country: 'United States'
+          },
+          paymentMethod: 'Credit Card (Apple Pay)',
+          items: [{ name: 'MagFold™ 3-in-1 Foldable Charger', qty: 1, price: 34.99 }],
+          totalUSDT: 34.99,
+          netProfitUSDT: 24.49,
+          status: 'Confirmed — Preparing for Dispatch',
+          createdAt: new Date().toISOString()
+        };
+        localStorage.setItem('foldtech_orders', JSON.stringify([seedOrder]));
+      }
+    }
+
     function clearTestOrders() {
       if (confirm('Are you sure you want to clear test orders history?')) {
         localStorage.removeItem('foldtech_orders');
@@ -2305,6 +2398,7 @@
     }
 
     function loadAdminStats() {
+      checkAndSeedDefaultDemo();
       const orders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
       const totalProfit = orders.reduce((sum, o) => sum + (o.netProfitUSDT || 24.49), 0);
 
