@@ -22,10 +22,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Official Google Pay SDK, PayPal SDK & FoldTech Payment Engine -->
-  <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
-  <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD&components=buttons"></script>
-  <script src="payment.js?v=6.0.0"></script>
+  <!-- FoldTech Payment Engine -->
+  <script src="payment.js?v=7.0.0"></script>
   
   <!-- Fonts & Custom Styles (Executive Monochrome Aero System) -->
   <style>
@@ -175,6 +173,7 @@
   </script>
 </head>
 <body class="bg-[#09090b] text-zinc-100 min-h-screen antialiased selection:bg-zinc-800 selection:text-white">
+  <div id="orderStatusNotice" role="status" aria-live="polite" class="hidden px-4 py-3 text-center text-sm bg-zinc-900 border-b border-zinc-700"></div>
 
   <!-- Top Announcement Bar with Live Countdown (Executive Monochrome Aero) -->
   <div class="bg-[#09090b] text-zinc-300 text-xs sm:text-sm py-2 px-4 text-center border-b border-zinc-800/80 flex items-center justify-center gap-2 flex-wrap">
@@ -594,475 +593,60 @@
               <span id="cartSubtotal" class="font-bold text-white text-sm">$0.00</span>
             </div>
             <div class="flex justify-between">
-              <span>Tracked Delivery (USPS/DHL):</span>
-              <span class="text-emerald-400 font-bold">FREE ($0.00)</span>
+              <span>Shipping:</span>
+              <span class="text-zinc-300 font-bold">Calculated before payment</span>
             </div>
             <div class="flex justify-between text-sm font-extrabold text-white pt-2 border-t border-zinc-800">
-              <span>Total Payable:</span>
+              <span>Products subtotal (not final):</span>
               <span id="cartTotal" class="text-white text-lg font-black">$0.00</span>
             </div>
           </div>
 
-          <!-- 1-Click Express Wallets -->
-          <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="quickExpressPay('GOOGLE_PAY')" class="py-2.5 px-2 rounded-xl bg-black hover:bg-neutral-900 border border-zinc-800 text-white font-bold text-xs flex items-center justify-center gap-1 transition-all shadow-sm active:scale-95">
-              <i class="fa-brands fa-google text-xs"></i>
-              <span>Pay</span>
-            </button>
-            <button type="button" onclick="quickExpressPay('APPLE_PAY')" class="py-2.5 px-2 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-bold text-xs flex items-center justify-center gap-1 transition-all shadow-sm active:scale-95">
-              <i class="fa-brands fa-apple text-sm"></i>
-              <span>Pay</span>
-            </button>
-            <button type="button" onclick="quickExpressPay('PAYPAL')" class="py-2.5 px-2 rounded-xl bg-[#ffc439] hover:bg-[#f4bb34] text-[#003087] font-bold text-xs flex items-center justify-center gap-1 transition-all shadow-sm active:scale-95">
-              <i class="fa-brands fa-paypal text-sm text-[#0079c1]"></i>
-              <span class="text-[#003087]">Pay</span>
-            </button>
-          </div>
-
-          <div class="relative flex py-0.5 items-center">
-            <div class="flex-grow border-t border-zinc-800"></div>
-            <span class="flex-shrink mx-2 text-[10px] text-zinc-500 uppercase font-semibold">or standard checkout</span>
-            <div class="flex-grow border-t border-zinc-800"></div>
-          </div>
-
-          <button onclick="openCheckoutModal()" id="btnCheckout" class="btn-executive-primary w-full py-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
-            <span>Proceed to Express Checkout</span>
-            <i class="fa-solid fa-arrow-right text-xs"></i>
-          </button>
-
-          <p class="text-[11px] text-zinc-500 text-center flex items-center justify-center gap-3">
-            <span><i class="fa-solid fa-lock text-emerald-400"></i> Encrypted 256-bit Payment</span>
-            <span><i class="fa-solid fa-shield-check text-zinc-400"></i> 30-Day Guarantee</span>
+          <p id="checkoutSetupMessage" class="text-xs text-amber-200 bg-amber-500/10 border border-amber-500/20 rounded-xl p-3 text-center" role="status">
+            Secure crypto checkout is being configured. No payment can be made yet.
           </p>
+          <form id="cryptoCheckoutForm" class="hidden space-y-3" onsubmit="startCryptoCheckout(event)">
+            <h4 class="text-sm font-bold text-white">Crypto checkout</h4>
+            <p class="text-xs text-zinc-400">The hosted crypto checkout shows the available payment coins and networks. Shipping and applicable tax are included before payment. Do not send funds to a wallet address copied from an unofficial message.</p>
+            <label class="block text-xs text-zinc-300">Full name
+              <input name="name" autocomplete="name" maxlength="100" required class="mt-1 w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-white">
+            </label>
+            <label class="block text-xs text-zinc-300">Email
+              <input name="email" type="email" autocomplete="email" maxlength="254" required class="mt-1 w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-white">
+            </label>
+            <label class="block text-xs text-zinc-300">Street address
+              <input name="address1" autocomplete="address-line1" maxlength="150" required class="mt-1 w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-white">
+            </label>
+            <label class="block text-xs text-zinc-300">Apartment, suite, etc. (optional)
+              <input name="address2" autocomplete="address-line2" maxlength="150" class="mt-1 w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-white">
+            </label>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="block text-xs text-zinc-300">City
+                <input name="city" autocomplete="address-level2" maxlength="100" required class="mt-1 w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-white">
+              </label>
+              <label class="block text-xs text-zinc-300">State / region
+                <input name="region" autocomplete="address-level1" maxlength="100" required class="mt-1 w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-white">
+              </label>
+              <label class="block text-xs text-zinc-300">Postal code
+                <input name="postalCode" autocomplete="postal-code" maxlength="20" required class="mt-1 w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-white">
+              </label>
+              <label class="block text-xs text-zinc-300">Country code
+                <input name="country" autocomplete="country" placeholder="US" pattern="[A-Za-z]{2}" maxlength="2" required class="mt-1 w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-white">
+              </label>
+            </div>
+            <label class="flex items-start gap-2 text-xs text-zinc-400">
+              <input name="consent" type="checkbox" required class="mt-0.5">
+              <span>I agree to the <a id="storeTermsLink" class="underline text-white" target="_blank" rel="noopener noreferrer">terms</a> and <a id="storePrivacyLink" class="underline text-white" target="_blank" rel="noopener noreferrer">privacy policy</a>.</span>
+            </label>
+            <p class="text-xs text-zinc-400">Questions? <a id="storeSupportLink" class="underline text-white"></a></p>
+            <button id="cryptoCheckoutButton" type="submit" class="w-full rounded-xl bg-white text-zinc-950 px-4 py-3 text-sm font-extrabold disabled:opacity-50" disabled>
+              Continue to secure crypto invoice
+            </button>
+            <p id="cryptoCheckoutMessage" class="hidden text-xs text-amber-200" role="status"></p>
+          </form>
         </div>
 
       </div>
-    </div>
-  </div>
-
-  <!-- Dynamic Multi-Payment Checkout Modal (Cards, PayPal, Apple Pay, Crypto) -->
-  <div id="checkoutModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4">
-    <div class="glass-card w-full max-w-xl rounded-3xl p-5 sm:p-8 max-h-[92vh] overflow-y-auto relative border-indigo-500/30 shadow-2xl">
-      
-      <button onclick="closeCheckoutModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg p-1 transition-colors" title="Close">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-      <!-- Stage 1: Order Form -->
-      <div id="checkoutStageForm" class="space-y-6">
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">Fold Tech Studio™ Express Checkout</span>
-          </div>
-          <h3 class="text-2xl font-extrabold text-white mt-1">Review & Place Your Order</h3>
-          <div class="text-xs text-gray-300 mt-1 flex items-center justify-between bg-gray-900/60 px-3 py-2 rounded-xl border border-gray-800">
-            <span>Order Total (<span id="checkoutItemCount">1 item</span>):</span>
-            <span class="font-black text-sm text-emerald-400" id="checkoutOrderTotalDisplay">$34.99 USD</span>
-          </div>
-        </div>
-
-        <!-- Section 1: Shipping Address (Amazon/Shopify Format) -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-1.5">
-              <i class="fa-solid fa-truck-fast text-indigo-400"></i> 1. Shipping Address
-            </h4>
-            <span class="text-[10px] text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Free Tracked Delivery</span>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-[11px] font-semibold text-gray-300 mb-1">Full Name <span class="text-rose-400">*</span></label>
-              <input type="text" id="custName" oninput="syncCardholder(this.value)" placeholder="e.g. John Miller" required class="w-full px-3.5 py-2.5 rounded-xl bg-gray-900 border border-gray-700 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-gray-300 mb-1">Email (For Order Updates) <span class="text-rose-400">*</span></label>
-              <input type="email" id="custEmail" placeholder="e.g. john.miller@gmail.com" required class="w-full px-3.5 py-2.5 rounded-xl bg-gray-900 border border-gray-700 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors">
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Street Address <span class="text-rose-400">*</span></label>
-            <input type="text" id="custStreet" placeholder="e.g. 742 Evergreen Terrace, Apt 4B" required class="w-full px-3.5 py-2.5 rounded-xl bg-gray-900 border border-gray-700 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors">
-          </div>
-
-          <div class="grid grid-cols-3 gap-2">
-            <div>
-              <label class="block text-[11px] font-semibold text-gray-300 mb-1">City <span class="text-rose-400">*</span></label>
-              <input type="text" id="custCity" placeholder="Austin" required class="w-full px-3 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-gray-300 mb-1">State / Province <span class="text-rose-400">*</span></label>
-              <input type="text" id="custState" placeholder="TX" required class="w-full px-3 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors">
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-gray-300 mb-1">ZIP / Postal <span class="text-rose-400">*</span></label>
-              <input type="text" id="custZip" placeholder="78704" required class="w-full px-3 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors">
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Country</label>
-            <select id="custCountry" class="w-full px-3.5 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white focus:outline-none focus:border-indigo-500">
-              <option value="United States" selected>United States</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="Canada">Canada</option>
-              <option value="Australia">Australia</option>
-              <option value="Germany">Germany</option>
-              <option value="France">France</option>
-              <option value="Ethiopia">Ethiopia</option>
-              <option value="United Arab Emirates">United Arab Emirates</option>
-              <option value="Worldwide">Other (Worldwide Express)</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Section 2: Payment Method (Tabs) -->
-        <div class="space-y-3 pt-3 border-t border-gray-800">
-          <div class="flex items-center justify-between">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-1.5">
-              <i class="fa-solid fa-shield-halved text-emerald-400"></i> 2. Payment Method
-            </h4>
-            <span class="text-[10px] text-gray-400 flex items-center gap-1">
-              <i class="fa-solid fa-lock text-emerald-400"></i> 256-Bit SSL
-            </span>
-          </div>
-
-          <!-- Payment Selector Tabs (5 Options) -->
-          <div class="grid grid-cols-5 gap-1 sm:gap-2">
-            
-            <!-- Tab 1: Credit / Debit Card -->
-            <button type="button" id="tabBtnCard" onclick="selectPaymentMethod('CARD')" class="p-2 sm:p-2.5 rounded-xl border border-emerald-500 bg-emerald-500/20 text-center transition-all">
-              <i class="fa-solid fa-credit-card text-emerald-400 text-xs sm:text-sm mb-0.5 block"></i>
-              <span class="text-[11px] font-bold text-white block">Card</span>
-              <span class="text-[8px] text-gray-400 block truncate">Cards</span>
-            </button>
-
-            <!-- Tab 2: Google Pay -->
-            <button type="button" id="tabBtnGooglePay" onclick="selectPaymentMethod('GOOGLE_PAY')" class="p-2 sm:p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center hover:border-gray-400 transition-all">
-              <i class="fa-brands fa-google text-white text-xs sm:text-sm mb-0.5 block"></i>
-              <span class="text-[11px] font-bold text-white block">GPay</span>
-              <span class="text-[8px] text-gray-400 block truncate">1-Click</span>
-            </button>
-
-            <!-- Tab 3: Apple Pay -->
-            <button type="button" id="tabBtnApplePay" onclick="selectPaymentMethod('APPLE_PAY')" class="p-2 sm:p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center hover:border-white transition-all">
-              <i class="fa-brands fa-apple text-white text-xs sm:text-sm mb-0.5 block"></i>
-              <span class="text-[11px] font-bold text-white block">Apple</span>
-              <span class="text-[8px] text-gray-400 block truncate">1-Click</span>
-            </button>
-
-            <!-- Tab 4: PayPal -->
-            <button type="button" id="tabBtnPayPal" onclick="selectPaymentMethod('PAYPAL')" class="p-2 sm:p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center hover:border-sky-500 transition-all">
-              <i class="fa-brands fa-paypal text-sky-400 text-xs sm:text-sm mb-0.5 block"></i>
-              <span class="text-[11px] font-bold text-white block">PayPal</span>
-              <span class="text-[8px] text-gray-400 block truncate">Express</span>
-            </button>
-
-            <!-- Tab 5: Crypto -->
-            <button type="button" id="tabBtnCrypto" onclick="selectPaymentMethod('CRYPTO')" class="p-2 sm:p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center hover:border-indigo-500 transition-all">
-              <i class="fa-brands fa-telegram text-sky-400 text-xs sm:text-sm mb-0.5 block"></i>
-              <span class="text-[11px] font-bold text-white block">Crypto</span>
-              <span class="text-[8px] text-gray-400 block truncate">USDT</span>
-            </button>
-          </div>
-
-          <!-- Panel 1: Card Payment View -->
-          <div id="panelCard" class="p-4 rounded-2xl bg-gray-950/90 border border-emerald-500/30 space-y-3.5">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-gray-300 font-bold flex items-center gap-1.5">
-                <i class="fa-solid fa-lock text-emerald-400"></i> Encrypted Card Processing
-              </span>
-              <div class="flex items-center gap-2 text-base">
-                <i id="cardIconMastercard" class="fa-brands fa-cc-mastercard text-amber-500 transition-transform duration-200" title="Mastercard"></i>
-                <i id="cardIconVisa" class="fa-brands fa-cc-visa text-sky-400 transition-transform duration-200" title="Visa"></i>
-                <i id="cardIconAmex" class="fa-brands fa-cc-amex text-blue-400 transition-transform duration-200" title="American Express"></i>
-                <i id="cardIconDiscover" class="fa-brands fa-cc-discover text-orange-400 transition-transform duration-200" title="Discover"></i>
-              </div>
-            </div>
-
-            <!-- Card Number Input -->
-            <div>
-              <label class="block text-[11px] font-semibold text-gray-400 mb-1">Card Number</label>
-              <div class="relative">
-                <input type="text" id="cardNumber" maxlength="19" oninput="handleCardNumberInput(this)" placeholder="5412 7500 1234 5678" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-900 border border-gray-700 text-sm text-white font-mono focus:outline-none focus:border-emerald-500">
-                <i class="fa-solid fa-credit-card absolute left-3.5 top-3.5 text-gray-500 text-xs"></i>
-              </div>
-            </div>
-
-            <!-- Name on Card -->
-            <div>
-              <label class="block text-[11px] font-semibold text-gray-400 mb-1">Name on Card</label>
-              <input type="text" id="cardName" placeholder="John Miller" class="w-full px-3.5 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white focus:outline-none focus:border-emerald-500">
-            </div>
-
-            <!-- Expiration Date & CVV -->
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-[11px] font-semibold text-gray-400 mb-1">Expires (MM/YY)</label>
-                <input type="text" id="cardExpiry" maxlength="5" placeholder="MM/YY" oninput="formatExpiry(this)" class="w-full px-3.5 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white font-mono focus:outline-none focus:border-emerald-500">
-              </div>
-              <div>
-                <label class="block text-[11px] font-semibold text-gray-400 mb-1">Security Code (CVV)</label>
-                <div class="relative">
-                  <input type="password" id="cardCvc" maxlength="4" placeholder="CVC" class="w-full px-3.5 py-2 rounded-xl bg-gray-900 border border-gray-700 text-xs text-white font-mono focus:outline-none focus:border-emerald-500">
-                  <i class="fa-solid fa-shield absolute right-3 top-2.5 text-gray-500 text-xs" title="3 or 4 digit code on the back of your card"></i>
-                </div>
-              </div>
-            </div>
-
-            <div class="text-[11px] text-gray-400 bg-gray-900/60 p-2.5 rounded-xl border border-gray-800 flex items-center justify-between">
-              <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-check text-emerald-400"></i> Bank-grade PCI-DSS Level 1 compliance</span>
-              <span class="text-white font-bold" id="cardChargeDisplay">$34.99 USD</span>
-            </div>
-          </div>
-
-          <!-- Panel 2: Google Pay View -->
-          <div id="panelGooglePay" class="p-4 rounded-2xl bg-gray-950/90 border border-gray-700 space-y-3.5 hidden">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-white font-bold flex items-center gap-1.5">
-                <i class="fa-brands fa-google text-white text-base"></i> Google Pay Express Checkout
-              </span>
-              <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Instant Google Wallet</span>
-            </div>
-            <p class="text-xs text-gray-300 leading-relaxed">
-              Pay securely using cards, shipping addresses, and buyer protection stored in your Google Account.
-            </p>
-            <div class="pt-1">
-              <button type="button" onclick="triggerNativeGooglePay()" class="w-full py-3.5 px-6 rounded-2xl bg-black hover:bg-gray-900 text-white font-black text-sm border border-gray-700 flex items-center justify-center gap-2.5 shadow-xl active:scale-[0.98] transition-all">
-                <i class="fa-brands fa-google text-lg"></i>
-                <span>Pay with <strong>Google Pay</strong></span>
-              </button>
-            </div>
-            <div class="p-2.5 bg-gray-900/60 rounded-xl border border-gray-800 text-[11px] text-gray-400 space-y-1">
-              <div class="text-gray-300 font-semibold flex items-center gap-1">
-                <i class="fa-solid fa-circle-info text-sky-400"></i>
-                <span>Browser Authorization Guide:</span>
-              </div>
-              <p>
-                When your browser sheet opens, click <strong>&gt;</strong> next to <em>Payment</em> to choose or add a card to activate <strong>Continue</strong>. You can also select the <strong>Card</strong> tab to enter card numbers directly.
-              </p>
-            </div>
-            <p class="text-[10px] text-gray-400 text-center flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-lock text-emerald-400"></i> Authorized directly via official Google Payments API (pay.js)
-            </p>
-          </div>
-
-          <!-- Panel 3: Apple Pay View -->
-          <div id="panelApplePay" class="p-4 rounded-2xl bg-gray-950/90 border border-white/20 space-y-3.5 hidden">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-white font-bold flex items-center gap-1.5">
-                <i class="fa-brands fa-apple text-white text-base"></i> Apple Pay Express Checkout
-              </span>
-              <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Biometric Token</span>
-            </div>
-            <p class="text-xs text-gray-300 leading-relaxed">
-              Authenticate instantly with your Apple Wallet card and device biometrics (Face ID or Touch ID).
-            </p>
-            <div class="pt-1">
-              <button type="button" onclick="triggerNativeApplePay()" class="w-full py-3.5 px-6 rounded-2xl bg-white hover:bg-gray-100 text-gray-950 font-black text-sm flex items-center justify-center gap-2.5 shadow-xl active:scale-[0.98] transition-all">
-                <i class="fa-brands fa-apple text-xl text-black"></i>
-                <span>Pay with <strong>Apple Pay</strong></span>
-              </button>
-            </div>
-            <p class="text-[10px] text-gray-400 text-center flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-lock text-emerald-400"></i> Authorized via Apple Secure Enclave & W3C PaymentRequest
-            </p>
-          </div>
-
-          <!-- Panel 4: PayPal View -->
-          <div id="panelPayPal" class="p-4 rounded-2xl bg-gray-950/90 border border-sky-500/30 space-y-3.5 hidden">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-white font-bold flex items-center gap-1.5">
-                <i class="fa-brands fa-paypal text-sky-400 text-base"></i> Official PayPal Checkout
-              </span>
-              <span class="text-[10px] text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">Buyer Protection</span>
-            </div>
-            <p class="text-xs text-gray-300 leading-relaxed">
-              Pay securely using your PayPal account balance, linked bank account, or debit/credit card.
-            </p>
-            <div id="paypalButtonContainer" class="pt-1">
-              <button type="button" onclick="triggerDirectPayPalCheckout()" class="w-full py-3.5 px-6 rounded-2xl bg-[#ffc439] hover:bg-[#f4bb34] text-[#003087] font-black text-sm flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-all">
-                <i class="fa-brands fa-paypal text-xl text-[#003087]"></i>
-                <span>Pay with <strong>PayPal</strong></span>
-              </button>
-            </div>
-            <p class="text-[10px] text-gray-400 text-center flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-lock text-emerald-400"></i> Encrypted end-to-end via PayPal Payments API
-            </p>
-          </div>
-
-          <!-- Panel 4: Crypto Payment View -->
-          <div id="panelCrypto" class="p-4 rounded-2xl bg-gray-950/90 border border-indigo-500/30 space-y-3.5 text-center hidden">
-            <div class="flex justify-center gap-2 mb-1">
-              <button type="button" id="cryptoSubTon" onclick="selectCryptoNetwork('TON')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white border border-indigo-500 transition-all">
-                <i class="fa-brands fa-telegram mr-1"></i> USDT (TON)
-              </button>
-              <button type="button" id="cryptoSubSol" onclick="selectCryptoNetwork('SOL')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-900 text-gray-400 border border-gray-700 hover:border-purple-500 transition-all">
-                <i class="fa-solid fa-bolt mr-1 text-purple-400"></i> USDC (Solana)
-              </button>
-            </div>
-
-            <div class="text-xs text-gray-400">
-              Send <strong class="text-white text-sm" id="payAmountDisplay">34.99</strong> <strong class="text-white text-sm" id="tokenSymbol">USDT</strong> to the official treasury address:
-            </div>
-            
-            <!-- QR Code -->
-            <div class="flex justify-center">
-              <img id="qrCodeImg" src="" alt="Wallet QR" class="w-36 h-36 rounded-xl bg-white p-2 shadow-lg">
-            </div>
-
-            <!-- Address String & Copy Button -->
-            <div class="flex items-center gap-2 bg-gray-900 p-2 rounded-xl border border-gray-800">
-              <input type="text" id="walletAddressField" readonly class="bg-transparent text-[11px] font-mono text-gray-300 w-full focus:outline-none px-2 select-all">
-              <button type="button" onclick="copyWalletAddress()" id="copyBtn" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold whitespace-nowrap transition-colors">
-                <i class="fa-regular fa-copy mr-1"></i> Copy
-              </button>
-            </div>
-            <div id="copyToast" class="text-emerald-400 text-xs font-semibold hidden">
-              ✓ Address copied to clipboard!
-            </div>
-
-            <!-- Optional TX Hash / Sender Note -->
-            <div class="text-left">
-              <label class="block text-[11px] font-semibold text-gray-400 mb-1">Transaction Hash / Sender Address (Optional)</label>
-              <input type="text" id="cryptoTxHash" placeholder="Paste TX hash for instant automated reconciliation" class="w-full px-3.5 py-2 rounded-xl bg-gray-900 border border-gray-800 text-xs text-white font-mono focus:outline-none focus:border-indigo-500">
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Section 3: Amazon / Alibaba "Place Your Order" Button -->
-        <div class="space-y-3 pt-2">
-          <!-- High-Converting Guarantee & Security Trust Box -->
-          <div class="p-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 space-y-2.5">
-            <div class="flex items-center justify-between text-[11px] text-amber-400 font-semibold bg-amber-500/10 px-3 py-1.5 rounded-lg border border-amber-500/20">
-              <span class="flex items-center gap-1.5"><i class="fa-solid fa-fire text-amber-400"></i> High Demand: Only 6 units remaining at 50% OFF</span>
-              <span class="text-zinc-400 text-[10px]">Reserved for 10:00</span>
-            </div>
-            <div class="grid grid-cols-3 gap-2 text-center pt-1">
-              <div class="p-2 rounded-lg bg-zinc-900/60 border border-zinc-800/80">
-                <i class="fa-solid fa-shield-halved text-emerald-400 text-sm mb-1 block"></i>
-                <div class="text-[10px] font-bold text-white">30-Day Guarantee</div>
-                <div class="text-[9px] text-zinc-400">100% Risk-Free</div>
-              </div>
-              <div class="p-2 rounded-lg bg-zinc-900/60 border border-zinc-800/80">
-                <i class="fa-solid fa-truck-fast text-sky-400 text-sm mb-1 block"></i>
-                <div class="text-[10px] font-bold text-white">Free Priority</div>
-                <div class="text-[9px] text-zinc-400">Tracked & Insured</div>
-              </div>
-              <div class="p-2 rounded-lg bg-zinc-900/60 border border-zinc-800/80">
-                <i class="fa-solid fa-award text-indigo-400 text-sm mb-1 block"></i>
-                <div class="text-[10px] font-bold text-white">2-Yr Warranty</div>
-                <div class="text-[9px] text-zinc-400">Full Hardware Cover</div>
-              </div>
-            </div>
-          </div>
-
-          <button type="button" onclick="submitOrder()" id="confirmOrderBtn" class="btn-executive-primary w-full py-4 px-6 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2">
-            <i class="fa-solid fa-lock text-sm"></i>
-            <span id="submitBtnText">Place Your Order • $34.99 USD</span>
-          </button>
-
-          <p class="text-[10px] text-gray-400 text-center leading-relaxed">
-            By placing your order, you agree to Fold Tech Studio's <a href="#flagship" class="underline hover:text-white">Conditions of Use</a> and <a href="#flagship" class="underline hover:text-white">Privacy Notice</a>.
-            <span class="block text-gray-500 mt-0.5">30-day money-back guarantee • Free express replacement on delivery issues</span>
-          </p>
-        </div>
-
-      </div>
-
-      <!-- Stage 2: Post-Purchase Confirmation (Amazon / Alibaba Standard) -->
-      <div id="checkoutStageSuccess" class="space-y-6 text-center py-4 hidden">
-        
-        <!-- Amazon Signature Success Checkmark -->
-        <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center text-3xl border border-emerald-500/30 shadow-lg shadow-emerald-500/20">
-          <i class="fa-solid fa-check"></i>
-        </div>
-
-        <div>
-          <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Order Placed Successfully</span>
-          <h3 class="text-2xl font-black text-white mt-1">Thank you, your order is placed!</h3>
-          <p class="text-xs text-gray-400 mt-1.5">
-            An order confirmation and receipt have been registered for <strong class="text-white" id="confEmailDisplay">buyer@email.com</strong>.
-          </p>
-        </div>
-
-        <!-- Order Information Card (Amazon Style) -->
-        <div class="p-4 rounded-2xl bg-gray-900/90 border border-gray-800 text-left space-y-2.5 text-xs shadow-inner">
-          <div class="flex justify-between items-center py-1 border-b border-gray-800">
-            <span class="text-gray-400 font-medium">Order Number:</span>
-            <span id="confOrderId" class="font-mono text-indigo-400 font-bold text-sm">FTS-2026-000000</span>
-          </div>
-          <div class="flex justify-between items-center py-1 border-b border-gray-800">
-            <span class="text-gray-400 font-medium">Order Date:</span>
-            <span id="confOrderDate" class="text-gray-200 font-medium">Today</span>
-          </div>
-          <div class="flex justify-between items-start py-1 border-b border-gray-800">
-            <span class="text-gray-400 font-medium">Ship To:</span>
-            <div class="text-right">
-              <span id="confCustomerName" class="text-white font-bold block">Customer Name</span>
-              <span id="confFullAddress" class="text-gray-400 text-[11px] block mt-0.5">Address</span>
-            </div>
-          </div>
-          <div class="flex justify-between items-center py-1 border-b border-gray-800">
-            <span class="text-gray-400 font-medium">Payment Method:</span>
-            <span id="confPaymentMethod" class="text-emerald-400 font-bold">Mastercard • Verified</span>
-          </div>
-          <div class="flex justify-between items-center py-1">
-            <span class="text-gray-400 font-medium">Order Total:</span>
-            <span id="confOrderTotal" class="text-white font-black text-sm">$34.99 USD</span>
-          </div>
-        </div>
-
-        <!-- Amazon/Alibaba Delivery Progress Tracker -->
-        <div class="p-4 rounded-2xl bg-gray-950/70 border border-gray-800/80 text-left space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-white flex items-center gap-1.5">
-              <i class="fa-solid fa-box text-indigo-400"></i> Delivery & Dispatch Status
-            </span>
-            <span class="text-[11px] text-emerald-400 font-semibold" id="confEstDelivery">Estimated Delivery: 5 - 8 Days</span>
-          </div>
-
-          <div class="grid grid-cols-4 gap-1 text-center pt-2">
-            <div class="space-y-1">
-              <div class="w-6 h-6 rounded-full bg-emerald-500 text-gray-950 font-bold text-xs mx-auto flex items-center justify-center">✓</div>
-              <div class="text-[10px] font-bold text-white">Placed</div>
-            </div>
-            <div class="space-y-1">
-              <div class="w-6 h-6 rounded-full bg-indigo-500 text-white font-bold text-xs mx-auto flex items-center justify-center animate-pulse">●</div>
-              <div class="text-[10px] font-bold text-indigo-300">Confirmed</div>
-            </div>
-            <div class="space-y-1">
-              <div class="w-6 h-6 rounded-full bg-gray-800 text-gray-500 font-bold text-xs mx-auto flex items-center justify-center">○</div>
-              <div class="text-[10px] text-gray-500">Packing</div>
-            </div>
-            <div class="space-y-1">
-              <div class="w-6 h-6 rounded-full bg-gray-800 text-gray-500 font-bold text-xs mx-auto flex items-center justify-center">○</div>
-              <div class="text-[10px] text-gray-500">Delivered</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Ordered Items Summary -->
-        <div class="text-left">
-          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Items in this order:</h4>
-          <div id="confItemsList" class="space-y-2 max-h-36 overflow-y-auto pr-1"></div>
-        </div>
-
-        <!-- Actions -->
-        <div class="grid grid-cols-2 gap-3 pt-2">
-          <button type="button" onclick="window.print()" class="py-3 px-4 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-200 text-xs font-semibold flex items-center justify-center gap-2 transition-colors">
-            <i class="fa-solid fa-print"></i> Print Receipt
-          </button>
-          <button type="button" onclick="closeCheckoutModal()" class="btn-executive-primary py-3 px-4 rounded-xl text-xs font-bold transition-colors">
-            Continue Shopping
-          </button>
-        </div>
-
-      </div>
-
     </div>
   </div>
 
@@ -1072,16 +656,10 @@
       <div class="w-6 h-6 rounded-lg bg-indigo-600/30 flex items-center justify-center text-indigo-400 text-xs">
         <i class="fa-solid fa-layer-group"></i>
       </div>
-      <span class="font-bold text-gray-400">Fold Tech Studio Global Inc.</span>
-    </div>
-    <div class="flex items-center justify-center gap-4 text-gray-400 text-base">
-      <i class="fa-brands fa-cc-mastercard text-amber-500" title="Mastercard"></i>
-      <i class="fa-brands fa-cc-visa text-sky-400" title="Visa"></i>
-      <i class="fa-brands fa-apple text-white" title="Apple Pay"></i>
-      <i class="fa-brands fa-telegram text-sky-400" title="USDT"></i>
+      <span class="font-bold text-gray-400">Fold Tech Studio</span>
     </div>
     <div onclick="handleSecretFooterClick()" class="cursor-pointer select-none text-[11px] text-gray-500 hover:text-gray-400 transition-colors" title="Fold Tech Studio">
-      © 2026 Fold Tech Studio. Worldwide Tracked Express Fulfillment. Direct Cryptocurrency & Card Settlements.
+      © 2026 Fold Tech Studio. Online checkout is currently unavailable.
     </div>
     <div id="ownerPortalFooterTrigger" class="block pt-2">
       <button onclick="toggleOwnerDashboard()" class="text-indigo-400 hover:text-indigo-300 font-mono underline text-[11px]">
@@ -1295,12 +873,7 @@
       <div class="space-y-2 pt-1 border-t border-gray-800">
         <div class="flex items-center justify-between">
           <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Recorded Customer Orders</h4>
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="simulateDemoOrder()" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/40 text-[10px] font-semibold transition-all">
-              <i class="fa-solid fa-play text-[9px] mr-1"></i> Simulate Demo Order
-            </button>
-            <button type="button" onclick="clearTestOrders()" class="text-[10px] text-rose-400 hover:underline">Clear History</button>
-          </div>
+          <button type="button" onclick="clearTestOrders()" class="text-[10px] text-rose-400 hover:underline">Clear History</button>
         </div>
         <div id="adminOrdersList" class="space-y-2.5 max-h-48 overflow-y-auto pr-1"></div>
       </div>
@@ -1448,24 +1021,7 @@
       }
     };
 
-    // Treasury Wallets (Ezana Takele)
-    const WALLETS = {
-      TON: {
-        symbol: 'USDT',
-        network: 'TON Network',
-        address: 'UQD2KXI7kwyDXr5kJh8VmDcktjI4awKSjCQ5R_G0z662uZRo',
-        qrUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=ton://transfer/UQD2KXI7kwyDXr5kJh8VmDcktjI4awKSjCQ5R_G0z662uZRo'
-      },
-      SOL: {
-        symbol: 'USDC',
-        network: 'Solana Network',
-        address: 'JC6P8F1AK3hitgDK9Nj1Tb2svA3KcwHcj6VvDPB5tg76',
-        qrUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=solana:JC6P8F1AK3hitgDK9Nj1Tb2svA3KcwHcj6VvDPB5tg76'
-      }
-    };
-
     let cart = JSON.parse(localStorage.getItem('foldtech_cart') || '{"p1": 1}');
-    let currentPaymentMethod = 'CARD';
 
     // Save cart to local storage and update UI
     function saveCart() {
@@ -1474,11 +1030,9 @@
     }
 
     function addToCart(productId, openCheckout = false) {
-      if (!cart[productId]) {
-        cart[productId] = 1;
-      } else {
-        cart[productId] += 1;
-      }
+      if (!Object.prototype.hasOwnProperty.call(PRODUCTS, productId)) return;
+      cart[productId] = (cart[productId] || 0) + 1;
+      if (cart[productId] > 99) cart[productId] = 99;
       saveCart();
       if (typeof recordEvent === 'function') {
         recordEvent('bag_add', productId);
@@ -1492,21 +1046,13 @@
     }
 
     function addBundleToCart() {
-      cart['p1'] = (cart['p1'] || 0) + 1;
-      cart['p2'] = (cart['p2'] || 0) + 1;
-      cart['p3'] = (cart['p3'] || 0) + 1;
-      saveCart();
-      if (typeof recordEvent === 'function') {
-        recordEvent('bag_add', 'p1');
-        recordEvent('bag_add', 'p2');
-        recordEvent('bag_add', 'p3');
-      }
-      toggleCart(true);
+      addToCart('bundle');
     }
 
     function updateQty(productId, delta) {
-      if (cart[productId]) {
+      if (Object.prototype.hasOwnProperty.call(PRODUCTS, productId) && cart[productId] && Number.isInteger(delta) && Math.abs(delta) === 1) {
         cart[productId] += delta;
+        if (cart[productId] > 99) cart[productId] = 99;
         if (cart[productId] <= 0) {
           delete cart[productId];
         }
@@ -1521,29 +1067,15 @@
 
     function calculateCartTotal() {
       let subtotal = 0;
-      let totalWholesale = 0;
-      let hasBundle = (cart['p1'] > 0 && cart['p2'] > 0 && cart['p3'] > 0);
-
       for (const [id, qty] of Object.entries(cart)) {
         if (PRODUCTS[id] && qty > 0) {
           subtotal += PRODUCTS[id].price * qty;
-          totalWholesale += PRODUCTS[id].wholesale * qty;
         }
       }
 
-      let discount = 0;
-      if (hasBundle) {
-        discount = 19.98; // Makes 3 items $59.99 instead of $79.97
-      }
-
-      let total = Math.max(0, subtotal - discount);
-      let netProfit = Math.max(0, total - totalWholesale);
-
       return {
         subtotal,
-        discount,
-        total,
-        netProfit,
+        total: subtotal,
         itemCount: Object.values(cart).reduce((a, b) => a + b, 0)
       };
     }
@@ -1618,603 +1150,150 @@
       }
     }
 
-    let currentCryptoNetwork = 'TON';
-
-    function selectPaymentMethod(method) {
-      currentPaymentMethod = method;
-      const summary = calculateCartTotal();
-      const payableAmount = summary.total > 0 ? summary.total.toFixed(2) : '34.99';
-
-      const tabCard = document.getElementById('tabBtnCard');
-      const tabGooglePay = document.getElementById('tabBtnGooglePay');
-      const tabApplePay = document.getElementById('tabBtnApplePay');
-      const tabPayPal = document.getElementById('tabBtnPayPal');
-      const tabCrypto = document.getElementById('tabBtnCrypto');
-
-      const panelCard = document.getElementById('panelCard');
-      const panelGooglePay = document.getElementById('panelGooglePay');
-      const panelApplePay = document.getElementById('panelApplePay');
-      const panelPayPal = document.getElementById('panelPayPal');
-      const panelCrypto = document.getElementById('panelCrypto');
-      const submitText = document.getElementById('submitBtnText');
-
-      document.getElementById('checkoutOrderTotalDisplay').innerText = '$' + payableAmount + ' USD';
-      const cardCharge = document.getElementById('cardChargeDisplay');
-      if (cardCharge) cardCharge.innerText = '$' + payableAmount + ' USD';
-
-      // Reset all tabs to neutral inactive state
-      const neutralTabClass = 'p-2 sm:p-2.5 rounded-xl border border-gray-700 bg-gray-900/50 text-center transition-all opacity-70 hover:opacity-100';
-      if (tabCard) tabCard.className = neutralTabClass + ' hover:border-emerald-500';
-      if (tabGooglePay) tabGooglePay.className = neutralTabClass + ' hover:border-gray-400';
-      if (tabApplePay) tabApplePay.className = neutralTabClass + ' hover:border-white';
-      if (tabPayPal) tabPayPal.className = neutralTabClass + ' hover:border-sky-500';
-      if (tabCrypto) tabCrypto.className = neutralTabClass + ' hover:border-indigo-500';
-
-      // Hide all panels
-      if (panelCard) panelCard.classList.add('hidden');
-      if (panelGooglePay) panelGooglePay.classList.add('hidden');
-      if (panelApplePay) panelApplePay.classList.add('hidden');
-      if (panelPayPal) panelPayPal.classList.add('hidden');
-      if (panelCrypto) panelCrypto.classList.add('hidden');
-
-      if (method === 'CARD') {
-        if (tabCard) tabCard.className = 'p-2 sm:p-2.5 rounded-xl border border-emerald-500 bg-emerald-500/20 text-center transition-all shadow-md';
-        if (panelCard) panelCard.classList.remove('hidden');
-        if (submitText) submitText.innerText = `Place Your Order • $${payableAmount} USD`;
-      } else if (method === 'GOOGLE_PAY') {
-        if (tabGooglePay) tabGooglePay.className = 'p-2 sm:p-2.5 rounded-xl border border-gray-400 bg-white/10 text-center transition-all shadow-md';
-        if (panelGooglePay) panelGooglePay.classList.remove('hidden');
-        if (submitText) submitText.innerText = `Authorize with Google Pay • $${payableAmount} USD`;
-      } else if (method === 'APPLE_PAY') {
-        if (tabApplePay) tabApplePay.className = 'p-2 sm:p-2.5 rounded-xl border border-white bg-white/10 text-center transition-all shadow-md';
-        if (panelApplePay) panelApplePay.classList.remove('hidden');
-        if (submitText) submitText.innerText = `Place Order with Apple Pay • $${payableAmount} USD`;
-      } else if (method === 'PAYPAL') {
-        if (tabPayPal) tabPayPal.className = 'p-2 sm:p-2.5 rounded-xl border border-sky-500 bg-sky-500/20 text-center transition-all shadow-md';
-        if (panelPayPal) panelPayPal.classList.remove('hidden');
-        if (submitText) submitText.innerText = `Continue to PayPal • $${payableAmount} USD`;
-        setTimeout(initPayPalButton, 50);
-      } else if (method === 'CRYPTO') {
-        if (tabCrypto) tabCrypto.className = 'p-2 sm:p-2.5 rounded-xl border border-indigo-500 bg-indigo-500/20 text-center transition-all shadow-md';
-        if (panelCrypto) panelCrypto.classList.remove('hidden');
-        selectCryptoNetwork(currentCryptoNetwork);
-        if (submitText) submitText.innerText = `Confirm Crypto Payment • $${payableAmount} USD`;
-      }
-    }
-
-    function initPayPalButton() {
-      const container = document.getElementById('paypalButtonContainer');
-      if (!container) return;
-      if (window.paypal && window.paypal.Buttons) {
-        if (container.querySelector('iframe') || container.querySelector('.paypal-buttons')) return;
-        try {
-          container.innerHTML = '';
-          window.paypal.Buttons({
-            style: {
-              layout: 'vertical',
-              color: 'gold',
-              shape: 'rect',
-              label: 'paypal'
-            },
-            createOrder: function (data, actions) {
-              const summary = calculateCartTotal();
-              const amt = summary.total > 0 ? summary.total.toFixed(2) : '34.99';
-              return actions.order.create({
-                purchase_units: [{
-                  description: 'Fold Tech Studio Order',
-                  amount: {
-                    currency_code: 'USD',
-                    value: amt
-                  }
-                }]
-              });
-            },
-            onApprove: function (data, actions) {
-              return actions.order.capture().then(function (details) {
-                const payer = details.payer || {};
-                const shipping = details.purchase_units?.[0]?.shipping?.address || {};
-                onWalletAuthorized({
-                  method: 'PayPal Express (' + (payer.email_address || 'Verified') + ')',
-                  email: payer.email_address || '',
-                  name: (payer.name?.given_name + ' ' + (payer.name?.surname || '')).trim() || 'PayPal Customer',
-                  street: shipping.address_line_1 || '',
-                  city: shipping.admin_area_2 || '',
-                  state: shipping.admin_area_1 || '',
-                  zip: shipping.postal_code || '',
-                  country: shipping.country_code || 'US'
-                });
-              });
-            },
-            onError: function (err) {
-              console.warn('PayPal error:', err);
-            }
-          }).render('#paypalButtonContainer');
-        } catch (e) {
-          console.warn('PayPal button render error:', e);
-        }
-      }
-    }
-
-    function triggerDirectPayPalCheckout() {
-      const summary = calculateCartTotal();
-      const amount = summary.total > 0 ? summary.total : 34.99;
-      const savedLink = localStorage.getItem('foldtech_admin_link');
-      
-      if (savedLink && savedLink.startsWith('http')) {
-        window.open(savedLink, '_blank');
-        completeOrderPlacement('PayPal Express Gateway (Redirect Verified)');
-        return;
-      }
-
-      // Check if PayPal SDK button exists and trigger click
-      const ppIframe = document.querySelector('#paypalButtonContainer iframe');
-      if (ppIframe) {
-        try {
-          ppIframe.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          return;
-        } catch (e) {}
-      }
-
-      // If user clicks direct PayPal checkout, open official PayPal checkout
-      const ppEmail = prompt('Enter your PayPal email to complete express checkout ($' + amount + ' USD):', document.getElementById('custEmail')?.value || 'buyer@paypal.com');
-      if (ppEmail && ppEmail.includes('@')) {
-        window.open('https://www.paypal.com/checkoutnow', '_blank');
-        onWalletAuthorized({
-          method: 'PayPal Express (' + ppEmail + ')',
-          email: ppEmail,
-          name: document.getElementById('custName')?.value || 'PayPal Buyer',
-          street: document.getElementById('custStreet')?.value || '123 Verified Ave',
-          city: document.getElementById('custCity')?.value || 'San Jose',
-          state: document.getElementById('custState')?.value || 'CA',
-          zip: document.getElementById('custZip')?.value || '95131',
-          country: document.getElementById('custCountry')?.value || 'US'
-        });
-      }
-    }
-
-    function quickExpressPay(method) {
-      const summary = calculateCartTotal();
-      if (summary.itemCount === 0) {
-        alert('Your bag is currently empty. Please select an item to checkout.');
-        return;
-      }
-      openCheckoutModal();
-      selectPaymentMethod(method);
-      if (method === 'GOOGLE_PAY') {
-        triggerNativeGooglePay();
-      } else if (method === 'APPLE_PAY') {
-        triggerNativeApplePay();
-      } else if (method === 'PAYPAL') {
-        triggerDirectPayPalCheckout();
-      }
-    }
-
-    function triggerNativeGooglePay() {
-      const summary = calculateCartTotal();
-      const amount = summary.total > 0 ? summary.total : 34.99;
-      if (window.FoldTechPayments && typeof window.FoldTechPayments.launchGooglePay === 'function') {
-        window.FoldTechPayments.launchGooglePay(amount, function (walletData) {
-          onWalletAuthorized(walletData);
-        });
-      } else {
-        alert('Google Pay SDK initializing... Please retry in a moment.');
-      }
-    }
-
-    function triggerNativeApplePay() {
-      const summary = calculateCartTotal();
-      const amount = summary.total > 0 ? summary.total : 34.99;
-      if (window.FoldTechPayments && typeof window.FoldTechPayments.launchApplePay === 'function') {
-        window.FoldTechPayments.launchApplePay(amount, function (walletData) {
-          onWalletAuthorized(walletData);
-        });
-      } else {
-        alert('Apple Pay engine initializing... Please retry in a moment.');
-      }
-    }
-
-    function onWalletAuthorized(walletData) {
-      if (!walletData) return;
-      if (walletData.name && !document.getElementById('custName').value) {
-        document.getElementById('custName').value = walletData.name;
-      }
-      if (walletData.email && !document.getElementById('custEmail').value) {
-        document.getElementById('custEmail').value = walletData.email;
-      }
-      if (walletData.street && !document.getElementById('custStreet').value) {
-        document.getElementById('custStreet').value = walletData.street;
-      }
-      if (walletData.city && !document.getElementById('custCity').value) {
-        document.getElementById('custCity').value = walletData.city;
-      }
-      if (walletData.state && !document.getElementById('custState').value) {
-        document.getElementById('custState').value = walletData.state;
-      }
-      if (walletData.zip && !document.getElementById('custZip').value) {
-        document.getElementById('custZip').value = walletData.zip;
-      }
-      completeOrderPlacement(walletData.method || 'Digital Wallet Verified');
-    }
-
-    function selectCryptoNetwork(net) {
-      currentCryptoNetwork = net;
-      const summary = calculateCartTotal();
-      const payableAmount = summary.total > 0 ? summary.total.toFixed(2) : '34.99';
-
-      const btnTon = document.getElementById('cryptoSubTon');
-      const btnSol = document.getElementById('cryptoSubSol');
-
-      if (net === 'TON') {
-        if (btnTon) btnTon.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white border border-indigo-500 transition-all';
-        if (btnSol) btnSol.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-900 text-gray-400 border border-gray-700 hover:border-purple-500 transition-all';
-      } else {
-        if (btnTon) btnTon.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-900 text-gray-400 border border-gray-700 hover:border-indigo-500 transition-all';
-        if (btnSol) btnSol.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-600 text-white border border-purple-500 transition-all';
-      }
-
-      const data = WALLETS[net];
-      if (data) {
-        const addrField = document.getElementById('walletAddressField');
-        const qrImg = document.getElementById('qrCodeImg');
-        const sym = document.getElementById('tokenSymbol');
-        const amt = document.getElementById('payAmountDisplay');
-
-        if (addrField) addrField.value = data.address;
-        if (qrImg) qrImg.src = data.qrUrl;
-        if (sym) sym.innerText = data.symbol;
-        if (amt) amt.innerText = payableAmount;
-      }
-    }
-
-    function copyWalletAddress() {
-      const field = document.getElementById('walletAddressField');
-      if (!field) return;
-      navigator.clipboard.writeText(field.value);
-      const toast = document.getElementById('copyToast');
-      if (toast) {
-        toast.classList.remove('hidden');
-        setTimeout(() => toast.classList.add('hidden'), 2500);
-      }
-    }
-
-    function handleCardNumberInput(input) {
-      let value = input.value.replace(/\D/g, '');
-      let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
-      input.value = formatted.substring(0, 19);
-
-      // Dynamic Card Brand Logo Highlighting
-      const icMastercard = document.getElementById('cardIconMastercard');
-      const icVisa = document.getElementById('cardIconVisa');
-      const icAmex = document.getElementById('cardIconAmex');
-      const icDiscover = document.getElementById('cardIconDiscover');
-
-      const icons = [icMastercard, icVisa, icAmex, icDiscover];
-      icons.forEach(i => {
-        if (i) {
-          i.classList.remove('scale-125', 'opacity-100');
-          i.classList.add('opacity-40');
-        }
-      });
-
-      if (value.startsWith('5') || value.startsWith('2')) {
-        if (icMastercard) {
-          icMastercard.classList.remove('opacity-40');
-          icMastercard.classList.add('opacity-100', 'scale-125');
-        }
-      } else if (value.startsWith('4')) {
-        if (icVisa) {
-          icVisa.classList.remove('opacity-40');
-          icVisa.classList.add('opacity-100', 'scale-125');
-        }
-      } else if (value.startsWith('34') || value.startsWith('37')) {
-        if (icAmex) {
-          icAmex.classList.remove('opacity-40');
-          icAmex.classList.add('opacity-100', 'scale-125');
-        }
-      } else if (value.startsWith('6')) {
-        if (icDiscover) {
-          icDiscover.classList.remove('opacity-40');
-          icDiscover.classList.add('opacity-100', 'scale-125');
-        }
-      } else {
-        // Neutral view when empty
-        icons.forEach(i => {
-          if (i) i.classList.remove('opacity-40', 'scale-125');
-        });
-      }
-    }
-
-    function formatExpiry(input) {
-      let value = input.value.replace(/\D/g, '');
-      if (value.length > 2) {
-        input.value = value.substring(0, 2) + '/' + value.substring(2, 4);
-      } else {
-        input.value = value;
-      }
-    }
-
-    function syncCardholder(name) {
-      const cardNameInput = document.getElementById('cardName');
-      if (cardNameInput && !cardNameInput.dataset.userEdited) {
-        cardNameInput.value = name;
-      }
-    }
-
-    // Mark cardName as user edited if they type manually
-    document.addEventListener('input', (e) => {
-      if (e.target && e.target.id === 'cardName') {
-        e.target.dataset.userEdited = 'true';
-      }
-    });
-
     function openCheckoutModal() {
-      if (typeof recordEvent === 'function') {
-        recordEvent('click');
-      }
-      toggleCart(false);
-      const summary = calculateCartTotal();
-      const itemCountElem = document.getElementById('checkoutItemCount');
-      if (itemCountElem) {
-        itemCountElem.innerText = summary.itemCount === 1 ? '1 item' : `${summary.itemCount} items`;
-      }
-
-      document.getElementById('checkoutStageForm').classList.remove('hidden');
-      document.getElementById('checkoutStageSuccess').classList.add('hidden');
-      document.getElementById('checkoutModal').classList.remove('hidden');
-      document.getElementById('checkoutModal').classList.add('flex');
-
-      selectPaymentMethod(currentPaymentMethod);
+      toggleCart(true);
+      document.getElementById('cryptoCheckoutForm')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     function closeCheckoutModal() {
-      document.getElementById('checkoutModal').classList.add('hidden');
-      document.getElementById('checkoutModal').classList.remove('flex');
+      toggleCart(false);
     }
 
-    function completeOrderPlacement(paymentLabel) {
-      const summary = calculateCartTotal();
-      const payableTotal = summary.total > 0 ? summary.total : 34.99;
-      const netProfit = summary.netProfit > 0 ? summary.netProfit : 24.49;
+    async function loadCryptoCheckoutConfig() {
+      const message = document.getElementById('checkoutSetupMessage');
+      const form = document.getElementById('cryptoCheckoutForm');
+      const submitButton = document.getElementById('cryptoCheckoutButton');
+      if (!message || !form || !submitButton) return;
+      if (window.location.protocol === 'file:') {
+        message.textContent = 'Secure checkout is available only on the configured Cloudflare Pages deployment.';
+        return;
+      }
+      try {
+        const response = await fetch('/api/checkout/config', { headers: { Accept: 'application/json' } });
+        if (!response.ok) throw new Error(`Checkout configuration request failed (${response.status}).`);
+        const config = await response.json();
+        if (!config.enabled) {
+          message.textContent = config.message || 'Secure crypto checkout is not configured yet.';
+          return;
+        }
+        const termsLink = document.getElementById('storeTermsLink');
+        if (termsLink && config.termsUrl) termsLink.href = config.termsUrl;
+        const privacyLink = document.getElementById('storePrivacyLink');
+        if (privacyLink && config.privacyUrl) privacyLink.href = config.privacyUrl;
+        const supportLink = document.getElementById('storeSupportLink');
+        if (supportLink && config.supportEmail) {
+          supportLink.href = `mailto:${config.supportEmail}`;
+          supportLink.textContent = config.supportEmail;
+        }
+        message.classList.add('hidden');
+        form.classList.remove('hidden');
+        submitButton.disabled = false;
+      } catch (error) {
+        console.error('Could not load secure crypto checkout configuration:', error);
+        message.textContent = 'Secure crypto checkout is temporarily unavailable. No payment can be made.';
+      }
+    }
 
-      const name = document.getElementById('custName').value.trim() || 'Verified Customer';
-      const email = document.getElementById('custEmail').value.trim() || 'buyer@orders.com';
-      const street = document.getElementById('custStreet').value.trim() || 'Express Priority Delivery';
-      const city = document.getElementById('custCity').value.trim() || 'Metropolitan';
-      const state = document.getElementById('custState').value.trim() || 'Direct';
-      const zip = document.getElementById('custZip').value.trim() || '10001';
-      const country = document.getElementById('custCountry').value || 'United States';
+    async function startCryptoCheckout(event) {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const message = document.getElementById('cryptoCheckoutMessage');
+      const button = document.getElementById('cryptoCheckoutButton');
+      if (!form.reportValidity()) return;
+      if (Object.keys(cart).length === 0) {
+        if (message) {
+          message.textContent = 'Your shopping bag is empty.';
+          message.classList.remove('hidden');
+        }
+        return;
+      }
 
-      const now = new Date();
-      const orderNum = 'FTS-2026-' + Math.floor(100000 + Math.random() * 900000);
-      
-      const orderDateStr = now.toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric'
-      });
-
-      // Calculate 5 to 8 business days delivery window
-      const d1 = new Date(now);
-      d1.setDate(d1.getDate() + 5);
-      const d2 = new Date(now);
-      d2.setDate(d2.getDate() + 8);
-      const deliveryRange = `${d1.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${d2.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
-
-      const orderedItemsSnapshot = Object.entries(cart).map(([id, qty]) => {
-        const prod = PRODUCTS[id];
-        return prod ? { id, name: prod.name, price: prod.price, image: prod.image, fallback: prod.fallback, qty } : null;
-      }).filter(Boolean);
-
-      const orderRecord = {
-        orderId: orderNum,
-        orderDate: orderDateStr,
-        estimatedDelivery: deliveryRange,
-        customerName: name,
-        customerEmail: email,
-        shippingAddress: { street, city, state, zip, country },
-        paymentMethod: paymentLabel,
-        items: orderedItemsSnapshot,
-        totalUSDT: payableTotal,
-        netProfitUSDT: netProfit,
-        status: 'Confirmed — Preparing for Dispatch',
-        createdAt: now.toISOString()
+      button.disabled = true;
+      if (message) {
+        message.textContent = 'Creating a secure hosted crypto invoice…';
+        message.classList.remove('hidden');
+      }
+      const formData = new FormData(form);
+      const payload = {
+        items: Object.entries(cart).map(([id, quantity]) => ({ id, quantity })),
+        acceptedPolicies: formData.get('consent') === 'on',
+        customer: {
+          name: formData.get('name'),
+          email: formData.get('email'),
+          address1: formData.get('address1'),
+          address2: formData.get('address2'),
+          city: formData.get('city'),
+          region: formData.get('region'),
+          postalCode: formData.get('postalCode'),
+          country: formData.get('country'),
+        },
       };
 
-      // Store in Local Orders
-      const localOrders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
-      localOrders.unshift(orderRecord);
-      localStorage.setItem('foldtech_orders', JSON.stringify(localOrders));
-      if (typeof recordEvent === 'function') {
-        recordEvent('order');
-      }
-
-      // Dispatch Instant Order Notification to Owner's Email (FormSubmit API)
       try {
-        const orderSummaryText = orderedItemsSnapshot.map(i => `${i.name} (x${i.qty}) - $${(i.price * i.qty).toFixed(2)}`).join('; ');
-        fetch('https://formsubmit.co/ajax/drtakeleezana@gmail.com', {
+        const response = await fetch('/api/checkout/create', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            _subject: `🚨 NEW FOLDTECH ORDER #${orderNum} ($${payableTotal.toFixed(2)} USD)`,
-            OrderId: orderNum,
-            OrderDate: orderDateStr,
-            Total: `$${payableTotal.toFixed(2)} USD`,
-            PaymentMethod: paymentLabel,
-            CustomerName: name,
-            CustomerEmail: email,
-            ShippingAddress: `${street}, ${city}, ${state} ${zip}, ${country}`,
-            OrderedItems: orderSummaryText,
-            _template: 'table'
-          })
-        }).catch(e => console.warn('Order dispatch fetch error:', e));
-      } catch (err) {
-        console.warn('Order webhook error:', err);
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || `Checkout failed (${response.status}).`);
+        const invoiceUrl = new URL(result.checkoutUrl);
+        if (invoiceUrl.protocol !== 'https:' || invoiceUrl.hostname !== 'nowpayments.io') {
+          throw new Error('The secure payment provider returned an invalid invoice URL.');
+        }
+        window.location.assign(invoiceUrl.toString());
+      } catch (error) {
+        console.error('Could not start crypto checkout:', error);
+        if (message) {
+          message.textContent = error.message || 'Could not create a secure crypto invoice. Please try again later.';
+        }
+        button.disabled = false;
       }
-
-      // Populate Confirmation Screen (Amazon/Alibaba Post-Purchase Page)
-      document.getElementById('confOrderId').innerText = orderNum;
-      document.getElementById('confOrderDate').innerText = orderDateStr;
-      document.getElementById('confCustomerName').innerText = name;
-      document.getElementById('confFullAddress').innerText = `${street}, ${city}, ${state} ${zip}, ${country}`;
-      document.getElementById('confPaymentMethod').innerText = paymentLabel;
-      document.getElementById('confOrderTotal').innerText = `$${payableTotal.toFixed(2)} USD`;
-      document.getElementById('confEmailDisplay').innerText = email;
-      document.getElementById('confEstDelivery').innerText = `Estimated Delivery: ${deliveryRange}`;
-
-      const confItemsList = document.getElementById('confItemsList');
-      if (confItemsList) {
-        confItemsList.innerHTML = orderedItemsSnapshot.map(item => `
-          <div class="flex items-center justify-between gap-3 p-2 bg-gray-900/60 rounded-xl border border-gray-800 text-xs">
-            <img src="${item.image}" onerror="this.src='${item.fallback || item.image}'" class="w-10 h-10 object-cover rounded-lg bg-gray-950">
-            <div class="flex-1">
-              <div class="font-bold text-white text-[11px] leading-tight">${item.name}</div>
-              <div class="text-[10px] text-gray-400">Qty: ${item.qty} × $${item.price.toFixed(2)}</div>
-            </div>
-            <div class="font-extrabold text-white text-xs">$${(item.price * item.qty).toFixed(2)}</div>
-          </div>
-        `).join('');
-      }
-
-      // Clear bag
-      cart = {};
-      saveCart();
-
-      // Transition to success screen
-      document.getElementById('checkoutStageForm').classList.add('hidden');
-      document.getElementById('checkoutStageSuccess').classList.remove('hidden');
     }
 
-    async function submitOrder() {
-      if (currentPaymentMethod === 'GOOGLE_PAY') {
-        triggerNativeGooglePay();
-        return;
+    async function showReturnedOrderStatus() {
+      const params = new URLSearchParams(window.location.search);
+      const orderId = params.get('order_id');
+      const notice = document.getElementById('orderStatusNotice');
+      if (!notice) return;
+      if (params.get('payment') === 'cancelled') {
+        notice.textContent = 'You returned from the payment page. Checking the provider status; do not send a second payment.';
+        notice.classList.remove('hidden');
+        if (!orderId) return;
       }
+      if (!orderId || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(orderId)) return;
 
-      if (currentPaymentMethod === 'APPLE_PAY') {
-        triggerNativeApplePay();
-        return;
-      }
-
-      if (currentPaymentMethod === 'PAYPAL') {
-        triggerDirectPayPalCheckout();
-        return;
-      }
-
-      const name = document.getElementById('custName').value.trim();
-      const email = document.getElementById('custEmail').value.trim();
-      const street = document.getElementById('custStreet').value.trim();
-      const city = document.getElementById('custCity').value.trim();
-      const state = document.getElementById('custState').value.trim();
-      const zip = document.getElementById('custZip').value.trim();
-      const country = document.getElementById('custCountry').value;
-
-      if (!name) {
-        alert('Please enter your full name for the shipping label.');
-        document.getElementById('custName').focus();
-        return;
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!email || !emailRegex.test(email)) {
-        alert('Please enter a valid email address so we can send your order confirmation and tracking details.');
-        document.getElementById('custEmail').focus();
-        return;
-      }
-
-      if (!street) {
-        alert('Please enter your street address.');
-        document.getElementById('custStreet').focus();
-        return;
-      }
-
-      if (!city) {
-        alert('Please enter your city.');
-        document.getElementById('custCity').focus();
-        return;
-      }
-
-      if (!state || !zip) {
-        alert('Please enter your state/province and ZIP/postal code.');
-        return;
-      }
-
-      let paymentLabel = 'Mastercard / Visa Verified';
-
-      if (currentPaymentMethod === 'CARD') {
-        const cardNum = document.getElementById('cardNumber').value.replace(/\s/g, '');
-        const cardExp = document.getElementById('cardExpiry').value.trim();
-        const cardCvc = document.getElementById('cardCvc').value.trim();
-
-        if (cardNum.length < 13) {
-          alert('Please enter a valid 15 or 16-digit card number.');
-          document.getElementById('cardNumber').focus();
-          return;
-        }
-
-        if (window.FoldTechPayments && !window.FoldTechPayments.validateCardNumberLuhn(cardNum)) {
-          alert('Card number failed standard checksum verification (Luhn algorithm). Please verify your card details.');
-          document.getElementById('cardNumber').focus();
-          return;
-        }
-
-        if (cardExp.length < 5 || !cardExp.includes('/')) {
-          alert('Please enter a valid card expiration date (MM/YY).');
-          document.getElementById('cardExpiry').focus();
-          return;
-        }
-
-        if (cardCvc.length < 3) {
-          alert('Please enter your 3 or 4-digit security code (CVV/CVC).');
-          document.getElementById('cardCvc').focus();
-          return;
-        }
-
-        const last4 = cardNum.slice(-4);
-        let brand = 'Card';
-        if (window.FoldTechPayments) {
-          brand = window.FoldTechPayments.detectCardBrand(cardNum);
-        } else {
-          if (cardNum.startsWith('5') || cardNum.startsWith('2')) brand = 'Mastercard';
-          else if (cardNum.startsWith('4')) brand = 'Visa';
-          else if (cardNum.startsWith('3')) brand = 'Amex';
-        }
-        paymentLabel = `${brand} (ending in ${last4})`;
-
-      } else if (currentPaymentMethod === 'PAYPAL') {
-        paymentLabel = 'PayPal Express Verified';
-        const savedLink = localStorage.getItem('foldtech_admin_link');
-        if (savedLink && savedLink.startsWith('http')) {
-          window.open(savedLink, '_blank');
-        }
-      } else if (currentPaymentMethod === 'CRYPTO') {
-        const txHash = document.getElementById('cryptoTxHash')?.value.trim();
-        paymentLabel = currentCryptoNetwork === 'TON' ? 'USDT (TON Network)' : 'USDC (Solana Network)';
-        if (txHash) {
-          paymentLabel += ` • TX: ${txHash.substring(0, 10)}...`;
-        }
-      }
-
-      const btn = document.getElementById('confirmOrderBtn');
-      btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-base"></i> <span>Placing your order...</span>`;
-
-      const summary = calculateCartTotal();
-      const payableTotal = summary.total > 0 ? summary.total : 34.99;
-
-      setTimeout(() => {
+      notice.textContent = `Checking payment status for order ${orderId}…`;
+      notice.classList.remove('hidden');
+      for (let attempt = 0; attempt < 6; attempt += 1) {
         try {
-          completeOrderPlacement(paymentLabel);
-        } catch (err) {
-          console.error('Order Submission Error:', err);
-          alert('Could not submit order. Please check inputs and retry.');
-        } finally {
-          btn.disabled = false;
-          btn.innerHTML = `<i class="fa-solid fa-lock text-sm"></i> <span id="submitBtnText">Place Your Order • $${payableTotal.toFixed(2)} USD</span>`;
+          const response = await fetch(`/api/orders/${encodeURIComponent(orderId)}`, {
+            headers: { Accept: 'application/json' },
+          });
+          if (!response.ok) throw new Error(`Order status request failed (${response.status}).`);
+          const order = await response.json();
+          if (order.status === 'paid') {
+            cart = {};
+            saveCart();
+            notice.textContent = `Payment verified for order ${orderId}. Keep this order reference for your records.`;
+            return;
+          }
+          if (order.status === 'refunded') {
+            notice.textContent = `Order ${orderId} is marked refunded. Contact store support if you need assistance.`;
+            return;
+          }
+          if (['failed', 'expired', 'checkout_failed'].includes(order.status)) {
+            notice.textContent = `Payment for order ${orderId} is ${order.status}. No successful payment is recorded.`;
+            return;
+          }
+        } catch (error) {
+          console.error('Could not check returned order status:', error);
+          notice.textContent = 'Payment is not yet verified. Refresh this page later to check again; do not pay a second invoice unless its status is clear.';
+          return;
         }
-      }, 700);
+        notice.textContent = `Payment is still awaiting provider confirmation for order ${orderId}. Do not send a second payment.`;
+        if (attempt < 5) await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
     }
 
     // ==========================================
@@ -2302,94 +1381,6 @@
       }
     }
 
-        function simulateDemoOrder() {
-      const demoNames = ['Marcus Vance', 'Alex Rivera', 'Sarah Jenkins', 'David Chen'];
-      const demoCities = [
-        { city: 'Austin', state: 'TX', zip: '78701', street: '402 Congress Ave' },
-        { city: 'Seattle', state: 'WA', zip: '98101', street: '1201 3rd Ave' },
-        { city: 'Brooklyn', state: 'NY', zip: '11201', street: '85 Adams St' },
-        { city: 'Denver', state: 'CO', zip: '80202', street: '1600 California St' }
-      ];
-      const demoProducts = [
-        { name: 'MagFold™ 3-in-1 Foldable Charger', price: 34.99, profit: 24.49 },
-        { name: 'The Ultimate Nomad Travel Bundle (All-in-One)', price: 59.99, profit: 39.89 },
-        { name: 'Volt65™ 65W GaN Travel Fast Charger', price: 24.99, profit: 18.79 }
-      ];
-
-      const rName = demoNames[Math.floor(Math.random() * demoNames.length)];
-      const rLoc = demoCities[Math.floor(Math.random() * demoCities.length)];
-      const rProd = demoProducts[Math.floor(Math.random() * demoProducts.length)];
-      const orderNum = 'FT-' + Math.floor(100000 + Math.random() * 900000);
-
-      const demoOrder = {
-        orderId: orderNum,
-        orderDate: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        customerName: rName,
-        customerEmail: rName.toLowerCase().replace(' ', '.') + '@gmail.com',
-        shippingAddress: {
-          street: rLoc.street,
-          city: rLoc.city,
-          state: rLoc.state,
-          zip: rLoc.zip,
-          country: 'United States'
-        },
-        paymentMethod: 'Credit Card (Apple Pay / Stripe)',
-        items: [{ name: rProd.name, qty: 1, price: rProd.price }],
-        totalUSDT: rProd.price,
-        netProfitUSDT: rProd.profit,
-        status: 'Confirmed — Preparing for Dispatch',
-        createdAt: new Date().toISOString()
-      };
-
-      const orders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
-      orders.unshift(demoOrder);
-      localStorage.setItem('foldtech_orders', JSON.stringify(orders));
-
-      // Refresh Admin Dashboard View
-      loadAdminStats();
-
-      // Trigger On-Screen Social Proof Toast Notification
-      const ticker = document.getElementById('socialProofTicker');
-      const textElem = document.getElementById('tickerText');
-      const timeElem = document.getElementById('tickerTime');
-      if (ticker && textElem) {
-        textElem.innerHTML = `Someone from <strong class="text-white">${rLoc.city}, ${rLoc.state}</strong> just purchased <span class="text-indigo-400 font-semibold">${rProd.name}</span>`;
-        if (timeElem) timeElem.innerText = 'Just now • Verified Purchase ✓';
-        ticker.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
-        ticker.classList.add('translate-y-0', 'opacity-100');
-        setTimeout(() => {
-          ticker.classList.remove('translate-y-0', 'opacity-100');
-          ticker.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
-        }, 5000);
-      }
-    }
-
-    function checkAndSeedDefaultDemo() {
-      const orders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
-      if (orders.length === 0) {
-        const seedOrder = {
-          orderId: 'FT-849201',
-          orderDate: 'Today 10:24 AM',
-          customerName: 'Marcus Vance',
-          customerEmail: 'marcus.vance@gmail.com',
-          shippingAddress: {
-            street: '402 Congress Ave',
-            city: 'Austin',
-            state: 'TX',
-            zip: '78701',
-            country: 'United States'
-          },
-          paymentMethod: 'Credit Card (Apple Pay)',
-          items: [{ name: 'MagFold™ 3-in-1 Foldable Charger', qty: 1, price: 34.99 }],
-          totalUSDT: 34.99,
-          netProfitUSDT: 24.49,
-          status: 'Confirmed — Preparing for Dispatch',
-          createdAt: new Date().toISOString()
-        };
-        localStorage.setItem('foldtech_orders', JSON.stringify([seedOrder]));
-      }
-    }
-
     function clearTestOrders() {
       if (confirm('Are you sure you want to clear test orders history?')) {
         localStorage.removeItem('foldtech_orders');
@@ -2398,7 +1389,6 @@
     }
 
     function loadAdminStats() {
-      checkAndSeedDefaultDemo();
       const orders = JSON.parse(localStorage.getItem('foldtech_orders') || '[]');
       const totalProfit = orders.reduce((sum, o) => sum + (o.netProfitUSDT || 24.49), 0);
 
@@ -3108,7 +2098,8 @@
       renderCatalog();
       initSocialProofTicker();
       renderCartUI();
-      selectPaymentMethod('CARD');
+      loadCryptoCheckoutConfig();
+      showReturnedOrderStatus();
     });
   </script>
 </body>
